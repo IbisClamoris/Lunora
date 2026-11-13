@@ -58,6 +58,14 @@ Please refer to the application's documentation for information about data stora
 
 See the [Releases](https://github.com/IbisClamoris/Lunora/releases) page for available versions and downloads.
 
+## 📜 Open Source
+
+Lunora is an open-source project distributed under the GNU General Public License v3.0 (GPL-3.0).
+
+You are welcome to explore the source code, study the project, and contribute to its development.
+
+See [LICENSE](LICENSE) for license details and [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+
 ---
 
 ## 🇷🇺 Lunora
@@ -119,6 +127,12 @@ Lunora создана как персональное настольное пр�
 **Платформа:** Windows
 
 Все доступные версии и установщики находятся на странице [Releases](https://github.com/IbisClamoris/Lunora/releases).
+
+Lunora — проект с открытым исходным кодом, распространяемый на условиях GNU General Public License версии 3.0 (GPL-3.0).
+
+Вы можете изучать исходный код, знакомиться с устройством приложения и участвовать в его развитии.
+
+Подробнее: LICENSE — условия лицензии, CONTRIBUTING.md — рекомендации для участников проекта.
 
 ---
 
