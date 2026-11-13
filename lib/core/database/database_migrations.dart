@@ -962,13 +962,25 @@ class DatabaseMigrations {
     if (oldWishlist.isNotEmpty) {
       final sourceUrl = oldWishlist.contains('source_url') ? 'source_url' :
           (oldWishlist.contains('url') ? 'url' : 'NULL');
+      final image = oldWishlist.contains('image_path') ? 'image_path' : 'NULL';
+      final tags = oldWishlist.contains('tags') ? 'tags' : "'[]'";
+      final purchased = oldWishlist.contains('is_purchased')
+          ? 'is_purchased'
+          : (oldWishlist.contains('status')
+              ? "CASE WHEN status IN ('purchased','bought','completed') THEN 1 ELSE 0 END"
+              : '0');
+      final purchasedAt = oldWishlist.contains('purchased_at') ? 'purchased_at' : 'NULL';
+      final notes = oldWishlist.contains('notes') ? 'notes' : "''";
+      final sortOrder = oldWishlist.contains('sort_order') ? 'sort_order' : '0';
       await db.execute('''
         INSERT OR IGNORE INTO wishlist_entries
-        (id,title,description,category,price,currency,source_url,priority,
-         is_purchased,created_at,updated_at)
-        SELECT id,title,COALESCE(description,''),COALESCE(category,'Без категории'),
-         price,COALESCE(currency,''),$sourceUrl,COALESCE(priority,'normal'),
-         0,created_at,updated_at FROM wishlist_items
+        (id,title,description,image_path,category,tags,price,currency,source_url,
+         priority,is_purchased,purchased_at,notes,sort_order,created_at,updated_at)
+        SELECT id,title,COALESCE(description,''),$image,
+         COALESCE(category,'Без категории'),COALESCE($tags,'[]'),price,
+         COALESCE(currency,''),$sourceUrl,COALESCE(priority,'normal'),
+         $purchased,$purchasedAt,COALESCE($notes,''),$sortOrder,
+         created_at,updated_at FROM wishlist_items
       ''');
     }
 
@@ -1113,6 +1125,21 @@ class DatabaseMigrations {
         sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
       )
     ''');
+    // Version 17 created this table with target_amount/current_amount.
+    // Add current model fields and copy the legacy balances without loss.
+    await _ensureColumn(db, 'finance_savings_goals', 'target_amount_minor', 'INTEGER NOT NULL DEFAULT 0');
+    await _ensureColumn(db, 'finance_savings_goals', 'saved_amount_minor', 'INTEGER NOT NULL DEFAULT 0');
+    await _ensureColumn(db, 'finance_savings_goals', 'currency', "TEXT NOT NULL DEFAULT 'RUB'");
+    await _ensureColumn(db, 'finance_savings_goals', 'target_date', 'TEXT');
+    await _ensureColumn(db, 'finance_savings_goals', 'status', "TEXT NOT NULL DEFAULT 'active'");
+    await _ensureColumn(db, 'finance_savings_goals', 'sort_order', 'INTEGER NOT NULL DEFAULT 0');
+    final savingsColumns = await _tableColumns(db, 'finance_savings_goals');
+    if (savingsColumns.contains('target_amount')) {
+      await db.execute('UPDATE finance_savings_goals SET target_amount_minor=CASE WHEN target_amount_minor=0 THEN target_amount ELSE target_amount_minor END');
+    }
+    if (savingsColumns.contains('current_amount')) {
+      await db.execute('UPDATE finance_savings_goals SET saved_amount_minor=CASE WHEN saved_amount_minor=0 THEN current_amount ELSE saved_amount_minor END');
+    }
     await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_transactions_date ON finance_transactions(transaction_date DESC)');
     await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_transactions_account ON finance_transactions(account_id)');
     await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_budgets_period ON finance_budgets(year,month,category_id)');
