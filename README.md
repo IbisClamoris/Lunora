@@ -1,128 +1,65 @@
-# 🌙 Lunora
-### Your Personal World
+# Lunora — Your Personal World
 
-**A personal space for your everyday life.**
+Lunora is a personal desktop workspace for organizing everyday life.
 
-Lunora brings your plans, thoughts, interests, and everyday activities together in one beautiful and organized desktop application.
+**Version:** 1.0.0  
+**Platform in this release:** Windows 64-bit  
+**License:** GNU General Public License v3.0 (GPL-3.0)
 
-Keep track of what matters, plan your days, collect inspiration, and make your personal world a little more organized.
+## Features
 
-[**⬇ Download Lunora 1.0.0**](https://github.com/IbisClamoris/Lunora/releases/latest)
+- Home dashboard
+- Calendar and planner
+- Personal diary
+- Book collection and reading tracking
+- Personal finance records
+- Movies and TV shows
+- Recipes and shopping lists
+- Wishes and learning plan
+- Knowledge base
+- Multiple interface themes
 
----
+## Get the application
 
-## ✨ Features
+Download the Windows installer from the [latest GitHub Release](../../releases/latest).
 
-Lunora combines several everyday tools in one place.
+## Build from source
 
-| Section | Description |
-|---|---|
-| 🏠 **Home** | An overview of your personal space and main sections. |
-| 📅 **Calendar** | Plan your days and keep track of events. |
-| 📖 **Diary** | Keep personal notes and memories. |
-| 📚 **Book World** | Organize your reading and book collection. |
-| 💰 **Finance** | Manage your personal finances. |
-| 🎬 **Movies & TV Shows** | Keep track of movies and series. |
-| 🍃 **Recipes** | Collect and organize recipes. |
-| 🛍️ **Shopping** | Manage shopping lists. |
-| ✨ **Wishes** | Save things you dream about and want to achieve. |
-| 🎓 **Learning Plan** | Organize your learning activities. |
-| 🗂️ **Planner** | Structure your tasks and plans. |
-| 📚 **Knowledge Base** | Keep useful information in one place. |
+### Requirements
 
-## 🎨 Personalization
+- Flutter SDK compatible with the Dart constraint in `pubspec.yaml` (`^3.13.7`)
+- Windows 10/11 64-bit
+- Visual Studio with the **Desktop development with C++** workload
+- CMake and Windows SDK (normally installed with the Visual Studio workload)
 
-Your personal space should feel like yours.
+### Steps
 
-Lunora offers several interface themes, allowing you to choose the atmosphere that suits you best.
+1. Install Flutter and configure it for Windows desktop development.
+2. Clone this repository.
+3. From the repository root, run:
 
-## 🖥️ Installation
+```powershell
+flutter doctor -v
+flutter pub get
+flutter run -d windows
+```
 
-1. Open the [latest release](https://github.com/IbisClamoris/Lunora/releases/latest).
-2. Download `Lunora_Setup_1.0.0.exe`.
-3. Run the installer.
-4. Follow the on-screen instructions.
-5. Launch Lunora from the Start menu or desktop shortcut.
+To create a release build:
 
-## 🔐 Privacy
+```powershell
+flutter build windows --release
+```
 
-Lunora is designed as a personal desktop workspace.
+The generated application will be under `build\windowsdunner\Release`.
 
-Please refer to the application's documentation for information about data storage and privacy.
+## Data and privacy
 
-## 📦 Release
+Lunora stores application data in the user's application-support location, outside the installation directory. Do not commit personal databases, exports, backups, or other user data to this repository.
 
-**Current version:** `1.0.0`  
-**Release channel:** Stable  
-**Platform:** Windows
+## Contributing
 
-See the [Releases](https://github.com/IbisClamoris/Lunora/releases) page for available versions and downloads.
+Bug reports and proposed changes are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before opening an issue or pull request.
 
----
+## License
 
-## 🇷🇺 Lunora
-### Твой личный мир
-
-**Личное пространство для повседневной жизни.**
-
-Lunora объединяет планы, мысли, интересы и повседневные дела в одном удобном приложении.
-
-Планируй дни, сохраняй воспоминания, следи за финансами, собирай любимые книги и фильмы, храни полезную информацию и организуй всё, что для тебя важно.
-
-[**⬇ Скачать Lunora 1.0.0**](https://github.com/IbisClamoris/Lunora/releases/latest)
-
----
-
-## ✨ Возможности
-
-Lunora объединяет инструменты для разных сфер повседневной жизни.
-
-| Раздел | Описание |
-|---|---|
-| 🏠 **Главная** | Обзор личного пространства и основных разделов. |
-| 📅 **Календарь** | Планирование дней и событий. |
-| 📖 **Дневник** | Личные записи и воспоминания. |
-| 📚 **Книжный мир** | Учёт книг и чтения. |
-| 💰 **Финансы** | Управление личными финансами. |
-| 🎬 **Фильмы и сериалы** | Коллекция фильмов и сериалов. |
-| 🍃 **Рецепты** | Хранение любимых рецептов. |
-| 🛍️ **Покупки** | Списки покупок. |
-| ✨ **Желания** | Список желаний и целей. |
-| 🎓 **Учебный план** | Организация обучения. |
-| 🗂️ **Планер** | Планирование задач и дел. |
-| 📚 **База знаний** | Хранение полезной информации. |
-
-## 🎨 Персонализация
-
-Твоё личное пространство должно отражать именно тебя.
-
-В Lunora предусмотрено несколько тем оформления, чтобы каждый мог выбрать подходящую атмосферу.
-
-## 🖥️ Установка
-
-1. Открой страницу [последнего релиза](https://github.com/IbisClamoris/Lunora/releases/latest).
-2. Скачай файл `Lunora_Setup_1.0.0.exe`.
-3. Запусти установщик.
-4. Следуй инструкциям на экране.
-5. Запусти Lunora через меню «Пуск» или ярлык на рабочем столе.
-
-## 🔐 Конфиденциальность
-
-Lunora создана как персональное настольное пространство.
-
-Информацию о хранении данных и конфиденциальности следует смотреть в документации приложения.
-
-## 📦 Версия
-
-**Текущая версия:** `1.0.0`  
-**Канал выпуска:** Stable  
-**Платформа:** Windows
-
-Все доступные версии и установщики находятся на странице [Releases](https://github.com/IbisClamoris/Lunora/releases).
-
----
-
-<p align="center">
-  <b>🌙 Lunora — Your Personal World</b><br>
-  <i>Make room for what matters.</i>
-</p>
+This project is distributed under the GNU General Public License, version 3. See [LICENSE](LICENSE). Third-party dependencies and assets may have their own licenses and notices; those terms remain applicable.

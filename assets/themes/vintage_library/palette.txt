@@ -1,0 +1,9 @@
+Antique parchment	#E8D9BA
+Warm ivory	#F8F1E2
+Sepia	#8B6B48
+Dark walnut	#4E3B2A
+Muted brown	#7A6250
+Ink black	#2C2722
+Antique olive	#6F6C45
+Aged gold	#A88A4E
+Dusty beige	#D9C9A8

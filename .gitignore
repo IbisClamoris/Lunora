@@ -1,0 +1,39 @@
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+build/
+coverage/
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Windows / Visual Studio
+windows/flutter/ephemeral/
+windows/runner/Debug/
+windows/runner/Release/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+x64/
+x86/
+
+# Local data, exports and secrets
+*.db
+*.sqlite
+*.sqlite3
+*.bak
+*.log
+.env
+.env.*
+!.env.example
+*.pem
+*.p12
+*.key
+
+# Installer output
+installer/Output/

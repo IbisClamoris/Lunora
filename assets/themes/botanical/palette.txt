@@ -1,0 +1,8 @@
+Sage green	#9CAF88
+Dusty olive	#7A7C52
+Muted eucalyptus	#8FA79A
+Warm ivory	#FAF6EC
+Cream	#F3EBD8
+Pale moss	#C9D2B0
+Muted beige	#DCCFB4
+Antique gold	#B4975A

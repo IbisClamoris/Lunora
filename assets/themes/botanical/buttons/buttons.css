@@ -1,0 +1,61 @@
+/* Lunora Botanical: кнопки. Состояния: .s-hover .s-press .s-sel [disabled] */
+:root{--bg:#F2EDDF;--paper:#FBF8F0;--panel:#F6F1E3;--ink:#3F4532;--muted:#7F826A;--line:#CFC9AE;--accent:#7A8B63;--accentInk:#FBF8F0;--accent2:#B4975A;--soft:#E5E8D3;--hover:#EDEFE0;--press:#DCE1C8;--danger:#9A6B4F;--bf:Constantia,"Palatino Linotype",Georgia,serif;--orn:url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20width%3D%2224%22%20height%3D%2224%22%3E%3Cpath%20d%3D%22M12%2021Q14.16%2012%2012%203%22%20fill%3D%22none%22%20stroke%3D%22%235C6447%22%20stroke-width%3D%220.76%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M12.52%2018.48C12.7%2015.76%2015.05%2014.63%2017.29%2014.73C16.86%2016.92%2015.2%2018.94%2012.52%2018.48Z%22%20fill%3D%22%239CAF88%22%20stroke%3D%22%235C6447%22%20stroke-width%3D%220.55%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M12.52%2018.48C9.84%2018.02%208.96%2015.56%209.28%2013.34C11.42%2014%2013.26%2015.86%2012.52%2018.48Z%22%20fill%3D%22%239CAF88%22%20stroke%3D%22%235C6447%22%20stroke-width%3D%220.55%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13.02%2014.06C12.9%2011.66%2014.85%2010.43%2016.82%2010.29C16.66%2012.26%2015.42%2014.2%2013.02%2014.06Z%22%20fill%3D%22%239CAF88%22%20stroke%3D%22%235C6447%22%20stroke-width%3D%220.55%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13.02%2014.06C10.62%2013.93%209.6%2011.87%209.66%209.89C11.61%2010.25%2013.41%2011.69%2013.02%2014.06Z%22%20fill%3D%22%239CAF88%22%20stroke%3D%22%235C6447%22%20stroke-width%3D%220.55%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13.01%209.65C12.66%207.6%2014.21%206.34%2015.89%206.01C15.96%207.72%2015.08%209.52%2013.01%209.65Z%22%20fill%3D%22%239CAF88%22%20stroke%3D%22%235C6447%22%20stroke-width%3D%220.55%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13.01%209.65C10.93%209.78%209.84%208.11%209.69%206.4C11.4%206.51%2013.09%207.57%2013.01%209.65Z%22%20fill%3D%22%239CAF88%22%20stroke%3D%22%235C6447%22%20stroke-width%3D%220.55%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M12.47%205.23C11.98%203.54%2013.16%202.33%2014.54%201.89C14.76%203.33%2014.2%204.92%2012.47%205.23Z%22%20fill%3D%22%239CAF88%22%20stroke%3D%22%235C6447%22%20stroke-width%3D%220.55%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M12.47%205.23C10.74%205.55%209.66%204.25%209.37%202.83C10.81%202.76%2012.34%203.48%2012.47%205.23Z%22%20fill%3D%22%239CAF88%22%20stroke%3D%22%235C6447%22%20stroke-width%3D%220.55%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M12%203C10.47%202.17%2010.44%200.5%2011.09%20-0.78C12.25%200.06%2012.99%201.56%2012%203Z%22%20fill%3D%22%239CAF88%22%20stroke%3D%22%235C6447%22%20stroke-width%3D%220.55%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3C%2Fsvg%3E")}
+:root{--br:999px;--bri:50%;--pin:1px solid rgba(251,248,240,.5)}
+.b-outline{border-width:1px}
+/* ---------- buttons: shared anatomy ---------- */
+.b{--bh:color-mix(in srgb,var(--accent) 86%,var(--ink));--bp:color-mix(in srgb,var(--accent) 72%,var(--ink));font:14px/1 var(--bf);padding:10px 18px;border:1px solid transparent;border-radius:var(--br);display:inline-flex;gap:8px;align-items:center;cursor:pointer;transition:background .15s,box-shadow .15s,transform .08s;color:var(--ink);background:transparent;white-space:nowrap;letter-spacing:var(--bls,0);font-variant:var(--bfv,normal)}
+.b .orn{width:15px;height:15px;background:var(--orn) center/contain no-repeat;flex:none}
+.b svg{flex:none}
+.b-primary,.b-fab,.b-ok{background:var(--accent);color:var(--accentInk);outline:var(--pin,none);outline-offset:-4px}
+.b-primary:hover,.b-primary.s-hover,.b-fab:hover,.b-fab.s-hover,.b-ok:hover,.b-ok.s-hover{background:var(--bh)}
+.b-primary.s-press,.b-fab.s-press,.b-ok.s-press,.b-primary:active,.b-fab:active,.b-ok:active{background:var(--bp);transform:translateY(1px)}
+.b-secondary,.b-dd{background:var(--soft);border-color:var(--line)}
+.b-secondary:hover,.b-secondary.s-hover,.b-dd:hover,.b-dd.s-hover{background:color-mix(in srgb,var(--soft) 70%,var(--line))}
+.b-secondary.s-press,.b-dd.s-press,.b-secondary:active{background:var(--press);transform:translateY(1px)}
+.b-outline,.b-no{border-color:var(--accent);color:var(--accent)}
+.b-outline:hover,.b-outline.s-hover,.b-no:hover,.b-no.s-hover{background:var(--hover)}
+.b-outline.s-press,.b-no.s-press,.b-outline:active{background:var(--press);transform:translateY(1px)}
+.b-text{color:var(--accent);padding:10px 6px;border-radius:4px}
+.b-text:hover,.b-text.s-hover{background:var(--hover)}
+.b-text.s-press{background:var(--press)}
+.b-text.s-sel{text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px}
+.b-fab{width:48px;height:48px;border-radius:50%;padding:0;justify-content:center}
+.b-icon{width:34px;height:34px;padding:0;justify-content:center;border-radius:var(--bri);border-color:var(--line);background:var(--paper)}
+.b-icon:hover,.b-icon.s-hover{background:var(--hover)}
+.b-icon.s-press{background:var(--press)}
+.b-icon.s-sel{background:var(--soft);border-color:var(--accent)}
+.s-sel:not(.b-text):not(.b-icon){box-shadow:0 0 0 2px var(--paper),0 0 0 3.5px var(--accent2)}
+.b[disabled],.b.dis{opacity:.42;cursor:not-allowed;filter:saturate(.35);transform:none!important}
+.tg{width:46px;height:26px;border-radius:var(--tgr,13px);background:var(--line);position:relative;display:inline-block;cursor:pointer;transition:.2s;border:1px solid color-mix(in srgb,var(--line) 70%,var(--ink))}
+.tg i{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:var(--tgk,50%);background:var(--paper) var(--orn) center/12px no-repeat;transition:.2s}
+.tg.s-hover{background:color-mix(in srgb,var(--line) 75%,var(--ink))}
+.tg.s-press i{width:24px}
+.tg.s-sel{background:var(--accent);border-color:var(--accent)}.tg.s-sel i{left:22px}
+.tg.dis{opacity:.42;cursor:not-allowed}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--br);padding:3px;background:var(--soft);gap:2px}
+.seg span{padding:7px 12px;border-radius:var(--br);font:13px/1 var(--bf);color:var(--muted);cursor:pointer}
+.seg span.on{background:var(--paper);color:var(--ink);box-shadow:0 0 0 1px var(--line)}
+.seg.s-hover span:nth-child(2){background:var(--hover);color:var(--ink)}
+.seg.s-press span:nth-child(2){background:var(--press);color:var(--ink)}
+.seg.s-sel span:nth-child(2){background:var(--accent);color:var(--accentInk);box-shadow:none}
+.seg.dis{opacity:.42}
+.pair{display:inline-flex;gap:8px}
+
+/* ---------- theme-specific button identity ---------- */
+.t-botanical{--br:999px;--bri:50%;--pin:1px solid rgba(251,248,240,.5)}
+.t-botanical .b-outline{border-width:1px}
+.t-lavender{--br:12px;--bri:10px;--pin:1px dotted rgba(251,248,245,.75)}
+.t-lavender .b-secondary,.t-lavender .b-dd{border-style:dashed}
+.t-rose{--br:16px 4px 16px 4px;--bri:12px 3px 12px 3px;--pin:1px solid rgba(214,186,128,.85);--tgr:13px 4px 13px 4px;--tgk:10px 3px 10px 3px}
+.t-rose .b-outline,.t-rose .b-no{border:3px double var(--accent)}
+.t-library{--br:0;--bri:0;--pin:1px solid rgba(168,138,78,.9);--bls:.06em;--bfv:small-caps;--tgr:2px;--tgk:1px}
+.t-library .b-secondary,.t-library .b-dd{background:var(--paper);outline:1px solid var(--line);outline-offset:-4px}
+.t-library .b-fab{border-radius:50%}
+.t-moonlight{--br:999px;--bri:50%;--pin:none}
+.t-moonlight .b-primary,.t-moonlight .b-ok{box-shadow:inset 0 0 0 1px rgba(248,247,242,.35)}
+.t-moonlight .b-outline,.t-moonlight .b-no{border-color:var(--muted)}
+.t-midnight{--br:3px;--bri:3px;--pin:1px solid rgba(26,31,53,.45);--tgr:4px;--tgk:2px}
+.t-midnight .b-secondary,.t-midnight .b-dd{background:var(--panel);border-color:#56607F}
+.t-midnight .b-icon{background:var(--panel)}
+.t-midnight .b-primary:hover,.t-midnight .b-primary.s-hover,.t-midnight .b-ok.s-hover,.t-midnight .b-fab.s-hover{--bh:color-mix(in srgb,var(--accent) 85%,#fff)}
+

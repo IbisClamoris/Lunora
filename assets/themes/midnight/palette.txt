@@ -1,0 +1,8 @@
+Deep midnight blue	#1B2342
+Dark indigo	#2B2F5C
+Charcoal	#2C2E35
+Muted plum	#5E4762
+Dark forest green	#2F4C41
+Antique silver	#B9BEC9
+Muted antique gold	#C2A66B
+Parchment accents	#E6DCC4

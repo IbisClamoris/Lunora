@@ -1,0 +1,9 @@
+Dusty lavender	#A898C2
+Muted lilac	#C2B2D3
+Soft violet	#8C7BA6
+Pale mauve	#D9C7D3
+Warm cream	#F6EFE2
+Ivory	#FBF8F1
+Muted sage	#9DAA8E
+Antique silver	#A9A8B0
+Muted gold	#B9A06E

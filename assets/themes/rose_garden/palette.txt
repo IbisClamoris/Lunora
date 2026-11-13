@@ -1,0 +1,9 @@
+Dusty rose	#C4979A
+Antique pink	#D7AFAE
+Muted blush	#E7CCC6
+Pale peach	#F2D9C8
+Burgundy rose	#8A4E58
+Warm ivory	#FCF7F1
+Cream	#F6EDE1
+Muted olive	#8D8B62
+Antique gold	#B69A62
