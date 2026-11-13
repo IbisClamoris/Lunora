@@ -64,10 +64,16 @@ class NotificationItem {
       'scheduled_at': scheduledAt?.toIso8601String(),
       'read_at': readAt?.toIso8601String(),
       'metadata': jsonEncode(metadata),
+      'is_delivered': metadata['systemDeliveryStatus'] == 'delivered' ? 1 : 0,
     };
   }
 
   factory NotificationItem.fromMap(Map<String, Object?> map) {
+    final parsedMetadata = _parseMetadata(map['metadata']);
+    if ((map['is_delivered'] as int? ?? 0) == 1) {
+      parsedMetadata.putIfAbsent('systemDeliveryStatus', () => 'delivered');
+    }
+
     return NotificationItem(
       id: map['id'] as String,
       category: NotificationCategory.values.firstWhere(
@@ -87,7 +93,7 @@ class NotificationItem {
       createdAt: _parseDate(map['created_at']) ?? DateTime.now(),
       scheduledAt: _parseDate(map['scheduled_at']),
       readAt: _parseDate(map['read_at']),
-      metadata: _parseMetadata(map['metadata']),
+      metadata: parsedMetadata,
     );
   }
 

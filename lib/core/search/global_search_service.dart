@@ -12,7 +12,6 @@ class GlobalSearchService {
   static const Map<String, LunoraSection> _sectionMap = {
     'tasks': LunoraSection.calendar,
     'notifications': LunoraSection.notifications,
-    'shopping_lists': LunoraSection.shoppingList,
     'shopping_items': LunoraSection.shoppingList,
     'planner_goals': LunoraSection.planner,
     'study_subjects': LunoraSection.studyPlanner,
@@ -30,8 +29,14 @@ class GlobalSearchService {
     'recipe_entries': LunoraSection.recipes,
     'recipe_ingredients': LunoraSection.recipes,
     'recipe_steps': LunoraSection.recipes,
-    'meal_plan_entries': LunoraSection.recipes,
-    'wishlist_items': LunoraSection.wishlist,
+  };
+
+  // Retained only as legacy storage after migration 25. Their current
+  // equivalents are indexed below; searching both would show stale duplicates.
+  static const Set<String> _legacyTables = {
+    'shopping_lists',
+    'wishlist_items',
+    'meal_plan_entries',
   };
 
   static const Set<String> _ignoredTables = {
@@ -85,6 +90,7 @@ class GlobalSearchService {
     for (final tableRow in tables) {
       final tableName = tableRow['name'] as String;
       if (_ignoredTables.contains(tableName) ||
+          _legacyTables.contains(tableName) ||
           tableName.startsWith('sqlite_') ||
           tableName.endsWith('_new')) {
         continue;

@@ -82,6 +82,9 @@ class DatabaseMigrations {
         case 24:
           await _migration24(db);
           break;
+        case 25:
+          await _migration25(db);
+          break;
       }
     }
   }
@@ -433,15 +436,23 @@ class DatabaseMigrations {
       )
     ''');
 
-    await db.execute('''
-      CREATE INDEX IF NOT EXISTS idx_notifications_scheduled
-      ON notifications(scheduled_at)
-    ''');
+    // Existing notification tables may predate scheduled_at or is_read.
+    // CREATE TABLE IF NOT EXISTS does not add missing columns, so only create
+    // indexes for columns that are actually present in the legacy schema.
+    final notificationColumns = await _tableColumns(db, 'notifications');
+    if (notificationColumns.contains('scheduled_at')) {
+      await db.execute('''
+        CREATE INDEX IF NOT EXISTS idx_notifications_scheduled
+        ON notifications(scheduled_at)
+      ''');
+    }
 
-    await db.execute('''
-      CREATE INDEX IF NOT EXISTS idx_notifications_read
-      ON notifications(is_read)
-    ''');
+    if (notificationColumns.contains('is_read')) {
+      await db.execute('''
+        CREATE INDEX IF NOT EXISTS idx_notifications_read
+        ON notifications(is_read)
+      ''');
+    }
   }
 
   // ============================================================
@@ -874,4 +885,458 @@ class DatabaseMigrations {
       ON tasks(status)
     ''');
   }
+
+  // Migration 25 restores tables required by current feature repositories.
+  static Future<Set<String>> _tableColumns(Database db, String table) async {
+    final rows = await db.rawQuery('PRAGMA table_info("$table")');
+    return rows.map((row) => row['name'] as String).toSet();
+  }
+
+  static Future<void> _ensureColumn(
+    Database db, String table, String column, String definition,
+  ) async {
+    if (!(await _tableColumns(db, table)).contains(column)) {
+      await db.execute('ALTER TABLE "$table" ADD COLUMN "$column" $definition');
+    }
+  }
+
+  static Future<void> _migration25(Database db) async {
+    // Some legacy databases contain shopping_items but are missing its
+    // parent table. Check the main schema explicitly before rebuilding the
+    // child table: CREATE TABLE IF NOT EXISTS also silently accepts a view
+    // with the same name, which would still leave the FK target unusable.
+    final shoppingListObjects = await db.rawQuery(
+      "SELECT type FROM sqlite_master WHERE name = 'shopping_lists' LIMIT 1",
+    );
+    if (shoppingListObjects.isEmpty) {
+      await db.execute('''
+        CREATE TABLE shopping_lists (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL DEFAULT '',
+          created_at TEXT NOT NULL DEFAULT '',
+          updated_at TEXT NOT NULL DEFAULT ''
+        )
+      ''');
+    } else if (shoppingListObjects.single['type'] != 'table') {
+      throw StateError(
+        'Cannot migrate shopping_items: main.shopping_lists exists as '
+        '${shoppingListObjects.single['type']}, not as a table.',
+      );
+    }
+
+    final shoppingListColumns = await _tableColumns(db, 'shopping_lists');
+    if (!shoppingListColumns.contains('id')) {
+      throw StateError(
+        'Cannot migrate shopping_items: main.shopping_lists has no id column.',
+      );
+    }
+    // Legacy shopping_items had a required "name" column. Rebuild it to
+    // match ShoppingItem and preserve rows/values from the old schema.
+    final shopping = await _tableColumns(db, 'shopping_items');
+    if (shopping.isNotEmpty) {
+      final titleExpr = shopping.contains('title') ? 'title' : 'name';
+      final quantityExpr = shopping.contains('quantity') ? 'quantity' :
+          (shopping.contains('amount') ? 'amount' : 'NULL');
+      final notesExpr = shopping.contains('notes') ? 'notes' :
+          (shopping.contains('note') ? 'note' : 'NULL');
+      final unitExpr = shopping.contains('unit') ? 'unit' : 'NULL';
+      final categoryExpr = shopping.contains('category') ? 'category' : 'NULL';
+      final purchasedExpr = shopping.contains('is_purchased') ? 'is_purchased' : '0';
+      final createdExpr = shopping.contains('created_at') ? 'created_at' : "datetime('now')";
+      final updatedExpr = shopping.contains('updated_at') ? 'updated_at' : "datetime('now')";
+      final idExpr = shopping.contains('id') ? 'id' : "lower(hex(randomblob(16)))";
+      final listIdExpr = shopping.contains('list_id') ? 'list_id' : 'NULL';
+      final purchasedAtExpr = shopping.contains('purchased_at') ? 'purchased_at' : 'NULL';
+      final sourceModuleExpr = shopping.contains('source_module') ? 'source_module' : 'NULL';
+      final sourceIdExpr = shopping.contains('source_record_id') ? 'source_record_id' : 'NULL';
+      final sortExpr = shopping.contains('sort_order') ? 'sort_order' : '0';
+      await db.execute('''
+        CREATE TABLE shopping_items_v25 (
+          id TEXT PRIMARY KEY, list_id TEXT, title TEXT NOT NULL, category TEXT,
+          quantity REAL, unit TEXT, notes TEXT,
+          is_purchased INTEGER NOT NULL DEFAULT 0, purchased_at TEXT,
+          source_module TEXT, source_record_id TEXT,
+          sort_order INTEGER NOT NULL DEFAULT 0,
+          created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+          FOREIGN KEY(list_id) REFERENCES shopping_lists(id) ON DELETE CASCADE
+        )
+      ''');
+      await db.execute('''
+        INSERT OR REPLACE INTO shopping_items_v25
+        SELECT $idExpr, $listIdExpr, COALESCE($titleExpr, ''), $categoryExpr,
+          $quantityExpr, $unitExpr, $notesExpr, $purchasedExpr,
+          $purchasedAtExpr, $sourceModuleExpr, $sourceIdExpr, $sortExpr,
+          $createdExpr, $updatedExpr FROM shopping_items
+      ''');
+      await db.execute('DROP TABLE shopping_items');
+      await db.execute('ALTER TABLE shopping_items_v25 RENAME TO shopping_items');
+    } else {
+      await db.execute('''
+        CREATE TABLE shopping_items (
+          id TEXT PRIMARY KEY, list_id TEXT, title TEXT NOT NULL, category TEXT,
+          quantity REAL, unit TEXT, notes TEXT,
+          is_purchased INTEGER NOT NULL DEFAULT 0, purchased_at TEXT,
+          source_module TEXT, source_record_id TEXT,
+          sort_order INTEGER NOT NULL DEFAULT 0,
+          created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+          FOREIGN KEY(list_id) REFERENCES shopping_lists(id) ON DELETE CASCADE
+        )
+      ''');
+    }
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_shopping_items_order ON shopping_items(is_purchased,sort_order,created_at)');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS wishlist_entries (
+        id TEXT PRIMARY KEY, title TEXT NOT NULL,
+        description TEXT NOT NULL DEFAULT '', image_path TEXT,
+        category TEXT NOT NULL DEFAULT 'Без категории',
+        tags TEXT NOT NULL DEFAULT '[]', price REAL,
+        currency TEXT NOT NULL DEFAULT '', source_url TEXT,
+        priority TEXT NOT NULL DEFAULT 'normal', desired_date TEXT,
+        legacy_status TEXT NOT NULL DEFAULT '',
+        is_purchased INTEGER NOT NULL DEFAULT 0, is_favorite INTEGER NOT NULL DEFAULT 0,
+        purchased_at TEXT, notes TEXT NOT NULL DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    final oldWishlist = await _tableColumns(db, 'wishlist_items');
+    if (oldWishlist.isNotEmpty) {
+      final sourceUrl = oldWishlist.contains('source_url') ? 'source_url' :
+          (oldWishlist.contains('url') ? 'url' : 'NULL');
+      final image = oldWishlist.contains('image_path') ? 'image_path' : 'NULL';
+      final tags = oldWishlist.contains('tags') ? 'tags' : "'[]'";
+      final purchased = oldWishlist.contains('is_purchased')
+          ? 'is_purchased'
+          : (oldWishlist.contains('status')
+              ? "CASE WHEN status IN ('purchased','bought','completed') THEN 1 ELSE 0 END"
+              : '0');
+      final legacyStatus = oldWishlist.contains('status') ? 'COALESCE(status,\'\')' : "''";
+      final purchasedAt = oldWishlist.contains('purchased_at') ? 'purchased_at' : 'NULL';
+      final favorite = oldWishlist.contains('is_favorite') ? 'is_favorite' : '0';
+      final notes = oldWishlist.contains('notes') ? 'notes' : "''";
+      final sortOrder = oldWishlist.contains('sort_order') ? 'sort_order' : '0';
+      await db.execute('''
+        INSERT OR IGNORE INTO wishlist_entries
+        (id,title,description,image_path,category,tags,price,currency,source_url,
+         priority,legacy_status,is_purchased,is_favorite,purchased_at,notes,sort_order,created_at,updated_at)
+        SELECT id,title,COALESCE(description,''),$image,
+         COALESCE(category,'Без категории'),COALESCE($tags,'[]'),price,
+         COALESCE(currency,''),$sourceUrl,COALESCE(priority,'normal'),
+         $legacyStatus,$purchased,$favorite,$purchasedAt,COALESCE($notes,''),$sortOrder,
+         created_at,updated_at FROM wishlist_items
+      ''');
+    }
+
+    // Rebuild notifications because the v20 table has a NOT NULL
+    // updated_at column that the current NotificationItem model no longer writes.
+    final legacyNotificationColumns = await _tableColumns(db, 'notifications');
+    if (legacyNotificationColumns.isNotEmpty) {
+      String notificationExpr(String current, {String? legacy, String fallback = 'NULL'}) {
+        if (legacyNotificationColumns.contains(current)) return current;
+        if (legacy != null && legacyNotificationColumns.contains(legacy)) return legacy;
+        return fallback;
+      }
+      final notificationTitle = notificationExpr('title', fallback: "''");
+      final notificationCreated = notificationExpr('created_at', fallback: "datetime('now')");
+      final notificationType = notificationExpr('type', fallback: "'info'");
+      final notificationMessage = notificationExpr('message', legacy: 'body', fallback: "''");
+      final notificationReadAt = notificationExpr('read_at');
+      final notificationScheduled = notificationExpr('scheduled_at');
+      final notificationCategory = notificationExpr('category', fallback: "'other'");
+      final notificationEventType = notificationExpr('event_type', fallback: "'unknown'");
+      final notificationEventKey = notificationExpr('event_key');
+      final notificationSourceModule = notificationExpr('source_module');
+      final notificationSourceId = notificationExpr('source_record_id', legacy: 'related_id');
+      final notificationMetadata = notificationExpr('metadata', fallback: "'{}'");
+      final notificationId = notificationExpr('id', fallback: "lower(hex(randomblob(16)))");
+      var readAtExpression = notificationReadAt;
+      if (legacyNotificationColumns.contains('is_read')) {
+        // Some intermediate/hand-migrated legacy databases have is_read but
+        // no updated_at. Only reference columns that actually exist.
+        final readTimestamp = legacyNotificationColumns.contains('updated_at')
+            ? 'updated_at'
+            : notificationCreated;
+        final legacyReadAt =
+            "CASE WHEN is_read=1 THEN COALESCE($readTimestamp,$notificationCreated) END";
+        readAtExpression = notificationReadAt == 'NULL'
+            ? legacyReadAt
+            : "COALESCE($notificationReadAt,$legacyReadAt)";
+      }
+      await db.execute('''
+        CREATE TABLE notifications_v25 (
+          id TEXT PRIMARY KEY,
+          category TEXT NOT NULL DEFAULT 'other',
+          type TEXT NOT NULL DEFAULT 'info',
+          event_type TEXT NOT NULL DEFAULT 'unknown',
+          event_key TEXT,
+          title TEXT NOT NULL DEFAULT '',
+          message TEXT NOT NULL DEFAULT '',
+          source_module TEXT,
+          source_record_id TEXT,
+          created_at TEXT NOT NULL DEFAULT '',
+          scheduled_at TEXT,
+          read_at TEXT,
+          metadata TEXT NOT NULL DEFAULT '{}',
+          is_delivered INTEGER NOT NULL DEFAULT 0
+        )
+      ''');
+      await db.execute('''
+        INSERT INTO notifications_v25
+        (id,category,type,event_type,event_key,title,message,source_module,
+         source_record_id,created_at,scheduled_at,read_at,metadata,is_delivered)
+        SELECT $notificationId,$notificationCategory,$notificationType,
+          $notificationEventType,$notificationEventKey,$notificationTitle,
+          $notificationMessage,$notificationSourceModule,$notificationSourceId,
+          COALESCE($notificationCreated,''),$notificationScheduled,
+          $readAtExpression,$notificationMetadata,
+          ${legacyNotificationColumns.contains('is_delivered') ? 'COALESCE(is_delivered,0)' : '0'}
+        FROM notifications
+      ''');
+      await db.execute('DROP TABLE notifications');
+      await db.execute('ALTER TABLE notifications_v25 RENAME TO notifications');
+    } else {
+      await db.execute('''
+        CREATE TABLE notifications (
+          id TEXT PRIMARY KEY, category TEXT NOT NULL DEFAULT 'other',
+          type TEXT NOT NULL DEFAULT 'info', event_type TEXT NOT NULL DEFAULT 'unknown',
+          event_key TEXT, title TEXT NOT NULL DEFAULT '', message TEXT NOT NULL DEFAULT '',
+          source_module TEXT, source_record_id TEXT, created_at TEXT NOT NULL DEFAULT '',
+          scheduled_at TEXT, read_at TEXT, metadata TEXT NOT NULL DEFAULT '{}',
+          is_delivered INTEGER NOT NULL DEFAULT 0
+        )
+      ''');
+    }
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_notifications_read_at ON notifications(read_at)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_notifications_created_at ON notifications(created_at DESC)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_notifications_event_key ON notifications(event_key)');
+
+    // book_entries v21 used author/genres; the current BookEntry model
+    // writes authors/genre. Add current columns and preserve legacy values.
+    await _ensureColumn(db, 'book_entries', 'authors', "TEXT NOT NULL DEFAULT ''");
+    await _ensureColumn(db, 'book_entries', 'genre', "TEXT NOT NULL DEFAULT ''");
+    final bookColumns = await _tableColumns(db, 'book_entries');
+    if (bookColumns.contains('author')) {
+      await db.execute("UPDATE book_entries SET authors=CASE WHEN authors='' THEN COALESCE(author,'') ELSE authors END");
+    }
+    if (bookColumns.contains('genres')) {
+      await db.execute("UPDATE book_entries SET genre=CASE WHEN genre='' THEN COALESCE(genres,'') ELSE genre END");
+    }
+
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_notifications_read_at ON notifications(read_at)');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS study_subjects (
+        id TEXT PRIMARY KEY, name TEXT NOT NULL,
+        teacher TEXT NOT NULL DEFAULT '', description TEXT NOT NULL DEFAULT '',
+        academic_year TEXT NOT NULL DEFAULT '', semester INTEGER NOT NULL DEFAULT 1,
+        sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS study_periods (
+        id TEXT PRIMARY KEY, title TEXT NOT NULL,
+        period_type TEXT NOT NULL DEFAULT 'other', academic_year TEXT NOT NULL DEFAULT '',
+        semester INTEGER NOT NULL DEFAULT 1, starts_at TEXT, ends_at TEXT,
+        description TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS study_items (
+        id TEXT PRIMARY KEY, subject_id TEXT, period_id TEXT, title TEXT NOT NULL,
+        description TEXT NOT NULL DEFAULT '', item_type TEXT NOT NULL DEFAULT 'other',
+        format TEXT NOT NULL DEFAULT 'none', status TEXT NOT NULL DEFAULT 'planned',
+        scheduled_at TEXT, due_at TEXT, grade TEXT NOT NULL DEFAULT '',
+        notes TEXT NOT NULL DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+        FOREIGN KEY(subject_id) REFERENCES study_subjects(id) ON DELETE SET NULL,
+        FOREIGN KEY(period_id) REFERENCES study_periods(id) ON DELETE SET NULL
+      )
+    ''');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_study_items_schedule ON study_items(scheduled_at,due_at,sort_order)');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS knowledge_entries (
+        id TEXT PRIMARY KEY, title TEXT NOT NULL, content TEXT NOT NULL DEFAULT '',
+        category TEXT NOT NULL DEFAULT 'Другое', tags TEXT NOT NULL DEFAULT '[]',
+        source_url TEXT, sort_order INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_knowledge_entries_order ON knowledge_entries(sort_order,updated_at)');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_accounts (
+        id TEXT PRIMARY KEY, name TEXT NOT NULL, account_type TEXT NOT NULL DEFAULT 'other',
+        currency TEXT NOT NULL DEFAULT 'RUB', opening_balance_minor INTEGER NOT NULL DEFAULT 0,
+        is_active INTEGER NOT NULL DEFAULT 1, sort_order INTEGER NOT NULL DEFAULT 0,
+        notes TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_categories (
+        id TEXT PRIMARY KEY, name TEXT NOT NULL, category_type TEXT NOT NULL DEFAULT 'expense',
+        parent_id TEXT, is_active INTEGER NOT NULL DEFAULT 1, sort_order INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+        FOREIGN KEY(parent_id) REFERENCES finance_categories(id) ON DELETE SET NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_transactions (
+        id TEXT PRIMARY KEY, title TEXT NOT NULL, transaction_type TEXT NOT NULL DEFAULT 'expense',
+        amount_minor INTEGER NOT NULL DEFAULT 0, account_id TEXT NOT NULL,
+        destination_account_id TEXT, category_id TEXT, debt_id TEXT,
+        transaction_date TEXT NOT NULL, description TEXT NOT NULL DEFAULT '',
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+        FOREIGN KEY(account_id) REFERENCES finance_accounts(id) ON DELETE CASCADE,
+        FOREIGN KEY(destination_account_id) REFERENCES finance_accounts(id) ON DELETE SET NULL,
+        FOREIGN KEY(category_id) REFERENCES finance_categories(id) ON DELETE SET NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_debts (
+        id TEXT PRIMARY KEY, name TEXT NOT NULL, debt_type TEXT NOT NULL DEFAULT 'loan',
+        creditor TEXT NOT NULL DEFAULT '', initial_amount_minor INTEGER NOT NULL DEFAULT 0,
+        current_balance_minor INTEGER NOT NULL DEFAULT 0, interest_rate REAL NOT NULL DEFAULT 0,
+        monthly_payment_minor INTEGER NOT NULL DEFAULT 0, payment_day INTEGER,
+        next_payment_date TEXT, start_date TEXT, end_date TEXT,
+        status TEXT NOT NULL DEFAULT 'active', notes TEXT NOT NULL DEFAULT '',
+        sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_debt_payments (
+        id TEXT PRIMARY KEY, debt_id TEXT NOT NULL, transaction_id TEXT NOT NULL,
+        amount_minor INTEGER NOT NULL DEFAULT 0, principal_minor INTEGER NOT NULL DEFAULT 0,
+        interest_minor INTEGER NOT NULL DEFAULT 0, paid_at TEXT NOT NULL,
+        notes TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL,
+        FOREIGN KEY(debt_id) REFERENCES finance_debts(id) ON DELETE CASCADE,
+        FOREIGN KEY(transaction_id) REFERENCES finance_transactions(id) ON DELETE CASCADE
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_budgets (
+        id TEXT PRIMARY KEY, category_id TEXT NOT NULL, year INTEGER NOT NULL,
+        month INTEGER NOT NULL, limit_minor INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+        FOREIGN KEY(category_id) REFERENCES finance_categories(id) ON DELETE CASCADE
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_savings_goals (
+        id TEXT PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL DEFAULT '',
+        target_amount_minor INTEGER NOT NULL DEFAULT 0,
+        saved_amount_minor INTEGER NOT NULL DEFAULT 0, currency TEXT NOT NULL DEFAULT 'RUB',
+        target_date TEXT, status TEXT NOT NULL DEFAULT 'active',
+        sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    // Version 17 stored savings goal amounts in major currency units.
+    // Current finance models store minor units (Excel import multiplies by 100).
+    // Convert legacy values exactly once when the v25 fields are still zero.
+    await _ensureColumn(db, 'finance_savings_goals', 'description', "TEXT NOT NULL DEFAULT ''");
+    await _ensureColumn(db, 'finance_savings_goals', 'target_amount_minor', 'INTEGER NOT NULL DEFAULT 0');
+    await _ensureColumn(db, 'finance_savings_goals', 'saved_amount_minor', 'INTEGER NOT NULL DEFAULT 0');
+    await _ensureColumn(db, 'finance_savings_goals', 'currency', "TEXT NOT NULL DEFAULT 'RUB'");
+    await _ensureColumn(db, 'finance_savings_goals', 'target_date', 'TEXT');
+    await _ensureColumn(db, 'finance_savings_goals', 'status', "TEXT NOT NULL DEFAULT 'active'");
+    await _ensureColumn(db, 'finance_savings_goals', 'sort_order', 'INTEGER NOT NULL DEFAULT 0');
+    final savingsColumns = await _tableColumns(db, 'finance_savings_goals');
+    if (savingsColumns.contains('target_amount')) {
+      await db.execute('UPDATE finance_savings_goals SET target_amount_minor=CASE WHEN target_amount_minor=0 THEN target_amount * 100 ELSE target_amount_minor END');
+    }
+    if (savingsColumns.contains('current_amount')) {
+      await db.execute('UPDATE finance_savings_goals SET saved_amount_minor=CASE WHEN saved_amount_minor=0 THEN current_amount * 100 ELSE saved_amount_minor END');
+    }
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_transactions_date ON finance_transactions(transaction_date DESC)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_transactions_account ON finance_transactions(account_id)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_budgets_period ON finance_budgets(year,month,category_id)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_debt_payments_debt ON finance_debt_payments(debt_id,paid_at DESC)');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS recipe_meal_plan_entries (
+        id TEXT PRIMARY KEY, recipe_id TEXT NOT NULL, plan_date TEXT NOT NULL,
+        meal_type TEXT NOT NULL DEFAULT 'Ужин', servings INTEGER NOT NULL DEFAULT 2,
+        cooking_days INTEGER NOT NULL DEFAULT 1, duration_minutes INTEGER,
+        status TEXT NOT NULL DEFAULT 'Запланировано', notes TEXT NOT NULL DEFAULT '',
+        sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+        FOREIGN KEY(recipe_id) REFERENCES recipe_entries(id) ON DELETE CASCADE
+      )
+    ''');
+    final oldMealPlan = await _tableColumns(db, 'meal_plan_entries');
+    if (oldMealPlan.isNotEmpty) {
+      final dateColumn = oldMealPlan.contains('plan_date') ? 'plan_date' : 'date';
+      final mealNotes = oldMealPlan.contains('notes')
+          ? 'notes'
+          : (oldMealPlan.contains('note') ? 'note' : "''");
+      final cookingDays = oldMealPlan.contains('cooking_days') ? 'cooking_days' : '1';
+      final durationMinutes = oldMealPlan.contains('duration_minutes')
+          ? 'duration_minutes'
+          : 'NULL';
+      final mealStatus = oldMealPlan.contains('status')
+          ? 'status'
+          : "'Запланировано'";
+      final mealSortOrder = oldMealPlan.contains('sort_order') ? 'sort_order' : '0';
+      final mealCreatedAt = oldMealPlan.contains('created_at')
+          ? 'created_at'
+          : "datetime('now')";
+      final mealUpdatedAt = oldMealPlan.contains('updated_at')
+          ? 'updated_at'
+          : mealCreatedAt;
+      await db.execute('''
+        INSERT OR IGNORE INTO recipe_meal_plan_entries
+        (id,recipe_id,plan_date,meal_type,servings,cooking_days,duration_minutes,
+         status,notes,sort_order,created_at,updated_at)
+        SELECT id,recipe_id,$dateColumn,COALESCE(meal_type,'Ужин'),
+          COALESCE(servings,2),COALESCE($cookingDays,1),$durationMinutes,
+          COALESCE($mealStatus,'Запланировано'),COALESCE($mealNotes,''),
+          COALESCE($mealSortOrder,0),COALESCE($mealCreatedAt,datetime('now')),
+          COALESCE($mealUpdatedAt,datetime('now'))
+        FROM meal_plan_entries WHERE recipe_id IS NOT NULL
+      ''');
+    }
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_recipe_meal_plan_date ON recipe_meal_plan_entries(plan_date,sort_order)');
+    await _ensureColumn(db, 'recipe_entries', 'cuisine', 'TEXT');
+    await _ensureColumn(db, 'recipe_entries', 'difficulty', "TEXT NOT NULL DEFAULT ''");
+    await _ensureColumn(db, 'recipe_entries', 'is_cook_ahead', 'INTEGER NOT NULL DEFAULT 0');
+    // Recipe ingredients were originally stored as amount/note; current
+    // RecipeIngredient writes quantity/notes. Keep legacy columns and copy.
+    await _ensureColumn(db, 'recipe_ingredients', 'quantity', 'REAL');
+    await _ensureColumn(db, 'recipe_ingredients', 'notes', "TEXT NOT NULL DEFAULT ''");
+    // Current RecipeIngredient.toMap also writes timestamps, absent in v14.
+    await _ensureColumn(db, 'recipe_ingredients', 'created_at', "TEXT NOT NULL DEFAULT ''");
+    await _ensureColumn(db, 'recipe_ingredients', 'updated_at', "TEXT NOT NULL DEFAULT ''");
+    final ingredientColumns = await _tableColumns(db, 'recipe_ingredients');
+    if (ingredientColumns.contains('amount')) {
+      await db.execute('UPDATE recipe_ingredients SET quantity=COALESCE(quantity,amount)');
+    }
+    if (ingredientColumns.contains('note')) {
+      await db.execute("UPDATE recipe_ingredients SET notes=CASE WHEN notes='' THEN COALESCE(note,'') ELSE notes END");
+    }
+    // Rows created before v25 did not have ingredient timestamps. Empty
+    // defaults would make RecipeIngredient.fromMap fail when parsing dates.
+    await db.execute('''
+      UPDATE recipe_ingredients
+      SET created_at = CASE
+            WHEN created_at IS NULL OR created_at = ''
+            THEN COALESCE(
+              (SELECT created_at FROM recipe_entries
+               WHERE recipe_entries.id = recipe_ingredients.recipe_id),
+              datetime('now')
+            )
+            ELSE created_at
+          END,
+          updated_at = CASE
+            WHEN updated_at IS NULL OR updated_at = ''
+            THEN COALESCE(
+              (SELECT updated_at FROM recipe_entries
+               WHERE recipe_entries.id = recipe_ingredients.recipe_id),
+              datetime('now')
+            )
+            ELSE updated_at
+          END
+      WHERE created_at IS NULL OR created_at = ''
+         OR updated_at IS NULL OR updated_at = ''
+    ''');
+  }
+
 }
