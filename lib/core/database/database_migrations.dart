@@ -1283,6 +1283,31 @@ class DatabaseMigrations {
     if (ingredientColumns.contains('note')) {
       await db.execute("UPDATE recipe_ingredients SET notes=CASE WHEN notes='' THEN COALESCE(note,'') ELSE notes END");
     }
+    // Rows created before v25 did not have ingredient timestamps. Empty
+    // defaults would make RecipeIngredient.fromMap fail when parsing dates.
+    await db.execute('''
+      UPDATE recipe_ingredients
+      SET created_at = CASE
+            WHEN created_at IS NULL OR created_at = ''
+            THEN COALESCE(
+              (SELECT created_at FROM recipe_entries
+               WHERE recipe_entries.id = recipe_ingredients.recipe_id),
+              datetime('now')
+            )
+            ELSE created_at
+          END,
+          updated_at = CASE
+            WHEN updated_at IS NULL OR updated_at = ''
+            THEN COALESCE(
+              (SELECT updated_at FROM recipe_entries
+               WHERE recipe_entries.id = recipe_ingredients.recipe_id),
+              datetime('now')
+            )
+            ELSE updated_at
+          END
+      WHERE created_at IS NULL OR created_at = ''
+         OR updated_at IS NULL OR updated_at = ''
+    ''');
   }
 
 }
