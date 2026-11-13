@@ -902,16 +902,34 @@ class DatabaseMigrations {
 
   static Future<void> _migration25(Database db) async {
     // Some legacy databases contain shopping_items but are missing its
-    // parent table. Create the parent first because the v25 rebuild adds a
-    // foreign key to shopping_lists. Existing lists and items are preserved.
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS shopping_lists (
-        id TEXT PRIMARY KEY,
-        title TEXT NOT NULL DEFAULT '',
-        created_at TEXT NOT NULL DEFAULT '',
-        updated_at TEXT NOT NULL DEFAULT ''
-      )
-    ''');
+    // parent table. Check the main schema explicitly before rebuilding the
+    // child table: CREATE TABLE IF NOT EXISTS also silently accepts a view
+    // with the same name, which would still leave the FK target unusable.
+    final shoppingListObjects = await db.rawQuery(
+      "SELECT type FROM sqlite_master WHERE name = 'shopping_lists' LIMIT 1",
+    );
+    if (shoppingListObjects.isEmpty) {
+      await db.execute('''
+        CREATE TABLE shopping_lists (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL DEFAULT '',
+          created_at TEXT NOT NULL DEFAULT '',
+          updated_at TEXT NOT NULL DEFAULT ''
+        )
+      ''');
+    } else if (shoppingListObjects.single['type'] != 'table') {
+      throw StateError(
+        'Cannot migrate shopping_items: main.shopping_lists exists as '
+        '${shoppingListObjects.single['type']}, not as a table.',
+      );
+    }
+
+    final shoppingListColumns = await _tableColumns(db, 'shopping_lists');
+    if (!shoppingListColumns.contains('id')) {
+      throw StateError(
+        'Cannot migrate shopping_items: main.shopping_lists has no id column.',
+      );
+    }
     // Legacy shopping_items had a required "name" column. Rebuild it to
     // match ShoppingItem and preserve rows/values from the old schema.
     final shopping = await _tableColumns(db, 'shopping_items');
