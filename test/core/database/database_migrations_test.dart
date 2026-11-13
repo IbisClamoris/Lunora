@@ -196,6 +196,96 @@ void main() {
       expect(ingredient['notes'], 'Large');
     });
 
+    test('new feature tables accept current model-shaped records', () async {
+      db = await openTestDatabase();
+      await DatabaseMigrations.migrate(db, 1, 25);
+
+      const now = '2026-11-13T12:00:00.000';
+      await db.insert('study_subjects', {
+        'id': 'subject-1', 'name': 'Math', 'teacher': '',
+        'description': '', 'academic_year': '2026/2027',
+        'semester': 1, 'sort_order': 0, 'created_at': now, 'updated_at': now,
+      });
+      await db.insert('study_periods', {
+        'id': 'period-1', 'title': 'Autumn', 'period_type': 'semester',
+        'academic_year': '2026/2027', 'semester': 1, 'starts_at': null,
+        'ends_at': null, 'description': '', 'created_at': now, 'updated_at': now,
+      });
+      await db.insert('study_items', {
+        'id': 'study-1', 'subject_id': 'subject-1', 'period_id': 'period-1',
+        'title': 'Exam', 'description': '', 'item_type': 'exam',
+        'format': 'offline', 'status': 'planned', 'scheduled_at': null,
+        'due_at': null, 'grade': '', 'notes': '', 'sort_order': 0,
+        'created_at': now, 'updated_at': now,
+      });
+      await db.insert('knowledge_entries', {
+        'id': 'knowledge-1', 'title': 'Formula', 'content': 'E=mc²',
+        'category': 'Конспекты', 'tags': '[]', 'source_url': null,
+        'sort_order': 0, 'created_at': now, 'updated_at': now,
+      });
+      await db.insert('finance_accounts', {
+        'id': 'account-1', 'name': 'Cash', 'account_type': 'cash',
+        'currency': 'EUR', 'opening_balance_minor': 10000,
+        'is_active': 1, 'sort_order': 0, 'notes': '',
+        'created_at': now, 'updated_at': now,
+      });
+      await db.insert('finance_categories', {
+        'id': 'category-1', 'name': 'Food', 'category_type': 'expense',
+        'parent_id': null, 'is_active': 1, 'sort_order': 0,
+        'created_at': now, 'updated_at': now,
+      });
+      await db.insert('finance_transactions', {
+        'id': 'transaction-1', 'title': 'Groceries',
+        'transaction_type': 'expense', 'amount_minor': 2500,
+        'account_id': 'account-1', 'destination_account_id': null,
+        'category_id': 'category-1', 'debt_id': null,
+        'transaction_date': now, 'description': '',
+        'created_at': now, 'updated_at': now,
+      });
+      await db.insert('finance_debts', {
+        'id': 'debt-1', 'name': 'Loan', 'debt_type': 'loan',
+        'creditor': '', 'initial_amount_minor': 100000,
+        'current_balance_minor': 90000, 'interest_rate': 0,
+        'monthly_payment_minor': 5000, 'payment_day': null,
+        'next_payment_date': null, 'start_date': null, 'end_date': null,
+        'status': 'active', 'notes': '', 'sort_order': 0,
+        'created_at': now, 'updated_at': now,
+      });
+      await db.insert('finance_debt_payments', {
+        'id': 'payment-1', 'debt_id': 'debt-1',
+        'transaction_id': 'transaction-1', 'amount_minor': 5000,
+        'principal_minor': 5000, 'interest_minor': 0,
+        'paid_at': now, 'notes': '', 'created_at': now,
+      });
+      await db.insert('finance_budgets', {
+        'id': 'budget-1', 'category_id': 'category-1',
+        'year': 2026, 'month': 11, 'limit_minor': 30000,
+        'created_at': now, 'updated_at': now,
+      });
+      await db.insert('finance_savings_goals', {
+        'id': 'saving-1', 'title': 'Travel', 'target_amount_minor': 50000,
+        'saved_amount_minor': 12000, 'currency': 'EUR', 'target_date': null,
+        'status': 'active', 'sort_order': 0,
+        'created_at': now, 'updated_at': now,
+      });
+      await db.insert('recipe_entries', {
+        'id': 'recipe-2', 'title': 'Pasta',
+        'created_at': now, 'updated_at': now,
+      });
+      await db.insert('recipe_meal_plan_entries', {
+        'id': 'meal-2', 'recipe_id': 'recipe-2', 'plan_date': '2026-11-14',
+        'meal_type': 'Обед', 'servings': 2, 'cooking_days': 1,
+        'duration_minutes': null, 'status': 'Запланировано', 'notes': '',
+        'sort_order': 0, 'created_at': now, 'updated_at': now,
+      });
+
+      expect((await db.query('study_items')).single['title'], 'Exam');
+      expect((await db.query('knowledge_entries')).single['content'], 'E=mc²');
+      expect((await db.query('finance_transactions')).single['amount_minor'], 2500);
+      expect((await db.query('finance_debt_payments')).single['principal_minor'], 5000);
+      expect((await db.query('recipe_meal_plan_entries')).single['plan_date'], '2026-11-14');
+    });
+
     test('is safe to run after the database is already at v25', () async {
       db = await openTestDatabase();
       await DatabaseMigrations.migrate(db, 1, 25);
