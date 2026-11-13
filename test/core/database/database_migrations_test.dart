@@ -237,7 +237,6 @@ void main() {
       expect(goal['target_amount_minor'], 5000000);
       expect(goal['saved_amount_minor'], 1200000);
       expect(goal['description'], 'Emergency fund details');
-      final wishlist = (await db.query('wishlist_entries')).single;
       expect(wishlist['legacy_status'], 'cancelled');
       expect(wishlist['is_purchased'], 0);
       final ingredient = (await db.query('recipe_ingredients')).single;
