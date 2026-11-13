@@ -382,6 +382,73 @@ void main() {
       expect(book['genre'], 'Mystery');
     });
 
+    test('upgrades every historical database version from 1 through 24', () async {
+      for (var oldVersion = 1; oldVersion <= 24; oldVersion++) {
+        db = await openTestDatabase();
+        await DatabaseMigrations.migrate(db, 1, oldVersion);
+
+        // Seed representative records in tables that exist at this version.
+        final existingTables = await tableNames(db);
+        if (existingTables.contains('recipe_entries')) {
+          await db.insert('recipe_entries', {
+            'id': 'recipe-v$oldVersion',
+            'title': 'Legacy recipe v$oldVersion',
+            'created_at': '2025-01-01',
+            'updated_at': '2025-01-01',
+          });
+        }
+        if (existingTables.contains('wishlist_items')) {
+          await db.insert('wishlist_items', {
+            'id': 'wish-v$oldVersion',
+            'title': 'Legacy wish v$oldVersion',
+            'created_at': '2025-01-01',
+            'updated_at': '2025-01-01',
+          });
+        }
+        if (existingTables.contains('shopping_items')) {
+          await db.insert('shopping_lists', {
+            'id': 'list-v$oldVersion', 'title': 'Legacy list',
+            'created_at': '2025-01-01', 'updated_at': '2025-01-01',
+          });
+          await db.insert('shopping_items', {
+            'id': 'shopping-v$oldVersion', 'list_id': 'list-v$oldVersion',
+            'name': 'Legacy item', 'created_at': '2025-01-01',
+            'updated_at': '2025-01-01',
+          });
+        }
+
+        await DatabaseMigrations.migrate(db, oldVersion, 25);
+
+        final upgradedTables = await tableNames(db);
+        expect(upgradedTables, containsAll([
+          'shopping_items', 'wishlist_entries', 'notifications',
+          'study_subjects', 'study_items', 'finance_accounts',
+          'knowledge_entries', 'recipe_meal_plan_entries',
+        ]), reason: 'Upgrade from database version $oldVersion');
+
+        if (existingTables.contains('recipe_entries')) {
+          expect(
+            (await db.query('recipe_entries')).single['title'],
+            'Legacy recipe v$oldVersion',
+            reason: 'Recipe row lost while upgrading from $oldVersion',
+          );
+        }
+        if (existingTables.contains('shopping_items')) {
+          expect(
+            (await db.query('shopping_items')).single['title'],
+            'Legacy item',
+            reason: 'Shopping row lost while upgrading from $oldVersion',
+          );
+        }
+        expect(
+          await db.rawQuery('PRAGMA foreign_key_check'),
+          isEmpty,
+          reason: 'Foreign key violation after upgrading from $oldVersion',
+        );
+        await db.close();
+      }
+    });
+
     test('is safe to open a database already at v25 without rerunning migrations', () async {
       db = await openTestDatabase();
       await DatabaseMigrations.migrate(db, 1, 25);
