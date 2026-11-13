@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:lunora/core/database/database_migrations.dart';
+import 'package:lunora/features/notifications/models/notification_item.dart';
 
 Future<Database> openTestDatabase() async {
   sqfliteFfiInit();
@@ -193,6 +194,11 @@ void main() {
       final notification = (await db.query('notifications')).single;
       expect(notification['message'], 'Read a chapter');
       expect(notification['read_at'], isNotNull);
+      expect(notification['is_delivered'], 1);
+      expect(
+        NotificationItem.fromMap(notification).metadata['systemDeliveryStatus'],
+        'delivered',
+      );
       // Current NotificationItem.toMap omits the legacy updated_at column.
       await db.insert('notifications', {
         'id': 'notice-2', 'category': 'study', 'type': 'reminder',
