@@ -1168,6 +1168,8 @@ class DatabaseMigrations {
     }
     await db.execute('CREATE INDEX IF NOT EXISTS idx_recipe_meal_plan_date ON recipe_meal_plan_entries(plan_date,sort_order)');
     await _ensureColumn(db, 'recipe_entries', 'cuisine', 'TEXT');
+    await _ensureColumn(db, 'recipe_entries', 'difficulty', "TEXT NOT NULL DEFAULT ''");
+    await _ensureColumn(db, 'recipe_entries', 'is_cook_ahead', 'INTEGER NOT NULL DEFAULT 0');
   }
 
 }
