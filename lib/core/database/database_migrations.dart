@@ -964,6 +964,7 @@ class DatabaseMigrations {
         tags TEXT NOT NULL DEFAULT '[]', price REAL,
         currency TEXT NOT NULL DEFAULT '', source_url TEXT,
         priority TEXT NOT NULL DEFAULT 'normal', desired_date TEXT,
+        legacy_status TEXT NOT NULL DEFAULT '',
         is_purchased INTEGER NOT NULL DEFAULT 0, is_favorite INTEGER NOT NULL DEFAULT 0,
         purchased_at TEXT, notes TEXT NOT NULL DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0,
         created_at TEXT NOT NULL, updated_at TEXT NOT NULL
@@ -980,6 +981,7 @@ class DatabaseMigrations {
           : (oldWishlist.contains('status')
               ? "CASE WHEN status IN ('purchased','bought','completed') THEN 1 ELSE 0 END"
               : '0');
+      final legacyStatus = oldWishlist.contains('status') ? 'COALESCE(status,\'\')' : "''";
       final purchasedAt = oldWishlist.contains('purchased_at') ? 'purchased_at' : 'NULL';
       final favorite = oldWishlist.contains('is_favorite') ? 'is_favorite' : '0';
       final notes = oldWishlist.contains('notes') ? 'notes' : "''";
@@ -987,11 +989,11 @@ class DatabaseMigrations {
       await db.execute('''
         INSERT OR IGNORE INTO wishlist_entries
         (id,title,description,image_path,category,tags,price,currency,source_url,
-         priority,is_purchased,is_favorite,purchased_at,notes,sort_order,created_at,updated_at)
+         priority,legacy_status,is_purchased,is_favorite,purchased_at,notes,sort_order,created_at,updated_at)
         SELECT id,title,COALESCE(description,''),$image,
          COALESCE(category,'Без категории'),COALESCE($tags,'[]'),price,
          COALESCE(currency,''),$sourceUrl,COALESCE(priority,'normal'),
-         $purchased,$favorite,$purchasedAt,COALESCE($notes,''),$sortOrder,
+         $legacyStatus,$purchased,$favorite,$purchasedAt,COALESCE($notes,''),$sortOrder,
          created_at,updated_at FROM wishlist_items
       ''');
     }
@@ -1189,7 +1191,8 @@ class DatabaseMigrations {
     ''');
     await db.execute('''
       CREATE TABLE IF NOT EXISTS finance_savings_goals (
-        id TEXT PRIMARY KEY, title TEXT NOT NULL, target_amount_minor INTEGER NOT NULL DEFAULT 0,
+        id TEXT PRIMARY KEY, title TEXT NOT NULL, description TEXT NOT NULL DEFAULT '',
+        target_amount_minor INTEGER NOT NULL DEFAULT 0,
         saved_amount_minor INTEGER NOT NULL DEFAULT 0, currency TEXT NOT NULL DEFAULT 'RUB',
         target_date TEXT, status TEXT NOT NULL DEFAULT 'active',
         sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
@@ -1198,6 +1201,7 @@ class DatabaseMigrations {
     // Version 17 stored savings goal amounts in major currency units.
     // Current finance models store minor units (Excel import multiplies by 100).
     // Convert legacy values exactly once when the v25 fields are still zero.
+    await _ensureColumn(db, 'finance_savings_goals', 'description', "TEXT NOT NULL DEFAULT ''");
     await _ensureColumn(db, 'finance_savings_goals', 'target_amount_minor', 'INTEGER NOT NULL DEFAULT 0');
     await _ensureColumn(db, 'finance_savings_goals', 'saved_amount_minor', 'INTEGER NOT NULL DEFAULT 0');
     await _ensureColumn(db, 'finance_savings_goals', 'currency', "TEXT NOT NULL DEFAULT 'RUB'");
