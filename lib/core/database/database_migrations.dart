@@ -1008,7 +1008,16 @@ class DatabaseMigrations {
       final notificationId = notificationExpr('id', fallback: "lower(hex(randomblob(16)))");
       var readAtExpression = notificationReadAt;
       if (legacyNotificationColumns.contains('is_read')) {
-        readAtExpression = "COALESCE($notificationReadAt, CASE WHEN is_read=1 THEN COALESCE(updated_at,created_at) END)";
+        // Some intermediate/hand-migrated legacy databases have is_read but
+        // no updated_at. Only reference columns that actually exist.
+        final readTimestamp = legacyNotificationColumns.contains('updated_at')
+            ? 'updated_at'
+            : notificationCreated;
+        final legacyReadAt =
+            "CASE WHEN is_read=1 THEN COALESCE($readTimestamp,$notificationCreated) END";
+        readAtExpression = notificationReadAt == 'NULL'
+            ? legacyReadAt
+            : "COALESCE($notificationReadAt,$legacyReadAt)";
       }
       await db.execute('''
         CREATE TABLE notifications_v25 (
