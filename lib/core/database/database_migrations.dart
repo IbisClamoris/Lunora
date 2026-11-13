@@ -1018,6 +1018,18 @@ class DatabaseMigrations {
     if (notificationColumns.contains('related_id')) {
       await db.execute('UPDATE notifications SET source_record_id=COALESCE(source_record_id,related_id)');
     }
+    // book_entries v21 used author/genres; the current BookEntry model
+    // writes authors/genre. Add current columns and preserve legacy values.
+    await _ensureColumn(db, 'book_entries', 'authors', "TEXT NOT NULL DEFAULT ''");
+    await _ensureColumn(db, 'book_entries', 'genre', "TEXT NOT NULL DEFAULT ''");
+    final bookColumns = await _tableColumns(db, 'book_entries');
+    if (bookColumns.contains('author')) {
+      await db.execute("UPDATE book_entries SET authors=CASE WHEN authors='' THEN COALESCE(author,'') ELSE authors END");
+    }
+    if (bookColumns.contains('genres')) {
+      await db.execute("UPDATE book_entries SET genre=CASE WHEN genre='' THEN COALESCE(genres,'') ELSE genre END");
+    }
+
     await db.execute('CREATE INDEX IF NOT EXISTS idx_notifications_read_at ON notifications(read_at)');
 
     await db.execute('''
