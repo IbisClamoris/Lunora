@@ -944,12 +944,13 @@ class DatabaseMigrations {
     } else {
       await db.execute('''
         CREATE TABLE shopping_items (
-          id TEXT PRIMARY KEY, title TEXT NOT NULL, category TEXT,
+          id TEXT PRIMARY KEY, list_id TEXT, title TEXT NOT NULL, category TEXT,
           quantity REAL, unit TEXT, notes TEXT,
           is_purchased INTEGER NOT NULL DEFAULT 0, purchased_at TEXT,
           source_module TEXT, source_record_id TEXT,
           sort_order INTEGER NOT NULL DEFAULT 0,
-          created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+          created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+          FOREIGN KEY(list_id) REFERENCES shopping_lists(id) ON DELETE CASCADE
         )
       ''');
     }
