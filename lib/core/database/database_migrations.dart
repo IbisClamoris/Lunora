@@ -1174,6 +1174,9 @@ class DatabaseMigrations {
     // RecipeIngredient writes quantity/notes. Keep legacy columns and copy.
     await _ensureColumn(db, 'recipe_ingredients', 'quantity', 'REAL');
     await _ensureColumn(db, 'recipe_ingredients', 'notes', "TEXT NOT NULL DEFAULT ''");
+    // Current RecipeIngredient.toMap also writes timestamps, absent in v14.
+    await _ensureColumn(db, 'recipe_ingredients', 'created_at', "TEXT NOT NULL DEFAULT ''");
+    await _ensureColumn(db, 'recipe_ingredients', 'updated_at', "TEXT NOT NULL DEFAULT ''");
     final ingredientColumns = await _tableColumns(db, 'recipe_ingredients');
     if (ingredientColumns.contains('amount')) {
       await db.execute('UPDATE recipe_ingredients SET quantity=COALESCE(quantity,amount)');
