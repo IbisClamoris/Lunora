@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-Lunora 1.0.0 includes or depends on third-party software packages. This file records the
+Lunora 1.0.1 includes or depends on third-party software packages. This file records the
 Flutter/Dart package dependencies and the license texts supplied for the versions resolved
 in the project's `pubspec.lock` at the time this inventory was generated.
 
