@@ -984,40 +984,77 @@ class DatabaseMigrations {
       ''');
     }
 
-    await db.execute('''
-      CREATE TABLE IF NOT EXISTS notifications (
-        id TEXT PRIMARY KEY, category TEXT NOT NULL DEFAULT 'other',
-        type TEXT NOT NULL DEFAULT 'info',
-        event_type TEXT NOT NULL DEFAULT 'unknown', event_key TEXT,
-        title TEXT NOT NULL DEFAULT '', message TEXT NOT NULL DEFAULT '',
-        source_module TEXT, source_record_id TEXT,
-        created_at TEXT NOT NULL DEFAULT '', scheduled_at TEXT,
-        read_at TEXT, metadata TEXT NOT NULL DEFAULT '{}'
-      )
-    ''');
-    for (final entry in <String, String>{
-      'category': "TEXT NOT NULL DEFAULT 'other'",
-      'type': "TEXT NOT NULL DEFAULT 'info'",
-      'event_type': "TEXT NOT NULL DEFAULT 'unknown'",
-      'event_key': 'TEXT', 'message': "TEXT NOT NULL DEFAULT ''",
-      'source_module': 'TEXT', 'source_record_id': 'TEXT',
-      'read_at': 'TEXT', 'metadata': "TEXT NOT NULL DEFAULT '{}'",
-    }.entries) {
-      await _ensureColumn(db, 'notifications', entry.key, entry.value);
+    // Rebuild notifications because the v20 table has a NOT NULL
+    // updated_at column that the current NotificationItem model no longer writes.
+    final legacyNotificationColumns = await _tableColumns(db, 'notifications');
+    if (legacyNotificationColumns.isNotEmpty) {
+      String notificationExpr(String current, {String? legacy, String fallback = 'NULL'}) {
+        if (legacyNotificationColumns.contains(current)) return current;
+        if (legacy != null && legacyNotificationColumns.contains(legacy)) return legacy;
+        return fallback;
+      }
+      final notificationTitle = notificationExpr('title', fallback: "''");
+      final notificationCreated = notificationExpr('created_at', fallback: "datetime('now')");
+      final notificationType = notificationExpr('type', fallback: "'info'");
+      final notificationMessage = notificationExpr('message', legacy: 'body', fallback: "''");
+      final notificationReadAt = notificationExpr('read_at');
+      final notificationScheduled = notificationExpr('scheduled_at');
+      final notificationCategory = notificationExpr('category', fallback: "'other'");
+      final notificationEventType = notificationExpr('event_type', fallback: "'unknown'");
+      final notificationEventKey = notificationExpr('event_key');
+      final notificationSourceModule = notificationExpr('source_module');
+      final notificationSourceId = notificationExpr('source_record_id', legacy: 'related_id');
+      final notificationMetadata = notificationExpr('metadata', fallback: "'{}'");
+      final notificationId = notificationExpr('id', fallback: "lower(hex(randomblob(16)))");
+      var readAtExpression = notificationReadAt;
+      if (legacyNotificationColumns.contains('is_read')) {
+        readAtExpression = "COALESCE($notificationReadAt, CASE WHEN is_read=1 THEN COALESCE(updated_at,created_at) END)";
+      }
+      await db.execute('''
+        CREATE TABLE notifications_v25 (
+          id TEXT PRIMARY KEY,
+          category TEXT NOT NULL DEFAULT 'other',
+          type TEXT NOT NULL DEFAULT 'info',
+          event_type TEXT NOT NULL DEFAULT 'unknown',
+          event_key TEXT,
+          title TEXT NOT NULL DEFAULT '',
+          message TEXT NOT NULL DEFAULT '',
+          source_module TEXT,
+          source_record_id TEXT,
+          created_at TEXT NOT NULL DEFAULT '',
+          scheduled_at TEXT,
+          read_at TEXT,
+          metadata TEXT NOT NULL DEFAULT '{}'
+        )
+      ''');
+      await db.execute('''
+        INSERT INTO notifications_v25
+        (id,category,type,event_type,event_key,title,message,source_module,
+         source_record_id,created_at,scheduled_at,read_at,metadata)
+        SELECT $notificationId,$notificationCategory,$notificationType,
+          $notificationEventType,$notificationEventKey,$notificationTitle,
+          $notificationMessage,$notificationSourceModule,$notificationSourceId,
+          COALESCE($notificationCreated,''),$notificationScheduled,
+          $readAtExpression,$notificationMetadata
+        FROM notifications
+      ''');
+      await db.execute('DROP TABLE notifications');
+      await db.execute('ALTER TABLE notifications_v25 RENAME TO notifications');
+    } else {
+      await db.execute('''
+        CREATE TABLE notifications (
+          id TEXT PRIMARY KEY, category TEXT NOT NULL DEFAULT 'other',
+          type TEXT NOT NULL DEFAULT 'info', event_type TEXT NOT NULL DEFAULT 'unknown',
+          event_key TEXT, title TEXT NOT NULL DEFAULT '', message TEXT NOT NULL DEFAULT '',
+          source_module TEXT, source_record_id TEXT, created_at TEXT NOT NULL DEFAULT '',
+          scheduled_at TEXT, read_at TEXT, metadata TEXT NOT NULL DEFAULT '{}'
+        )
+      ''');
     }
-    final notificationColumns = await _tableColumns(db, 'notifications');
-    if (notificationColumns.contains('body')) {
-      await db.execute("UPDATE notifications SET message=COALESCE(NULLIF(message,''),body,'')");
-    }
-    if (notificationColumns.contains('is_read')) {
-      await db.execute("""
-        UPDATE notifications SET read_at=COALESCE(read_at,
-          CASE WHEN is_read=1 THEN COALESCE(NULLIF(updated_at,''),NULLIF(created_at,'')) END)
-      """);
-    }
-    if (notificationColumns.contains('related_id')) {
-      await db.execute('UPDATE notifications SET source_record_id=COALESCE(source_record_id,related_id)');
-    }
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_notifications_read_at ON notifications(read_at)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_notifications_created_at ON notifications(created_at DESC)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_notifications_event_key ON notifications(event_key)');
+
     // book_entries v21 used author/genres; the current BookEntry model
     // writes authors/genre. Add current columns and preserve legacy values.
     await _ensureColumn(db, 'book_entries', 'authors', "TEXT NOT NULL DEFAULT ''");
