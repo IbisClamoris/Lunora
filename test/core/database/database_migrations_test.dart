@@ -169,6 +169,23 @@ void main() {
         'meal_type': 'Breakfast', 'servings': 1, 'note': 'Recipe was deleted',
         'created_at': '2026-01-01', 'updated_at': '2026-01-02',
       });
+      await db.execute('ALTER TABLE meal_plan_entries ADD COLUMN notes TEXT');
+      await db.execute('ALTER TABLE meal_plan_entries ADD COLUMN cooking_days INTEGER');
+      await db.execute('ALTER TABLE meal_plan_entries ADD COLUMN duration_minutes INTEGER');
+      await db.execute('ALTER TABLE meal_plan_entries ADD COLUMN status TEXT');
+      await db.execute('ALTER TABLE meal_plan_entries ADD COLUMN sort_order INTEGER');
+      await db.update(
+        'meal_plan_entries',
+        {
+          'notes': 'Detailed meal notes',
+          'cooking_days': 2,
+          'duration_minutes': 45,
+          'status': 'prepared',
+          'sort_order': 4,
+        },
+        where: 'id = ?',
+        whereArgs: ['meal-1'],
+      );
       await db.insert('finance_savings_goals', {
         'id': 'goal-1', 'title': 'Trip', 'description': 'Emergency fund details',
         'target_amount': 50000, 'current_amount': 12000,
@@ -224,7 +241,11 @@ void main() {
       final meal = (await db.query('recipe_meal_plan_entries')).single;
       expect(meal['recipe_id'], 'recipe-1');
       expect(meal['plan_date'], '2026-01-03');
-      expect(meal['notes'], 'Prepare ahead');
+      expect(meal['notes'], 'Detailed meal notes');
+      expect(meal['cooking_days'], 2);
+      expect(meal['duration_minutes'], 45);
+      expect(meal['status'], 'prepared');
+      expect(meal['sort_order'], 4);
 
       // Detached legacy entries are intentionally retained in the old table.
       // They cannot be represented by the current model, whose recipeId is required.
