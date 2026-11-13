@@ -64,7 +64,7 @@ Lunora is an open-source project distributed under the GNU General Public Licens
 
 You are welcome to explore the source code, study the project, and contribute to its development.
 
-See [LICENSE](LICENSE) for license details and [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+See [LICENSE](LICENSE) for license details, [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for third-party dependency licenses, and [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
 
 ---
 
@@ -132,7 +132,7 @@ Lunora — проект с открытым исходным кодом, рас�
 
 Вы можете изучать исходный код, знакомиться с устройством приложения и участвовать в его развитии.
 
-Подробнее: LICENSE — условия лицензии, CONTRIBUTING.md — рекомендации для участников проекта.
+Подробнее: LICENSE — условия лицензии, THIRD_PARTY_NOTICES.md — лицензии сторонних зависимостей, CONTRIBUTING.md — рекомендации для участников проекта.
 
 ---
 
