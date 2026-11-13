@@ -916,23 +916,25 @@ class DatabaseMigrations {
       final createdExpr = shopping.contains('created_at') ? 'created_at' : "datetime('now')";
       final updatedExpr = shopping.contains('updated_at') ? 'updated_at' : "datetime('now')";
       final idExpr = shopping.contains('id') ? 'id' : "lower(hex(randomblob(16)))";
+      final listIdExpr = shopping.contains('list_id') ? 'list_id' : 'NULL';
       final purchasedAtExpr = shopping.contains('purchased_at') ? 'purchased_at' : 'NULL';
       final sourceModuleExpr = shopping.contains('source_module') ? 'source_module' : 'NULL';
       final sourceIdExpr = shopping.contains('source_record_id') ? 'source_record_id' : 'NULL';
       final sortExpr = shopping.contains('sort_order') ? 'sort_order' : '0';
       await db.execute('''
         CREATE TABLE shopping_items_v25 (
-          id TEXT PRIMARY KEY, title TEXT NOT NULL, category TEXT,
+          id TEXT PRIMARY KEY, list_id TEXT, title TEXT NOT NULL, category TEXT,
           quantity REAL, unit TEXT, notes TEXT,
           is_purchased INTEGER NOT NULL DEFAULT 0, purchased_at TEXT,
           source_module TEXT, source_record_id TEXT,
           sort_order INTEGER NOT NULL DEFAULT 0,
-          created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+          created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+          FOREIGN KEY(list_id) REFERENCES shopping_lists(id) ON DELETE CASCADE
         )
       ''');
       await db.execute('''
         INSERT OR REPLACE INTO shopping_items_v25
-        SELECT $idExpr, COALESCE($titleExpr, ''), $categoryExpr,
+        SELECT $idExpr, $listIdExpr, COALESCE($titleExpr, ''), $categoryExpr,
           $quantityExpr, $unitExpr, $notesExpr, $purchasedExpr,
           $purchasedAtExpr, $sourceModuleExpr, $sourceIdExpr, $sortExpr,
           $createdExpr, $updatedExpr FROM shopping_items
@@ -961,8 +963,8 @@ class DatabaseMigrations {
         tags TEXT NOT NULL DEFAULT '[]', price REAL,
         currency TEXT NOT NULL DEFAULT '', source_url TEXT,
         priority TEXT NOT NULL DEFAULT 'normal', desired_date TEXT,
-        is_purchased INTEGER NOT NULL DEFAULT 0, purchased_at TEXT,
-        notes TEXT NOT NULL DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0,
+        is_purchased INTEGER NOT NULL DEFAULT 0, is_favorite INTEGER NOT NULL DEFAULT 0,
+        purchased_at TEXT, notes TEXT NOT NULL DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0,
         created_at TEXT NOT NULL, updated_at TEXT NOT NULL
       )
     ''');
@@ -978,16 +980,17 @@ class DatabaseMigrations {
               ? "CASE WHEN status IN ('purchased','bought','completed') THEN 1 ELSE 0 END"
               : '0');
       final purchasedAt = oldWishlist.contains('purchased_at') ? 'purchased_at' : 'NULL';
+      final favorite = oldWishlist.contains('is_favorite') ? 'is_favorite' : '0';
       final notes = oldWishlist.contains('notes') ? 'notes' : "''";
       final sortOrder = oldWishlist.contains('sort_order') ? 'sort_order' : '0';
       await db.execute('''
         INSERT OR IGNORE INTO wishlist_entries
         (id,title,description,image_path,category,tags,price,currency,source_url,
-         priority,is_purchased,purchased_at,notes,sort_order,created_at,updated_at)
+         priority,is_purchased,is_favorite,purchased_at,notes,sort_order,created_at,updated_at)
         SELECT id,title,COALESCE(description,''),$image,
          COALESCE(category,'Без категории'),COALESCE($tags,'[]'),price,
          COALESCE(currency,''),$sourceUrl,COALESCE(priority,'normal'),
-         $purchased,$purchasedAt,COALESCE($notes,''),$sortOrder,
+         $purchased,$favorite,$purchasedAt,COALESCE($notes,''),$sortOrder,
          created_at,updated_at FROM wishlist_items
       ''');
     }
@@ -1191,8 +1194,9 @@ class DatabaseMigrations {
         sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
       )
     ''');
-    // Version 17 created this table with target_amount/current_amount.
-    // Add current model fields and copy the legacy balances without loss.
+    // Version 17 stored savings goal amounts in major currency units.
+    // Current finance models store minor units (Excel import multiplies by 100).
+    // Convert legacy values exactly once when the v25 fields are still zero.
     await _ensureColumn(db, 'finance_savings_goals', 'target_amount_minor', 'INTEGER NOT NULL DEFAULT 0');
     await _ensureColumn(db, 'finance_savings_goals', 'saved_amount_minor', 'INTEGER NOT NULL DEFAULT 0');
     await _ensureColumn(db, 'finance_savings_goals', 'currency', "TEXT NOT NULL DEFAULT 'RUB'");
@@ -1201,10 +1205,10 @@ class DatabaseMigrations {
     await _ensureColumn(db, 'finance_savings_goals', 'sort_order', 'INTEGER NOT NULL DEFAULT 0');
     final savingsColumns = await _tableColumns(db, 'finance_savings_goals');
     if (savingsColumns.contains('target_amount')) {
-      await db.execute('UPDATE finance_savings_goals SET target_amount_minor=CASE WHEN target_amount_minor=0 THEN target_amount ELSE target_amount_minor END');
+      await db.execute('UPDATE finance_savings_goals SET target_amount_minor=CASE WHEN target_amount_minor=0 THEN target_amount * 100 ELSE target_amount_minor END');
     }
     if (savingsColumns.contains('current_amount')) {
-      await db.execute('UPDATE finance_savings_goals SET saved_amount_minor=CASE WHEN saved_amount_minor=0 THEN current_amount ELSE saved_amount_minor END');
+      await db.execute('UPDATE finance_savings_goals SET saved_amount_minor=CASE WHEN saved_amount_minor=0 THEN current_amount * 100 ELSE saved_amount_minor END');
     }
     await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_transactions_date ON finance_transactions(transaction_date DESC)');
     await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_transactions_account ON finance_transactions(account_id)');
