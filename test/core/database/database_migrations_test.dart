@@ -316,7 +316,73 @@ void main() {
       expect((await db.query('recipe_meal_plan_entries')).single['plan_date'], '2026-11-14');
     });
 
-    test('is safe to run after the database is already at v25', () async {
+    test('can reapply v25 without losing migrated rows', () async {
+      db = await openTestDatabase();
+      await DatabaseMigrations.migrate(db, 1, 24);
+
+      await db.insert('notifications', {
+        'id': 'legacy-notice', 'title': 'Legacy', 'body': 'Keep me',
+        'type': 'reminder', 'is_read': 1, 'created_at': '2025-01-01',
+        'updated_at': '2025-01-02',
+      });
+      await db.insert('book_entries', {
+        'id': 'legacy-book', 'title': 'Old book', 'author': 'Old author',
+        'genres': 'Fantasy', 'created_at': '2025-01-01',
+        'updated_at': '2025-01-02',
+      });
+      await db.insert('wishlist_items', {
+        'id': 'legacy-wish', 'title': 'Old wish',
+        'created_at': '2025-01-01', 'updated_at': '2025-01-02',
+      });
+
+      await DatabaseMigrations.migrate(db, 24, 25);
+      await DatabaseMigrations.migrate(db, 24, 25);
+
+      expect((await db.query('notifications')).length, 1);
+      expect((await db.query('notifications')).single['message'], 'Keep me');
+      expect((await db.query('notifications')).single['read_at'], isNotNull);
+      expect((await db.query('book_entries')).single['authors'], 'Old author');
+      expect((await db.query('book_entries')).single['genre'], 'Fantasy');
+      expect((await db.query('wishlist_entries')).length, 1);
+
+      final foreignKeyViolations = await db.rawQuery('PRAGMA foreign_key_check');
+      expect(foreignKeyViolations, isEmpty);
+    });
+
+    test('upgrades a version 20 database with existing notifications', () async {
+      db = await openTestDatabase();
+      await DatabaseMigrations.migrate(db, 1, 20);
+      await db.insert('notifications', {
+        'id': 'notice-v20', 'title': 'Reminder', 'body': 'Old body',
+        'type': 'reminder', 'is_read': 1, 'is_delivered': 1,
+        'created_at': '2025-03-01', 'updated_at': '2025-03-02',
+      });
+
+      await DatabaseMigrations.migrate(db, 20, 25);
+
+      final notice = (await db.query('notifications')).single;
+      expect(notice['message'], 'Old body');
+      expect(notice['read_at'], isNotNull);
+      expect(await columns(db, 'notifications'), isNot(contains('updated_at')));
+    });
+
+    test('upgrades a version 21 database with existing book metadata', () async {
+      db = await openTestDatabase();
+      await DatabaseMigrations.migrate(db, 1, 21);
+      await db.insert('book_entries', {
+        'id': 'book-v21', 'title': 'Legacy book', 'author': 'A. Writer',
+        'genres': 'Mystery', 'created_at': '2025-03-01',
+        'updated_at': '2025-03-02',
+      });
+
+      await DatabaseMigrations.migrate(db, 21, 25);
+
+      final book = (await db.query('book_entries')).single;
+      expect(book['authors'], 'A. Writer');
+      expect(book['genre'], 'Mystery');
+    });
+
+    test('is safe to open a database already at v25 without rerunning migrations', () async {
       db = await openTestDatabase();
       await DatabaseMigrations.migrate(db, 1, 25);
       await expectLater(
