@@ -436,15 +436,23 @@ class DatabaseMigrations {
       )
     ''');
 
-    await db.execute('''
-      CREATE INDEX IF NOT EXISTS idx_notifications_scheduled
-      ON notifications(scheduled_at)
-    ''');
+    // Existing notification tables may predate scheduled_at or is_read.
+    // CREATE TABLE IF NOT EXISTS does not add missing columns, so only create
+    // indexes for columns that are actually present in the legacy schema.
+    final notificationColumns = await _tableColumns(db, 'notifications');
+    if (notificationColumns.contains('scheduled_at')) {
+      await db.execute('''
+        CREATE INDEX IF NOT EXISTS idx_notifications_scheduled
+        ON notifications(scheduled_at)
+      ''');
+    }
 
-    await db.execute('''
-      CREATE INDEX IF NOT EXISTS idx_notifications_read
-      ON notifications(is_read)
-    ''');
+    if (notificationColumns.contains('is_read')) {
+      await db.execute('''
+        CREATE INDEX IF NOT EXISTS idx_notifications_read
+        ON notifications(is_read)
+      ''');
+    }
   }
 
   // ============================================================
