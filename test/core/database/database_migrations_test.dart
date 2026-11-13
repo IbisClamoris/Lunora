@@ -137,7 +137,7 @@ void main() {
         'id': 'wish-1', 'title': 'Book', 'description': 'A novel',
         'category': 'Books', 'price': 25, 'currency': 'EUR',
         'url': 'https://example.com/book', 'image_path': null,
-        'priority': 'high', 'status': 'planned', 'is_favorite': 1,
+        'priority': 'high', 'status': 'cancelled', 'is_favorite': 1,
         'created_at': '2026-01-01', 'updated_at': '2026-01-02',
       });
       await db.insert('notifications', {
@@ -168,7 +168,7 @@ void main() {
         'created_at': '2026-01-01', 'updated_at': '2026-01-02',
       });
       await db.insert('finance_savings_goals', {
-        'id': 'goal-1', 'title': 'Trip', 'description': '',
+        'id': 'goal-1', 'title': 'Trip', 'description': 'Emergency fund details',
         'target_amount': 50000, 'current_amount': 12000,
         'currency': 'EUR', 'target_date': '2026-12-01',
         'status': 'active', 'created_at': '2026-01-01',
@@ -236,6 +236,10 @@ void main() {
       final goal = (await db.query('finance_savings_goals')).single;
       expect(goal['target_amount_minor'], 5000000);
       expect(goal['saved_amount_minor'], 1200000);
+      expect(goal['description'], 'Emergency fund details');
+      final wishlist = (await db.query('wishlist_entries')).single;
+      expect(wishlist['legacy_status'], 'cancelled');
+      expect(wishlist['is_purchased'], 0);
       final ingredient = (await db.query('recipe_ingredients')).single;
       expect(ingredient['quantity'], 3);
       expect(ingredient['notes'], 'Large');
