@@ -901,6 +901,17 @@ class DatabaseMigrations {
   }
 
   static Future<void> _migration25(Database db) async {
+    // Some legacy databases contain shopping_items but are missing its
+    // parent table. Create the parent first because the v25 rebuild adds a
+    // foreign key to shopping_lists. Existing lists and items are preserved.
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS shopping_lists (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL DEFAULT '',
+        created_at TEXT NOT NULL DEFAULT '',
+        updated_at TEXT NOT NULL DEFAULT ''
+      )
+    ''');
     // Legacy shopping_items had a required "name" column. Rebuild it to
     // match ShoppingItem and preserve rows/values from the old schema.
     final shopping = await _tableColumns(db, 'shopping_items');
