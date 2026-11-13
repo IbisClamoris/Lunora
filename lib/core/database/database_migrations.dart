@@ -82,6 +82,9 @@ class DatabaseMigrations {
         case 24:
           await _migration24(db);
           break;
+        case 25:
+          await _migration25(db);
+          break;
       }
     }
   }
@@ -874,4 +877,270 @@ class DatabaseMigrations {
       ON tasks(status)
     ''');
   }
+
+  // Migration 25 restores tables required by current feature repositories.
+  static Future<Set<String>> _tableColumns(Database db, String table) async {
+    final rows = await db.rawQuery('PRAGMA table_info("$table")');
+    return rows.map((row) => row['name'] as String).toSet();
+  }
+
+  static Future<void> _ensureColumn(
+    Database db, String table, String column, String definition,
+  ) async {
+    if (!(await _tableColumns(db, table)).contains(column)) {
+      await db.execute('ALTER TABLE "$table" ADD COLUMN "$column" $definition');
+    }
+  }
+
+  static Future<void> _migration25(Database db) async {
+    // Legacy shopping_items had a required "name" column. Rebuild it to
+    // match ShoppingItem and preserve rows/values from the old schema.
+    final shopping = await _tableColumns(db, 'shopping_items');
+    if (shopping.isNotEmpty) {
+      final titleExpr = shopping.contains('title') ? 'title' : 'name';
+      final quantityExpr = shopping.contains('quantity') ? 'quantity' :
+          (shopping.contains('amount') ? 'amount' : 'NULL');
+      final notesExpr = shopping.contains('notes') ? 'notes' :
+          (shopping.contains('note') ? 'note' : 'NULL');
+      final unitExpr = shopping.contains('unit') ? 'unit' : 'NULL';
+      final categoryExpr = shopping.contains('category') ? 'category' : 'NULL';
+      final purchasedExpr = shopping.contains('is_purchased') ? 'is_purchased' : '0';
+      final createdExpr = shopping.contains('created_at') ? 'created_at' : "datetime('now')";
+      final updatedExpr = shopping.contains('updated_at') ? 'updated_at' : "datetime('now')";
+      final idExpr = shopping.contains('id') ? 'id' : "lower(hex(randomblob(16)))";
+      final purchasedAtExpr = shopping.contains('purchased_at') ? 'purchased_at' : 'NULL';
+      final sourceModuleExpr = shopping.contains('source_module') ? 'source_module' : 'NULL';
+      final sourceIdExpr = shopping.contains('source_record_id') ? 'source_record_id' : 'NULL';
+      final sortExpr = shopping.contains('sort_order') ? 'sort_order' : '0';
+      await db.execute('''
+        CREATE TABLE shopping_items_v25 (
+          id TEXT PRIMARY KEY, title TEXT NOT NULL, category TEXT,
+          quantity REAL, unit TEXT, notes TEXT,
+          is_purchased INTEGER NOT NULL DEFAULT 0, purchased_at TEXT,
+          source_module TEXT, source_record_id TEXT,
+          sort_order INTEGER NOT NULL DEFAULT 0,
+          created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+        )
+      ''');
+      await db.execute('''
+        INSERT OR REPLACE INTO shopping_items_v25
+        SELECT $idExpr, COALESCE($titleExpr, ''), $categoryExpr,
+          $quantityExpr, $unitExpr, $notesExpr, $purchasedExpr,
+          $purchasedAtExpr, $sourceModuleExpr, $sourceIdExpr, $sortExpr,
+          $createdExpr, $updatedExpr FROM shopping_items
+      ''');
+      await db.execute('DROP TABLE shopping_items');
+      await db.execute('ALTER TABLE shopping_items_v25 RENAME TO shopping_items');
+    } else {
+      await db.execute('''
+        CREATE TABLE shopping_items (
+          id TEXT PRIMARY KEY, title TEXT NOT NULL, category TEXT,
+          quantity REAL, unit TEXT, notes TEXT,
+          is_purchased INTEGER NOT NULL DEFAULT 0, purchased_at TEXT,
+          source_module TEXT, source_record_id TEXT,
+          sort_order INTEGER NOT NULL DEFAULT 0,
+          created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+        )
+      ''');
+    }
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_shopping_items_order ON shopping_items(is_purchased,sort_order,created_at)');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS wishlist_entries (
+        id TEXT PRIMARY KEY, title TEXT NOT NULL,
+        description TEXT NOT NULL DEFAULT '', image_path TEXT,
+        category TEXT NOT NULL DEFAULT 'Без категории',
+        tags TEXT NOT NULL DEFAULT '[]', price REAL,
+        currency TEXT NOT NULL DEFAULT '', source_url TEXT,
+        priority TEXT NOT NULL DEFAULT 'normal', desired_date TEXT,
+        is_purchased INTEGER NOT NULL DEFAULT 0, purchased_at TEXT,
+        notes TEXT NOT NULL DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    final oldWishlist = await _tableColumns(db, 'wishlist_items');
+    if (oldWishlist.isNotEmpty) {
+      final sourceUrl = oldWishlist.contains('source_url') ? 'source_url' :
+          (oldWishlist.contains('url') ? 'url' : 'NULL');
+      await db.execute('''
+        INSERT OR IGNORE INTO wishlist_entries
+        (id,title,description,category,price,currency,source_url,priority,
+         is_purchased,created_at,updated_at)
+        SELECT id,title,COALESCE(description,''),COALESCE(category,'Без категории'),
+         price,COALESCE(currency,''),$sourceUrl,COALESCE(priority,'normal'),
+         0,created_at,updated_at FROM wishlist_items
+      ''');
+    }
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS notifications (
+        id TEXT PRIMARY KEY, category TEXT NOT NULL DEFAULT 'other',
+        type TEXT NOT NULL DEFAULT 'info',
+        event_type TEXT NOT NULL DEFAULT 'unknown', event_key TEXT,
+        title TEXT NOT NULL DEFAULT '', message TEXT NOT NULL DEFAULT '',
+        source_module TEXT, source_record_id TEXT,
+        created_at TEXT NOT NULL DEFAULT '', scheduled_at TEXT,
+        read_at TEXT, metadata TEXT NOT NULL DEFAULT '{}'
+      )
+    ''');
+    for (final entry in <String, String>{
+      'category': "TEXT NOT NULL DEFAULT 'other'",
+      'type': "TEXT NOT NULL DEFAULT 'info'",
+      'event_type': "TEXT NOT NULL DEFAULT 'unknown'",
+      'event_key': 'TEXT', 'message': "TEXT NOT NULL DEFAULT ''",
+      'source_module': 'TEXT', 'source_record_id': 'TEXT',
+      'read_at': 'TEXT', 'metadata': "TEXT NOT NULL DEFAULT '{}'",
+    }.entries) {
+      await _ensureColumn(db, 'notifications', entry.key, entry.value);
+    }
+    final notificationColumns = await _tableColumns(db, 'notifications');
+    if (notificationColumns.contains('body')) {
+      await db.execute("UPDATE notifications SET message=COALESCE(NULLIF(message,''),body,'')");
+    }
+    if (notificationColumns.contains('is_read')) {
+      await db.execute("""
+        UPDATE notifications SET read_at=COALESCE(read_at,
+          CASE WHEN is_read=1 THEN COALESCE(NULLIF(updated_at,''),NULLIF(created_at,'')) END)
+      """);
+    }
+    if (notificationColumns.contains('related_id')) {
+      await db.execute('UPDATE notifications SET source_record_id=COALESCE(source_record_id,related_id)');
+    }
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_notifications_read_at ON notifications(read_at)');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS study_subjects (
+        id TEXT PRIMARY KEY, name TEXT NOT NULL,
+        teacher TEXT NOT NULL DEFAULT '', description TEXT NOT NULL DEFAULT '',
+        academic_year TEXT NOT NULL DEFAULT '', semester INTEGER NOT NULL DEFAULT 1,
+        sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS study_periods (
+        id TEXT PRIMARY KEY, title TEXT NOT NULL,
+        period_type TEXT NOT NULL DEFAULT 'other', academic_year TEXT NOT NULL DEFAULT '',
+        semester INTEGER NOT NULL DEFAULT 1, starts_at TEXT, ends_at TEXT,
+        description TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS study_items (
+        id TEXT PRIMARY KEY, subject_id TEXT, period_id TEXT, title TEXT NOT NULL,
+        description TEXT NOT NULL DEFAULT '', item_type TEXT NOT NULL DEFAULT 'other',
+        format TEXT NOT NULL DEFAULT 'none', status TEXT NOT NULL DEFAULT 'planned',
+        scheduled_at TEXT, due_at TEXT, grade TEXT NOT NULL DEFAULT '',
+        notes TEXT NOT NULL DEFAULT '', sort_order INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+        FOREIGN KEY(subject_id) REFERENCES study_subjects(id) ON DELETE SET NULL,
+        FOREIGN KEY(period_id) REFERENCES study_periods(id) ON DELETE SET NULL
+      )
+    ''');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_study_items_schedule ON study_items(scheduled_at,due_at,sort_order)');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS knowledge_entries (
+        id TEXT PRIMARY KEY, title TEXT NOT NULL, content TEXT NOT NULL DEFAULT '',
+        category TEXT NOT NULL DEFAULT 'Другое', tags TEXT NOT NULL DEFAULT '[]',
+        source_url TEXT, sort_order INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_knowledge_entries_order ON knowledge_entries(sort_order,updated_at)');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_accounts (
+        id TEXT PRIMARY KEY, name TEXT NOT NULL, account_type TEXT NOT NULL DEFAULT 'other',
+        currency TEXT NOT NULL DEFAULT 'RUB', opening_balance_minor INTEGER NOT NULL DEFAULT 0,
+        is_active INTEGER NOT NULL DEFAULT 1, sort_order INTEGER NOT NULL DEFAULT 0,
+        notes TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_categories (
+        id TEXT PRIMARY KEY, name TEXT NOT NULL, category_type TEXT NOT NULL DEFAULT 'expense',
+        parent_id TEXT, is_active INTEGER NOT NULL DEFAULT 1, sort_order INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+        FOREIGN KEY(parent_id) REFERENCES finance_categories(id) ON DELETE SET NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_transactions (
+        id TEXT PRIMARY KEY, title TEXT NOT NULL, transaction_type TEXT NOT NULL DEFAULT 'expense',
+        amount_minor INTEGER NOT NULL DEFAULT 0, account_id TEXT NOT NULL,
+        destination_account_id TEXT, category_id TEXT, debt_id TEXT,
+        transaction_date TEXT NOT NULL, description TEXT NOT NULL DEFAULT '',
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+        FOREIGN KEY(account_id) REFERENCES finance_accounts(id) ON DELETE CASCADE,
+        FOREIGN KEY(destination_account_id) REFERENCES finance_accounts(id) ON DELETE SET NULL,
+        FOREIGN KEY(category_id) REFERENCES finance_categories(id) ON DELETE SET NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_debts (
+        id TEXT PRIMARY KEY, name TEXT NOT NULL, debt_type TEXT NOT NULL DEFAULT 'loan',
+        creditor TEXT NOT NULL DEFAULT '', initial_amount_minor INTEGER NOT NULL DEFAULT 0,
+        current_balance_minor INTEGER NOT NULL DEFAULT 0, interest_rate REAL NOT NULL DEFAULT 0,
+        monthly_payment_minor INTEGER NOT NULL DEFAULT 0, payment_day INTEGER,
+        next_payment_date TEXT, start_date TEXT, end_date TEXT,
+        status TEXT NOT NULL DEFAULT 'active', notes TEXT NOT NULL DEFAULT '',
+        sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_debt_payments (
+        id TEXT PRIMARY KEY, debt_id TEXT NOT NULL, transaction_id TEXT NOT NULL,
+        amount_minor INTEGER NOT NULL DEFAULT 0, principal_minor INTEGER NOT NULL DEFAULT 0,
+        interest_minor INTEGER NOT NULL DEFAULT 0, paid_at TEXT NOT NULL,
+        notes TEXT NOT NULL DEFAULT '', created_at TEXT NOT NULL,
+        FOREIGN KEY(debt_id) REFERENCES finance_debts(id) ON DELETE CASCADE,
+        FOREIGN KEY(transaction_id) REFERENCES finance_transactions(id) ON DELETE CASCADE
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_budgets (
+        id TEXT PRIMARY KEY, category_id TEXT NOT NULL, year INTEGER NOT NULL,
+        month INTEGER NOT NULL, limit_minor INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+        FOREIGN KEY(category_id) REFERENCES finance_categories(id) ON DELETE CASCADE
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS finance_savings_goals (
+        id TEXT PRIMARY KEY, title TEXT NOT NULL, target_amount_minor INTEGER NOT NULL DEFAULT 0,
+        saved_amount_minor INTEGER NOT NULL DEFAULT 0, currency TEXT NOT NULL DEFAULT 'RUB',
+        target_date TEXT, status TEXT NOT NULL DEFAULT 'active',
+        sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_transactions_date ON finance_transactions(transaction_date DESC)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_transactions_account ON finance_transactions(account_id)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_budgets_period ON finance_budgets(year,month,category_id)');
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_finance_debt_payments_debt ON finance_debt_payments(debt_id,paid_at DESC)');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS recipe_meal_plan_entries (
+        id TEXT PRIMARY KEY, recipe_id TEXT NOT NULL, plan_date TEXT NOT NULL,
+        meal_type TEXT NOT NULL DEFAULT 'Ужин', servings INTEGER NOT NULL DEFAULT 2,
+        cooking_days INTEGER NOT NULL DEFAULT 1, duration_minutes INTEGER,
+        status TEXT NOT NULL DEFAULT 'Запланировано', notes TEXT NOT NULL DEFAULT '',
+        sort_order INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL, updated_at TEXT NOT NULL,
+        FOREIGN KEY(recipe_id) REFERENCES recipe_entries(id) ON DELETE CASCADE
+      )
+    ''');
+    final oldMealPlan = await _tableColumns(db, 'meal_plan_entries');
+    if (oldMealPlan.isNotEmpty) {
+      final dateColumn = oldMealPlan.contains('plan_date') ? 'plan_date' : 'date';
+      await db.execute('''
+        INSERT OR IGNORE INTO recipe_meal_plan_entries
+        (id,recipe_id,plan_date,meal_type,servings,notes,created_at,updated_at)
+        SELECT id,recipe_id,$dateColumn,COALESCE(meal_type,'Ужин'),
+          COALESCE(servings,2),COALESCE(note,''),created_at,updated_at
+        FROM meal_plan_entries WHERE recipe_id IS NOT NULL
+      ''');
+    }
+    await db.execute('CREATE INDEX IF NOT EXISTS idx_recipe_meal_plan_date ON recipe_meal_plan_entries(plan_date,sort_order)');
+    await _ensureColumn(db, 'recipe_entries', 'cuisine', 'TEXT');
+  }
+
 }
