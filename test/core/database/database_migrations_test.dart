@@ -109,6 +109,9 @@ void main() {
         'title', 'quantity', 'notes', 'sort_order', 'purchased_at',
       ]));
       expect(await columns(db, 'notifications'), contains('read_at'));
+      expect(await columns(db, 'recipe_ingredients'), containsAll([
+        'quantity', 'notes',
+      ]));
       expect(await columns(db, 'recipe_entries'), containsAll([
         'cuisine', 'difficulty', 'is_cook_ahead',
       ]));
@@ -144,6 +147,11 @@ void main() {
       await db.insert('recipe_entries', {
         'id': 'recipe-1', 'title': 'Soup',
         'created_at': '2026-01-01', 'updated_at': '2026-01-01',
+      });
+      await db.insert('recipe_ingredients', {
+        'id': 'ingredient-1', 'recipe_id': 'recipe-1', 'name': 'Potato',
+        'amount': 3, 'unit': 'pcs', 'note': 'Large',
+        'sort_order': 0,
       });
       await db.insert('meal_plan_entries', {
         'id': 'meal-1', 'recipe_id': 'recipe-1', 'date': '2026-01-03',
@@ -183,6 +191,9 @@ void main() {
       final goal = (await db.query('finance_savings_goals')).single;
       expect(goal['target_amount_minor'], 50000);
       expect(goal['saved_amount_minor'], 12000);
+      final ingredient = (await db.query('recipe_ingredients')).single;
+      expect(ingredient['quantity'], 3);
+      expect(ingredient['notes'], 'Large');
     });
 
     test('is safe to run after the database is already at v25', () async {
