@@ -560,6 +560,50 @@ void main() {
       expect(book['genre'], 'Mystery');
     });
 
+    test('v25 recreates a missing shopping_lists parent for legacy v24 schema', () async {
+      db = await openTestDatabase();
+      await DatabaseMigrations.migrate(db, 1, 24);
+
+      // Match the supplied real-world database: shopping_items exists,
+      // has no list_id/FK, and shopping_lists is absent.
+      await db.execute('DROP TABLE shopping_items');
+      await db.execute('DROP TABLE shopping_lists');
+      await db.execute('''
+        CREATE TABLE shopping_items (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          category TEXT,
+          quantity REAL,
+          unit TEXT,
+          notes TEXT,
+          is_purchased INTEGER NOT NULL DEFAULT 0,
+          purchased_at TEXT,
+          source_module TEXT,
+          source_record_id TEXT,
+          sort_order INTEGER NOT NULL DEFAULT 0,
+          created_at TEXT NOT NULL,
+          updated_at TEXT NOT NULL
+        )
+      ''');
+      await db.insert('shopping_items', {
+        'id': 'legacy-shopping-item',
+        'title': 'Preserved item',
+        'created_at': '2026-11-13',
+        'updated_at': '2026-11-13',
+      });
+
+      await DatabaseMigrations.migrate(db, 24, 25);
+
+      expect(await tableNames(db), contains('shopping_lists'));
+      expect((await db.query('shopping_items')).single['title'], 'Preserved item');
+      expect(
+        (await db.rawQuery('PRAGMA foreign_key_list(shopping_items)'))
+            .map((row) => row['table']),
+        contains('shopping_lists'),
+      );
+      expect(await db.rawQuery('PRAGMA foreign_key_check'), isEmpty);
+    });
+
     test('upgrades every historical database version from 1 through 24', () async {
       for (var oldVersion = 1; oldVersion <= 24; oldVersion++) {
         db = await openTestDatabase();
