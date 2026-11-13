@@ -1047,18 +1047,20 @@ class DatabaseMigrations {
           created_at TEXT NOT NULL DEFAULT '',
           scheduled_at TEXT,
           read_at TEXT,
-          metadata TEXT NOT NULL DEFAULT '{}'
+          metadata TEXT NOT NULL DEFAULT '{}',
+          is_delivered INTEGER NOT NULL DEFAULT 0
         )
       ''');
       await db.execute('''
         INSERT INTO notifications_v25
         (id,category,type,event_type,event_key,title,message,source_module,
-         source_record_id,created_at,scheduled_at,read_at,metadata)
+         source_record_id,created_at,scheduled_at,read_at,metadata,is_delivered)
         SELECT $notificationId,$notificationCategory,$notificationType,
           $notificationEventType,$notificationEventKey,$notificationTitle,
           $notificationMessage,$notificationSourceModule,$notificationSourceId,
           COALESCE($notificationCreated,''),$notificationScheduled,
-          $readAtExpression,$notificationMetadata
+          $readAtExpression,$notificationMetadata,
+          ${legacyNotificationColumns.contains('is_delivered') ? 'COALESCE(is_delivered,0)' : '0'}
         FROM notifications
       ''');
       await db.execute('DROP TABLE notifications');
@@ -1070,7 +1072,8 @@ class DatabaseMigrations {
           type TEXT NOT NULL DEFAULT 'info', event_type TEXT NOT NULL DEFAULT 'unknown',
           event_key TEXT, title TEXT NOT NULL DEFAULT '', message TEXT NOT NULL DEFAULT '',
           source_module TEXT, source_record_id TEXT, created_at TEXT NOT NULL DEFAULT '',
-          scheduled_at TEXT, read_at TEXT, metadata TEXT NOT NULL DEFAULT '{}'
+          scheduled_at TEXT, read_at TEXT, metadata TEXT NOT NULL DEFAULT '{}',
+          is_delivered INTEGER NOT NULL DEFAULT 0
         )
       ''');
     }
@@ -1233,11 +1236,32 @@ class DatabaseMigrations {
     final oldMealPlan = await _tableColumns(db, 'meal_plan_entries');
     if (oldMealPlan.isNotEmpty) {
       final dateColumn = oldMealPlan.contains('plan_date') ? 'plan_date' : 'date';
+      final mealNotes = oldMealPlan.contains('notes')
+          ? 'notes'
+          : (oldMealPlan.contains('note') ? 'note' : "''");
+      final cookingDays = oldMealPlan.contains('cooking_days') ? 'cooking_days' : '1';
+      final durationMinutes = oldMealPlan.contains('duration_minutes')
+          ? 'duration_minutes'
+          : 'NULL';
+      final mealStatus = oldMealPlan.contains('status')
+          ? 'status'
+          : "'Запланировано'";
+      final mealSortOrder = oldMealPlan.contains('sort_order') ? 'sort_order' : '0';
+      final mealCreatedAt = oldMealPlan.contains('created_at')
+          ? 'created_at'
+          : "datetime('now')";
+      final mealUpdatedAt = oldMealPlan.contains('updated_at')
+          ? 'updated_at'
+          : mealCreatedAt;
       await db.execute('''
         INSERT OR IGNORE INTO recipe_meal_plan_entries
-        (id,recipe_id,plan_date,meal_type,servings,notes,created_at,updated_at)
+        (id,recipe_id,plan_date,meal_type,servings,cooking_days,duration_minutes,
+         status,notes,sort_order,created_at,updated_at)
         SELECT id,recipe_id,$dateColumn,COALESCE(meal_type,'Ужин'),
-          COALESCE(servings,2),COALESCE(note,''),created_at,updated_at
+          COALESCE(servings,2),COALESCE($cookingDays,1),$durationMinutes,
+          COALESCE($mealStatus,'Запланировано'),COALESCE($mealNotes,''),
+          COALESCE($mealSortOrder,0),COALESCE($mealCreatedAt,datetime('now')),
+          COALESCE($mealUpdatedAt,datetime('now'))
         FROM meal_plan_entries WHERE recipe_id IS NOT NULL
       ''');
     }
