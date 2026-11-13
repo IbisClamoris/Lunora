@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:lunora/core/database/database_migrations.dart';
 import 'package:lunora/features/notifications/models/notification_item.dart';
+import 'package:lunora/features/recipes/models/recipe_ingredient.dart';
 
 Future<Database> openTestDatabase() async {
   sqfliteFfiInit();
@@ -248,6 +249,8 @@ void main() {
       final ingredient = (await db.query('recipe_ingredients')).single;
       expect(ingredient['quantity'], 3);
       expect(ingredient['notes'], 'Large');
+      expect(RecipeIngredient.fromMap(ingredient).createdAt, isA<DateTime>());
+      expect(RecipeIngredient.fromMap(ingredient).updatedAt, isA<DateTime>());
       // Current RecipeIngredient.toMap requires both timestamp columns.
       await db.insert('recipe_ingredients', {
         'id': 'ingredient-2', 'recipe_id': 'recipe-1', 'name': 'Carrot',
