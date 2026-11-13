@@ -8,7 +8,7 @@ class LunoraDatabase {
 
   static final LunoraDatabase instance = LunoraDatabase._();
 
-  static const int databaseVersion = 24;
+  static const int databaseVersion = 25;
   static const String databaseName = 'lunora.db';
 
   Database? _database;
