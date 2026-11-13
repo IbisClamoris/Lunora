@@ -60,11 +60,14 @@ See the [Releases](https://github.com/IbisClamoris/Lunora/releases) page for ava
 
 ## 📜 Open Source
 
-Lunora is an open-source project distributed under the GNU General Public License v3.0 (GPL-3.0).
+Lunora is an open-source project distributed under the **GNU General Public License v3.0 (GPL-3.0)**.
 
-You are welcome to explore the source code, study the project, and contribute to its development.
+You are welcome to explore the source code, learn how the application works, and contribute to its development.
 
-See [LICENSE](LICENSE) for license details, [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for third-party dependency licenses, and [CONTRIBUTING.md](CONTRIBUTING.md) for contribution guidelines.
+**Project documents:**
+- **Project license:** [LICENSE](LICENSE)
+- **Third-party dependency licenses:** [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+- **Contribution guidelines:** [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
@@ -128,11 +131,16 @@ Lunora создана как персональное настольное пр�
 
 Все доступные версии и установщики находятся на странице [Releases](https://github.com/IbisClamoris/Lunora/releases).
 
-Lunora — проект с открытым исходным кодом, распространяемый на условиях GNU General Public License версии 3.0 (GPL-3.0).
+### 📜 Открытый исходный код
+
+Lunora — проект с открытым исходным кодом, распространяемый на условиях **GNU General Public License версии 3.0 (GPL-3.0)**.
 
 Вы можете изучать исходный код, знакомиться с устройством приложения и участвовать в его развитии.
 
-Подробнее: LICENSE — условия лицензии, THIRD_PARTY_NOTICES.md — лицензии сторонних зависимостей, CONTRIBUTING.md — рекомендации для участников проекта.
+**Документы проекта:**
+- **Лицензия проекта:** [LICENSE](LICENSE)
+- **Лицензии сторонних зависимостей:** [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)
+- **Рекомендации для участников:** [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ---
 
