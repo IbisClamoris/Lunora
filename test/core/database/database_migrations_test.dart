@@ -110,7 +110,7 @@ void main() {
       ]));
       expect(await columns(db, 'notifications'), contains('read_at'));
       expect(await columns(db, 'recipe_ingredients'), containsAll([
-        'quantity', 'notes',
+        'quantity', 'notes', 'created_at', 'updated_at',
       ]));
       expect(await columns(db, 'recipe_entries'), containsAll([
         'cuisine', 'difficulty', 'is_cook_ahead',
@@ -194,6 +194,14 @@ void main() {
       final ingredient = (await db.query('recipe_ingredients')).single;
       expect(ingredient['quantity'], 3);
       expect(ingredient['notes'], 'Large');
+      // Current RecipeIngredient.toMap requires both timestamp columns.
+      await db.insert('recipe_ingredients', {
+        'id': 'ingredient-2', 'recipe_id': 'recipe-1', 'name': 'Carrot',
+        'quantity': 1.5, 'unit': 'pcs', 'notes': 'Fresh',
+        'sort_order': 1, 'created_at': '2026-01-03T00:00:00.000',
+        'updated_at': '2026-01-03T00:00:00.000',
+      });
+      expect((await db.query('recipe_ingredients')).length, 2);
     });
 
     test('new feature tables accept current model-shaped records', () async {
