@@ -109,6 +109,8 @@ void main() {
         'title', 'quantity', 'notes', 'sort_order', 'purchased_at',
       ]));
       expect(await columns(db, 'notifications'), contains('read_at'));
+      expect(await columns(db, 'notifications'), isNot(contains('updated_at')));
+      expect(await columns(db, 'book_entries'), containsAll(['authors', 'genre']));
       expect(await columns(db, 'recipe_ingredients'), containsAll([
         'quantity', 'notes', 'created_at', 'updated_at',
       ]));
@@ -182,6 +184,26 @@ void main() {
       final notification = (await db.query('notifications')).single;
       expect(notification['message'], 'Read a chapter');
       expect(notification['read_at'], isNotNull);
+      // Current NotificationItem.toMap omits the legacy updated_at column.
+      await db.insert('notifications', {
+        'id': 'notice-2', 'category': 'study', 'type': 'reminder',
+        'event_type': 'study_deadline', 'title': 'Exam',
+        'message': 'Prepare notes', 'created_at': '2026-01-04T00:00:00.000',
+        'metadata': '{}',
+      });
+      expect((await db.query('notifications')).length, 2);
+
+      // Current BookEntry.toMap uses authors/genre rather than legacy author/genres.
+      await db.insert('book_entries', {
+        'id': 'book-1', 'title': 'Neverwhere', 'authors': 'Neil Gaiman',
+        'description': '', 'genre': 'Fantasy', 'tags': '[]',
+        'status': 'reading', 'review': '', 'is_favorite': 0,
+        'created_at': '2026-01-04T00:00:00.000',
+        'updated_at': '2026-01-04T00:00:00.000',
+        'current_page': 10, 'series_name': '', 'book_format': '',
+        'source_name': '',
+      });
+      expect((await db.query('book_entries')).single['authors'], 'Neil Gaiman');
 
       final meal = (await db.query('recipe_meal_plan_entries')).single;
       expect(meal['recipe_id'], 'recipe-1');
