@@ -449,6 +449,52 @@ void main() {
       }
     });
 
+    test('movie, diary and planner tables accept current model records', () async {
+      db = await openTestDatabase();
+      await DatabaseMigrations.migrate(db, 1, 25);
+      const now = '2026-11-13T12:00:00.000';
+
+      await db.insert('movie_entries', {
+        'id': 'movie-1', 'title': 'The Example', 'original_title': '',
+        'media_type': 'movie', 'description': '', 'genres': '[]',
+        'tags': '[]', 'status': 'planned', 'review': '',
+        'current_season': 0, 'current_episode': 0, 'is_favorite': 0,
+        'sort_order': 0, 'created_at': now, 'updated_at': now,
+      });
+      await db.insert('movie_episodes', {
+        'id': 'episode-1', 'movie_id': 'movie-1', 'season_number': 1,
+        'episode_number': 1, 'title': 'Pilot', 'status': 'planned',
+        'notes': '', 'created_at': now, 'updated_at': now,
+      });
+      await db.insert('movie_watch_history', {
+        'id': 'watch-1', 'movie_id': 'movie-1', 'watched_at': now,
+        'mood': '', 'impressions': '', 'favorite_quote': '', 'notes': '',
+        'created_at': now, 'updated_at': now,
+      });
+      await db.insert('movie_genres', {
+        'id': 'genre-1', 'name': 'Fantasy', 'is_favorite': 0,
+        'created_at': now, 'updated_at': now,
+      });
+      await db.insert('diary_entries', {
+        'id': 'diary-1', 'title': 'Today', 'content': 'Entry',
+        'entry_date': '2026-11-13', 'created_at': now, 'updated_at': now,
+        'category': 'Personal', 'entry_type': 'diary',
+        'is_favorite': 0, 'tags': '[]',
+      });
+      await db.insert('planner_goals', {
+        'id': 'goal-1', 'title': 'Read a book', 'month': 11, 'year': 2026,
+        'is_completed': 0, 'sort_order': 0,
+        'created_at': now, 'updated_at': now,
+      });
+      expect((await db.query('movie_entries')).single['title'], 'The Example');
+      expect((await db.query('movie_episodes')).single['movie_id'], 'movie-1');
+      expect((await db.query('movie_watch_history')).single['id'], 'watch-1');
+      expect((await db.query('movie_genres')).single['name'], 'Fantasy');
+      expect((await db.query('diary_entries')).single['entry_date'], '2026-11-13');
+      expect((await db.query('planner_goals')).single['title'], 'Read a book');
+      expect(await db.rawQuery('PRAGMA foreign_key_check'), isEmpty);
+    });
+
     test('is safe to open a database already at v25 without rerunning migrations', () async {
       db = await openTestDatabase();
       await DatabaseMigrations.migrate(db, 1, 25);
