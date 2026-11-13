@@ -387,6 +387,30 @@ void main() {
       expect(await columns(db, 'notifications'), isNot(contains('updated_at')));
     });
 
+    test('upgrades legacy notifications with is_read but no updated_at', () async {
+      db = await openTestDatabase();
+      await DatabaseMigrations.migrate(db, 1, 19);
+      await db.execute('''
+        CREATE TABLE notifications (
+          id TEXT PRIMARY KEY, title TEXT NOT NULL,
+          body TEXT NOT NULL DEFAULT '', type TEXT NOT NULL DEFAULT '',
+          is_read INTEGER NOT NULL DEFAULT 0, created_at TEXT NOT NULL
+        )
+      ''');
+      await db.insert('notifications', {
+        'id': 'notice-no-updated', 'title': 'Legacy reminder',
+        'body': 'Still here', 'type': 'reminder', 'is_read': 1,
+        'created_at': '2025-03-01T10:00:00.000',
+      });
+
+      await DatabaseMigrations.migrate(db, 19, 25);
+
+      final notice = (await db.query('notifications')).single;
+      expect(notice['message'], 'Still here');
+      expect(notice['read_at'], '2025-03-01T10:00:00.000');
+      expect(await columns(db, 'notifications'), isNot(contains('updated_at')));
+    });
+
     test('upgrades a version 21 database with existing book metadata', () async {
       db = await openTestDatabase();
       await DatabaseMigrations.migrate(db, 1, 21);
