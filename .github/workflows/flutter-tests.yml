@@ -1,19 +1,22 @@
-name: Flutter tests
+name: Flutter CI and Windows release
 
 on:
   push:
     branches:
       - main
-      - fix/database-schema-v25
+    tags:
+      - "v*"
   pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 jobs:
-  test:
+  test-build:
+    name: Test and build Windows installer
     runs-on: windows-latest
     steps:
       - name: Checkout
@@ -25,6 +28,24 @@ jobs:
           channel: stable
           flutter-version: 3.47.9
           cache: true
+
+      - name: Read and validate application version
+        id: app-version
+        shell: pwsh
+        run: |
+          $pubspec = Get-Content pubspec.yaml -Raw
+          if ($pubspec -notmatch '(?m)^version:\s*([0-9]+\.[0-9]+\.[0-9]+)(?:\+([0-9]+))?\s*$') {
+            throw "Could not read a valid version from pubspec.yaml"
+          }
+          $version = $Matches[1]
+          "version=$version" >> $env:GITHUB_OUTPUT
+          if ("${{ github.ref_type }}" -eq "tag") {
+            $expectedTag = "v$version"
+            if ("${{ github.ref_name }}" -ne $expectedTag) {
+              throw "Tag ${{ github.ref_name }} does not match pubspec.yaml version $expectedTag"
+            }
+          }
+          Write-Host "Building Lunora $version"
 
       - name: Install dependencies
         run: flutter pub get
@@ -43,21 +64,66 @@ jobs:
         run: |
           $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
           if (-not (Test-Path $iscc)) { throw "Inno Setup compiler not found: $iscc" }
-          & $iscc /DAppVersion=1.0.0 installer/Lunora.iss
+          $version = "${{ steps.app-version.outputs.version }}"
+          & $iscc "/DAppVersion=$version" installer/Lunora.iss
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
-      - name: Upload Windows test build
+      - name: Generate SHA-256 checksum
+        shell: pwsh
+        run: |
+          $version = "${{ steps.app-version.outputs.version }}"
+          $installer = "build/installer/Lunora-Setup-$version.exe"
+          if (-not (Test-Path $installer)) { throw "Installer not found: $installer" }
+          $hash = (Get-FileHash -Algorithm SHA256 $installer).Hash.ToLowerInvariant()
+          "$hash  Lunora-Setup-$version.exe" | Set-Content -Encoding ascii "$installer.sha256"
+          Write-Host "SHA-256: $hash"
+
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: Lunora-Windows-${{ github.sha }}
-          path: build/windows/x64/runner/Release/
+          path: |
+            build/windows/x64/runner/Release/
+            build/installer/Lunora-Setup-*.exe
+            build/installer/Lunora-Setup-*.exe.sha256
           if-no-files-found: error
           retention-days: 14
 
-      - name: Upload Lunora installer
+      - name: Upload release bundle
+        if: startsWith(github.ref, 'refs/tags/v')
         uses: actions/upload-artifact@v4
         with:
-          name: Lunora-Setup-${{ github.sha }}
-          path: build/installer/Lunora-Setup-1.0.0.exe
+          name: lunora-release-bundle
+          path: |
+            build/installer/Lunora-Setup-*.exe
+            build/installer/Lunora-Setup-*.exe.sha256
           if-no-files-found: error
-          retention-days: 14
+          retention-days: 1
+
+  publish-release:
+    name: Publish GitHub Release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: test-build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download installer and checksum
+        uses: actions/download-artifact@v4
+        with:
+          name: lunora-release-bundle
+          path: dist
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Lunora ${{ github.ref_name }}
+          generate_release_notes: true
+          files: |
+            dist/*.exe
+            dist/*.sha256
+          fail_on_unmatched_files: true
+          make_latest: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

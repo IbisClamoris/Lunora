@@ -1,5 +1,5 @@
 #ifndef AppVersion
-  #define AppVersion "1.0.0"
+  #error AppVersion must be supplied by the release workflow.
 #endif
 
 #define AppName "Lunora"
