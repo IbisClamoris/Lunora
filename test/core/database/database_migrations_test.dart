@@ -119,6 +119,104 @@ void main() {
       expect(await columns(db, 'recipe_entries'), containsAll([
         'cuisine', 'difficulty', 'is_cook_ahead',
       ]));
+
+      // Verify the complete column contract used by current feature models.
+      const modelColumns = <String, List<String>>{
+        'movie_entries': [
+          'id', 'title', 'original_title', 'media_type', 'description',
+          'poster_path', 'backdrop_path', 'genres', 'tags', 'status',
+          'rating', 'review', 'release_year', 'runtime_minutes',
+          'seasons_count', 'episodes_count', 'current_season',
+          'current_episode', 'watched_at', 'created_at', 'updated_at',
+        ],
+        'movie_episodes': [
+          'id', 'movie_id', 'season_number', 'episode_number', 'title',
+          'air_date', 'status', 'watched_at', 'rating', 'notes',
+          'created_at', 'updated_at',
+        ],
+        'movie_watch_history': [
+          'id', 'movie_id', 'watched_at', 'started_at', 'finished_at',
+          'duration_minutes', 'rating', 'mood', 'impressions',
+          'favorite_quote', 'notes', 'created_at', 'updated_at',
+        ],
+        'movie_genres': [
+          'id', 'name', 'is_favorite', 'created_at', 'updated_at',
+        ],
+        'diary_entries': [
+          'id', 'title', 'content', 'entry_date', 'created_at',
+          'updated_at', 'mood', 'category', 'entry_type', 'is_favorite', 'tags',
+        ],
+        'planner_goals': [
+          'id', 'title', 'month', 'year', 'is_completed', 'sort_order',
+          'created_at', 'updated_at',
+        ],
+        'tasks': [
+          'id', 'title', 'description', 'status', 'priority', 'due_date',
+          'due_time_minutes', 'created_at', 'updated_at', 'completed_at',
+        ],
+        'wishlist_entries': [
+          'id', 'title', 'description', 'image_path', 'category', 'tags',
+          'price', 'currency', 'source_url', 'priority', 'desired_date',
+          'is_purchased', 'is_favorite', 'purchased_at', 'notes',
+          'sort_order', 'created_at', 'updated_at', 'legacy_status',
+        ],
+        'study_subjects': [
+          'id', 'name', 'teacher', 'description', 'academic_year',
+          'semester', 'sort_order', 'created_at', 'updated_at',
+        ],
+        'study_periods': [
+          'id', 'title', 'period_type', 'academic_year', 'semester',
+          'starts_at', 'ends_at', 'description', 'created_at', 'updated_at',
+        ],
+        'study_items': [
+          'id', 'subject_id', 'period_id', 'title', 'description',
+          'item_type', 'format', 'status', 'scheduled_at', 'due_at',
+          'grade', 'notes', 'sort_order', 'created_at', 'updated_at',
+        ],
+        'knowledge_entries': [
+          'id', 'title', 'content', 'category', 'tags', 'source_url',
+          'sort_order', 'created_at', 'updated_at',
+        ],
+        'finance_accounts': [
+          'id', 'name', 'account_type', 'currency', 'opening_balance_minor',
+          'is_active', 'sort_order', 'notes', 'created_at', 'updated_at',
+        ],
+        'finance_categories': [
+          'id', 'name', 'category_type', 'parent_id', 'is_active',
+          'sort_order', 'created_at', 'updated_at',
+        ],
+        'finance_transactions': [
+          'id', 'title', 'transaction_type', 'amount_minor', 'account_id',
+          'destination_account_id', 'category_id', 'debt_id',
+          'transaction_date', 'description', 'created_at', 'updated_at',
+        ],
+        'finance_debts': [
+          'id', 'name', 'debt_type', 'creditor', 'initial_amount_minor',
+          'current_balance_minor', 'interest_rate', 'monthly_payment_minor',
+          'payment_day', 'next_payment_date', 'start_date', 'end_date',
+          'status', 'notes', 'sort_order', 'created_at', 'updated_at',
+        ],
+        'finance_debt_payments': [
+          'id', 'debt_id', 'transaction_id', 'amount_minor',
+          'principal_minor', 'interest_minor', 'paid_at', 'notes', 'created_at',
+        ],
+        'finance_budgets': [
+          'id', 'category_id', 'year', 'month', 'limit_minor',
+          'created_at', 'updated_at',
+        ],
+        'finance_savings_goals': [
+          'id', 'title', 'description', 'target_amount_minor',
+          'saved_amount_minor', 'currency', 'target_date', 'status',
+          'sort_order', 'created_at', 'updated_at',
+        ],
+      };
+      for (final entry in modelColumns.entries) {
+        expect(
+          await columns(db, entry.key),
+          containsAll(entry.value),
+          reason: 'Schema mismatch for ${entry.key}',
+        );
+      }
     });
 
     test('preserves legacy shopping, wishlist, notification and meal-plan rows', () async {
