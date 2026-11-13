@@ -137,7 +137,7 @@ void main() {
         'id': 'wish-1', 'title': 'Book', 'description': 'A novel',
         'category': 'Books', 'price': 25, 'currency': 'EUR',
         'url': 'https://example.com/book', 'image_path': null,
-        'priority': 'high', 'status': 'planned', 'is_favorite': 0,
+        'priority': 'high', 'status': 'planned', 'is_favorite': 1,
         'created_at': '2026-01-01', 'updated_at': '2026-01-02',
       });
       await db.insert('notifications', {
@@ -178,6 +178,7 @@ void main() {
       await DatabaseMigrations.migrate(db, 24, 25);
 
       final shopping = (await db.query('shopping_items')).single;
+      expect(shopping['list_id'], 'list-1');
       expect(shopping['title'], 'Tea');
       expect(shopping['quantity'], 2);
       expect(shopping['notes'], 'Green tea');
@@ -187,6 +188,7 @@ void main() {
       expect(wishlist['title'], 'Book');
       expect(wishlist['source_url'], 'https://example.com/book');
       expect(wishlist['priority'], 'high');
+      expect(wishlist['is_favorite'], 1);
 
       final notification = (await db.query('notifications')).single;
       expect(notification['message'], 'Read a chapter');
@@ -232,8 +234,8 @@ void main() {
       );
 
       final goal = (await db.query('finance_savings_goals')).single;
-      expect(goal['target_amount_minor'], 50000);
-      expect(goal['saved_amount_minor'], 12000);
+      expect(goal['target_amount_minor'], 5000000);
+      expect(goal['saved_amount_minor'], 1200000);
       final ingredient = (await db.query('recipe_ingredients')).single;
       expect(ingredient['quantity'], 3);
       expect(ingredient['notes'], 'Large');
