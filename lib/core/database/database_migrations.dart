@@ -1170,6 +1170,17 @@ class DatabaseMigrations {
     await _ensureColumn(db, 'recipe_entries', 'cuisine', 'TEXT');
     await _ensureColumn(db, 'recipe_entries', 'difficulty', "TEXT NOT NULL DEFAULT ''");
     await _ensureColumn(db, 'recipe_entries', 'is_cook_ahead', 'INTEGER NOT NULL DEFAULT 0');
+    // Recipe ingredients were originally stored as amount/note; current
+    // RecipeIngredient writes quantity/notes. Keep legacy columns and copy.
+    await _ensureColumn(db, 'recipe_ingredients', 'quantity', 'REAL');
+    await _ensureColumn(db, 'recipe_ingredients', 'notes', "TEXT NOT NULL DEFAULT ''");
+    final ingredientColumns = await _tableColumns(db, 'recipe_ingredients');
+    if (ingredientColumns.contains('amount')) {
+      await db.execute('UPDATE recipe_ingredients SET quantity=COALESCE(quantity,amount)');
+    }
+    if (ingredientColumns.contains('note')) {
+      await db.execute("UPDATE recipe_ingredients SET notes=CASE WHEN notes='' THEN COALESCE(note,'') ELSE notes END");
+    }
   }
 
 }
