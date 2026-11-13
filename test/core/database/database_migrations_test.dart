@@ -160,6 +160,13 @@ void main() {
         'meal_type': 'Lunch', 'servings': 3, 'note': 'Prepare ahead',
         'created_at': '2026-01-01', 'updated_at': '2026-01-01',
       });
+      // A legacy plan entry can outlive its recipe because recipe_id is nullable
+      // and uses ON DELETE SET NULL. v25 keeps this row in the legacy table.
+      await db.insert('meal_plan_entries', {
+        'id': 'meal-detached', 'recipe_id': null, 'date': '2026-01-04',
+        'meal_type': 'Breakfast', 'servings': 1, 'note': 'Recipe was deleted',
+        'created_at': '2026-01-01', 'updated_at': '2026-01-02',
+      });
       await db.insert('finance_savings_goals', {
         'id': 'goal-1', 'title': 'Trip', 'description': '',
         'target_amount': 50000, 'current_amount': 12000,
@@ -209,6 +216,20 @@ void main() {
       expect(meal['recipe_id'], 'recipe-1');
       expect(meal['plan_date'], '2026-01-03');
       expect(meal['notes'], 'Prepare ahead');
+
+      // Detached legacy entries are intentionally retained in the old table.
+      // They cannot be represented by the current model, whose recipeId is required.
+      final detachedLegacyMeals = await db.query(
+        'meal_plan_entries',
+        where: 'id = ?',
+        whereArgs: ['meal-detached'],
+      );
+      expect(detachedLegacyMeals, hasLength(1));
+      expect(detachedLegacyMeals.single['recipe_id'], isNull);
+      expect(
+        (await db.query('recipe_meal_plan_entries')).map((row) => row['id']),
+        isNot(contains('meal-detached')),
+      );
 
       final goal = (await db.query('finance_savings_goals')).single;
       expect(goal['target_amount_minor'], 50000);
