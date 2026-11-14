@@ -111,14 +111,14 @@ class _FinancePageState extends State<FinancePage>
       if (!mounted) return;
 
       await _showMessage(
-        LunoraLocalization.text('Импорт завершён.\n', 'Import complete.\n')
-        LunoraLocalization.text('Счета: ${result.accounts}\n', 'Accounts: ${result.accounts}\n')
-        LunoraLocalization.text('Категории: ${result.categories}\n', 'Categories: ${result.categories}\n')
-        LunoraLocalization.text('Операции: ${result.transactions}\n', 'Transactions: ${result.transactions}\n')
-        LunoraLocalization.text('Кредиты: ${result.debts}\n', 'Loans: ${result.debts}\n')
-        LunoraLocalization.text('Бюджеты: ${result.budgets}\n', 'Budgets: ${result.budgets}\n')
-        LunoraLocalization.text('Накопления: ${result.savingsGoals}\n', 'Savings goals: ${result.savingsGoals}\n')
-        LunoraLocalization.text('Пропущено дубликатов операций: ${result.skippedTransactions}', 'Duplicate transactions skipped: ${result.skippedTransactions}'),
+        LunoraLocalization.text('Импорт завершён.\n', 'Import complete.\n') +
+        LunoraLocalization.text('Счета: ${result.accounts}\n', 'Accounts: ${result.accounts}\n') +
+        LunoraLocalization.text('Категории: ${result.categories}\n', 'Categories: ${result.categories}\n') +
+        LunoraLocalization.text('Операции: ${result.transactions}\n', 'Transactions: ${result.transactions}\n') +
+        LunoraLocalization.text('Кредиты: ${result.debts}\n', 'Loans: ${result.debts}\n') +
+        LunoraLocalization.text('Бюджеты: ${result.budgets}\n', 'Budgets: ${result.budgets}\n') +
+        LunoraLocalization.text('Накопления: ${result.savingsGoals}\n', 'Savings goals: ${result.savingsGoals}\n') +
+                LunoraLocalization.text('Пропущено дубликатов операций: ${result.skippedTransactions}', 'Duplicate transactions skipped: ${result.skippedTransactions}'),
       );
     } catch (error) {
       await _showError(error);
@@ -200,7 +200,7 @@ class _FinancePageState extends State<FinancePage>
 
   Future<void> _runAction(
     Future<void> Function() action, {
-    String successMessage = LunoraLocalization.text('Изменения сохранены.', 'Changes saved.'),
+    String successMessage = 'Изменения сохранены.',
   }) async {
     try {
       await action();
@@ -3039,10 +3039,10 @@ class _FinancePageState extends State<FinancePage>
                           style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
                         subtitle: Text(
-                          '${_date(payment.paidAt)}\n'
-                          LunoraLocalization.text('Основной долг: ', 'Principal: ')
-                          '${_money(payment.principalMinor)}\n'
-                          LunoraLocalization.text('Проценты: ${_money(payment.interestMinor)}', 'Interest: ${_money(payment.interestMinor)}')
+                          '${_date(payment.paidAt)}\n' +
+                          LunoraLocalization.text('Основной долг: ', 'Principal: ') +
+                          '${_money(payment.principalMinor)}\n' +
+                          LunoraLocalization.text('Проценты: ${_money(payment.interestMinor)}', 'Interest: ${_money(payment.interestMinor)}') +
                           '${payment.notes.trim().isNotEmpty ? '\n${payment.notes}' : ''}',
                         ),
                         isThreeLine: true,
