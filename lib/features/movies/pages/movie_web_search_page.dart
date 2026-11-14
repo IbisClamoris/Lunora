@@ -40,12 +40,18 @@ class _MovieWebSearchPageState extends State<MovieWebSearchPage> {
         _results = results;
         if (results.isEmpty) {
           _error = _searchMode == 'person'
-              ? 'По этому актёру или режиссёру сериалы не найдены.'
-              : 'Фильмы, сериалы или аниме не найдены. Попробуй другое название.';
+              ? LunoraLocalization.text(
+                  'По этому актёру или режиссёру сериалы не найдены.',
+                )
+              : LunoraLocalization.text(
+                  'Фильмы, сериалы или аниме не найдены. Попробуй другое название.',
+                );
         }
       });
     } catch (error) {
-      if (mounted) setState(() => _error = 'Ошибка поиска: $error');
+      if (mounted) {
+        setState(() => _error = '${LunoraLocalization.text('Ошибка поиска: ')}$error');
+      }
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -89,8 +95,8 @@ class _MovieWebSearchPageState extends State<MovieWebSearchPage> {
                         onSubmitted: (_) => _search(),
                         decoration: InputDecoration(
                           hintText: _searchMode == 'person'
-                              ? 'Имя актёра или режиссёра'
-                              : 'Название фильма, сериала или аниме',
+                              ? LunoraLocalization.text('Имя актёра или режиссёра')
+                              : LunoraLocalization.text('Название фильма, сериала или аниме'),
                           prefixIcon: const Icon(Icons.search),
                           border: const OutlineInputBorder(),
                         ),
