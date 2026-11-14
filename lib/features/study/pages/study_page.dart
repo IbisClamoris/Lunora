@@ -839,7 +839,7 @@ class _StudyPageState extends State<StudyPage> {
 
   Future<void> _addItem() async {
     if (_subjects.isEmpty) {
-      _showError('Сначала добавь хотя бы один учебный предмет.');
+      _showError(LunoraLocalization.text('Сначала добавь хотя бы один учебный предмет.', 'Add at least one subject first.'));
 
       return;
     }
@@ -901,7 +901,7 @@ class _StudyPageState extends State<StudyPage> {
 
     Future<void> pickScheduledTime(StateSetter setDialogState) async {
       if (selectedScheduledAt == null) {
-        _showError('Сначала выбери дату занятия.');
+        _showError(LunoraLocalization.text('Сначала выбери дату занятия.', 'Choose a class date first.'));
 
         return;
       }
@@ -1349,7 +1349,7 @@ class _StudyPageState extends State<StudyPage> {
 
       await _loadData();
     } catch (error) {
-      _showError('Не удалось удалить предмет: $error');
+      _showError(LunoraLocalization.text('Не удалось удалить предмет: $error', 'Could not delete subject: $error'));
     }
   }
 
@@ -1367,7 +1367,7 @@ class _StudyPageState extends State<StudyPage> {
 
       await _loadData();
     } catch (error) {
-      _showError('Не удалось удалить период: $error');
+      _showError(LunoraLocalization.text('Не удалось удалить период: $error', 'Could not delete period: $error'));
     }
   }
 
@@ -1385,7 +1385,7 @@ class _StudyPageState extends State<StudyPage> {
 
       await _loadData();
     } catch (error) {
-      _showError('Не удалось удалить событие: $error');
+      _showError(LunoraLocalization.text('Не удалось удалить событие: $error', 'Could not delete event: $error'));
     }
   }
 
