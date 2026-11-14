@@ -927,9 +927,9 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
         ),
         const SizedBox(height: 9),
         if (activeDebts.isEmpty)
-          const _AnalyticsEmpty(text: 'Активных задолженностей нет.')
+          const _AnalyticsEmpty(text: LunoraLocalization.text('Активных задолженностей нет.', 'No active debts.'))
         else if (upcoming.isEmpty)
-          const _AnalyticsEmpty(text: 'Ближайшие даты платежей не указаны.')
+          const _AnalyticsEmpty(text: LunoraLocalization.text('Ближайшие даты платежей не указаны.', 'Upcoming payment dates are not specified.'))
         else
           _card(
             child: Column(
