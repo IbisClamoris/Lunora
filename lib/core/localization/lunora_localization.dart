@@ -330,16 +330,16 @@ abstract final class LunoraLocalization {
     'Редактировать': 'Edit',
     'Редактировать запись': 'Edit entry',
     'Удалить запись?': 'Delete entry?',
-    'Эта запись будет удалена без возможности восстановления.':
+    'Эта запись будет удалена без возможности восстановления.': 'This entry will be permanently deleted.',
     'Запись дневника': 'Diary entry',
     'Любимый момент': 'Favourite moment',
     'Добавить запись в избранное': 'Add entry to favourites',
     'Добавить первую книгу': 'Add your first book',
     'Не удалось загрузить библиотеку': 'Could not load the library',
-    'Номер книги в серии должен быть числом.':
-    'Количество прочитанных страниц не может превышать общее количество.':
-    'Количество страниц не может быть отрицательным.':
-    'Количество прочитанных страниц не может быть отрицательным.':
+    'Номер книги в серии должен быть числом.': 'The book number in the series must be a number.',
+    'Количество прочитанных страниц не может превышать общее количество.': 'The number of pages read cannot exceed the total number of pages.',
+    'Количество страниц не может быть отрицательным.': 'The page count cannot be negative.',
+    'Количество прочитанных страниц не может быть отрицательным.': 'The number of pages read cannot be negative.',
     'Удалить книгу?': 'Delete book?',
     'Прогресс чтения': 'Reading progress',
     'О книге': 'About the book',
@@ -353,7 +353,7 @@ abstract final class LunoraLocalization {
     'Форматы файлов: .xlsx и .xlsm': 'File formats: .xlsx and .xlsm',
     'Всего импортировано:': 'Total imported:',
     'Всего пропущено:': 'Total skipped:',
-    'Даты можно оставить пустыми и заполнить позже.':
+    'Даты можно оставить пустыми и заполнить позже.': 'You can leave the dates blank and fill them in later.',
     'Без предмета': 'No subject',
     'Мой учебный мир': 'My study space',
     'СЕМЕСТР': 'SEMESTER',
@@ -376,8 +376,8 @@ abstract final class LunoraLocalization {
     'Убрать из избранного': 'Remove from favourites',
     'В избранном пока пусто': 'No favorites yet',
     'Здесь пока нет рецептов': 'No recipes here yet',
-    'Твои любимые блюда будут собраны здесь':
-    'Коллекция блюд, которые хочется готовить снова':
+    'Твои любимые блюда будут собраны здесь': 'Your favourite dishes will be collected here.',
+    'Коллекция блюд, которые хочется готовить снова': 'A collection of dishes worth making again.',
     'Найти рецепты в интернете': 'Find recipes online',
     'Время не указано': 'Time not specified',
     'порц.': 'servings',
@@ -405,11 +405,11 @@ abstract final class LunoraLocalization {
     'Покупки': 'Shopping',
     'Найти товар...': 'Find an item...',
     'Корзина пока пуста': 'Your basket is empty',
-    'Добавь нужное вручную или перенеси ингредиенты из рецепта':
+    'Добавь нужное вручную или перенеси ингредиенты из рецепта': 'Add items manually or transfer ingredients from a recipe.',
     'Резервных копий пока нет': 'No backups yet',
     'Создай первую копию, чтобы защитить свои данные.': 'Create your first backup to protect your data.',
     'Защита данных Lunora': 'Protecting your Lunora data',
-    'Создавай резервные копии и восстанавливай данные.':
+    'Создавай резервные копии и восстанавливай данные.': 'Create backups and restore your data.',
     'Создать резервную копию': 'Create backup',
     'Сохранённые копии': 'Saved backups',
     'Резервные копии': 'Backups',
@@ -485,7 +485,7 @@ abstract final class LunoraLocalization {
     'Выполнено сегодня': 'Completed today',
     'В списке покупок': 'On shopping list',
     'План на сегодня': "Today's plan",
-    'Ближайшие дела и то, что требует внимания':
+    'Ближайшие дела и то, что требует внимания': 'Upcoming tasks and things that need your attention.',
     'Весь день': 'All day',
     'Сейчас в процессе': 'In progress',
     'То, к чему можно вернуться': 'Things to return to',
@@ -500,18 +500,18 @@ abstract final class LunoraLocalization {
     'Активные кредиты': 'Active loans',
     'Нет активных задолженностей': 'No active debts',
     'Быстрые действия': 'Quick actions',
-    'Перейти сразу к тому, что хочешь добавить':
+    'Перейти сразу к тому, что хочешь добавить': 'Jump straight to what you want to add.',
     'Запись в дневник': 'Diary entry',
     'Рецепты': 'Recipes',
     'Не обязательно успеть всё. ': 'You do not have to do everything. ',
-    'Пусть сегодня найдётся место и для себя.':
+    'Пусть сегодня найдётся место и для себя.': 'Make some room for yourself today, too.',
     'Не удалось загрузить сводку': 'Could not load the overview',
     'Данные разделов пока недоступны': 'Section data is not available yet',
     'Настрой Lunora под себя': 'Make Lunora your own',
     'Коллекция оформления': 'Theme collection',
-    'Выбери атмосферу своего пространства':
+    'Выбери атмосферу своего пространства': 'Choose the atmosphere of your space.',
     'Цветовая тема': 'Color theme',
-    'Меняет палитру и декоративные ресурсы всего приложения':
+    'Меняет палитру и декоративные ресурсы всего приложения': 'Changes the colour palette and decorative assets throughout the app.',
     'Обычная': 'Comfortable',
     'Декоративные элементы интерфейса': 'Interface decorations',
     'Плавные переходы и эффекты': 'Smooth transitions and effects',
@@ -529,7 +529,7 @@ abstract final class LunoraLocalization {
     'Импортировано записей': 'Records imported',
     'Подробности операции': 'Operation details',
     'Файл будет сохранён в формате XLSX.': 'The file will be saved in XLSX format.',
-    'Файл будет сохранён в папку Lunora/Exports.':
+    'Файл будет сохранён в папку Lunora/Exports.': 'The file will be saved to the Lunora/Exports folder.',
     'PDF-документ': 'PDF document',
     'PNG-изображение': 'PNG image',
     'Что экспортировать': 'What to export',
@@ -541,7 +541,7 @@ abstract final class LunoraLocalization {
     'Фильтр по категории': 'Filter by category',
     'Очистить купленное': 'Clear purchased',
     'Очистить купленное?': 'Clear purchased items?',
-    'Все товары из раздела «Куплено» будут удалены.':
+    'Все товары из раздела «Куплено» будут удалены.': 'All items in the “Purchased” section will be deleted.',
     'Экспорт списка': 'Export list',
     'Экспортировать список': 'Export list',
     'Экспортировать': 'Export',
@@ -549,27 +549,27 @@ abstract final class LunoraLocalization {
     'Фильтр': 'Filter',
     'В корзине пока пусто': 'Your basket is empty',
     'Перед восстановлением Lunora автоматически ': 'Before restoring, Lunora automatically ',
-    'Системные функции будут подключены отдельно. ':
-    'Сейчас эти параметры сохраняются в настройках.':
+    'Системные функции будут подключены отдельно. ': 'System features will be integrated separately. ',
+    'Сейчас эти параметры сохраняются в настройках.': 'These settings are currently saved in Preferences.',
     'Настройки сброшены': 'Settings reset',
     'Не удалось сохранить настройки': 'Could not save settings',
     'Не удалось загрузить настройки': 'Could not load settings',
     'Громкость': 'Volume',
     'Интерфейс': 'Interface',
-    'Общий календарь личных дел, учёбы и важных событий.':
-    'Напоминания о важных событиях и сроках.':
-    'Единый список покупок для всех твоих планов.':
+    'Общий календарь личных дел, учёбы и важных событий.': 'A shared calendar for personal tasks, studies and important events.',
+    'Напоминания о важных событиях и сроках.': 'Reminders for important events and deadlines.',
+    'Единый список покупок для всех твоих планов.': 'One shopping list for all your plans.',
     'Личные планы, дела и цели.': 'Personal plans, tasks and goals.',
-    'Учебные материалы, задания и расписание.':
-    'Доходы, расходы, кредиты и финансовые цели.':
-    'Твоя личная библиотека знаний и материалов.':
-    'Личные записи, мысли и воспоминания.':
-    'Фотографии из твоих дневниковых записей и воспоминаний.':
-    'Книги, читательский дневник и личная библиотека.':
+    'Учебные материалы, задания и расписание.': 'Study materials, assignments and timetable.',
+    'Доходы, расходы, кредиты и финансовые цели.': 'Income, expenses, loans and financial goals.',
+    'Твоя личная библиотека знаний и материалов.': 'Your personal library of knowledge and resources.',
+    'Личные записи, мысли и воспоминания.': 'Personal entries, thoughts and memories.',
+    'Фотографии из твоих дневниковых записей и воспоминаний.': 'Photos from your diary entries and memories.',
+    'Книги, читательский дневник и личная библиотека.': 'Books, reading journal and personal library.',
     'Фильмы, сериалы и список просмотра.': 'Movies, series and your watchlist.',
     'Рецепты, меню и кулинарные заметки.': 'Recipes, menus and cooking notes.',
-    'Желания, покупки мечты и планы на будущее.':
-    'Внешний вид, уведомления, данные и поведение Lunora.':
+    'Желания, покупки мечты и планы на будущее.': 'Wishes, dream purchases and plans for the future.',
+    'Внешний вид, уведомления, данные и поведение Lunora.': 'Lunora\'s appearance, notifications, data and behaviour.',
     'Открыть ссылку': 'Open link',
     'Поиск по названию, содержимому и тегам': 'Search by title, content and tags',
     'Категория': 'Category',
@@ -583,14 +583,14 @@ abstract final class LunoraLocalization {
     'Выбрать дату': 'Choose date',
     'Очистить дату': 'Clear date',
     'Название *': 'Title *',
-    'Что хочется добавить в свою жизнь?':
+    'Что хочется добавить в свою жизнь?': 'What would you like to add to your life?',
     'Например, Техника, Книги, Дом': 'For example: Tech, Books, Home',
     'Через запятую': 'Separate with commas',
     'Цена': 'Price',
     'Приоритет': 'Priority',
     'Ссылка на товар или источник': 'Product or source link',
     'Мой вишлист': 'My wishlist',
-    'Всё, что хочется сохранить и однажды приобрести.':
+    'Всё, что хочется сохранить и однажды приобрести.': 'Everything you want to save and buy someday.',
     'Поиск желаний...': 'Search wishes...',
     'Срок:': 'Due: ',
     'Платёж:': 'Payment: ',
@@ -624,7 +624,7 @@ abstract final class LunoraLocalization {
     'Текущий сезон': 'Current season',
     'Текущая серия': 'Current episode',
     'Мир кино': 'Movie world',
-    'Фильмы, сериалы и истории, к которым хочется возвращаться.':
+    'Фильмы, сериалы и истории, к которым хочется возвращаться.': 'Movies, TV shows and stories you want to revisit.',
     'Всего': 'Total',
     'Найти фильм, сериал или жанр...': 'Find a movie, series or genre...',
     'Оригинальное название': 'Original title',
@@ -661,7 +661,7 @@ abstract final class LunoraLocalization {
     'Открыть запись': 'Open entry',
     'Удалить уведомление?': 'Delete notification?',
     'Очистить историю?': 'Clear history?',
-    'Все уведомления будут удалены без возможности восстановления.':
+    'Все уведомления будут удалены без возможности восстановления.': 'All notifications will be permanently deleted.',
     'Непрочитанные': 'Unread',
     'Обновить список': 'Refresh list',
     'Не удалось выполнить импорт.': 'Could not complete the import.',
@@ -676,13 +676,13 @@ abstract final class LunoraLocalization {
     'Обновить историю': 'Refresh history',
     'Очистить': 'Clear',
     'Планер': 'Planner',
-    'Место для планов, маленьких шагов и больших задумок.':
+    'Место для планов, маленьких шагов и больших задумок.': 'A place for plans, small steps and big ideas.',
     'Импортировать планер из Excel': 'Import planner from Excel',
     'Название цели': 'Goal title',
     'Текст заметки': 'Note text',
     'Искать': 'Search',
-    'Ищи блюдо по названию или ингредиентам':
-    'Например, борщ или курица с картошкой':
+    'Ищи блюдо по названию или ингредиентам': 'Search for a dish by name or ingredients.',
+    'Например, борщ или курица с картошкой': 'For example, borscht or chicken with potatoes.',
     'Удалить ингредиент': 'Remove ingredient',
     'Название продукта': 'Ingredient name',
     'Единица': 'Unit',
@@ -749,11 +749,11 @@ abstract final class LunoraLocalization {
     'Ошибка резервного копирования': 'Backup error',
     'Резервная копия создана': 'Backup created',
     'Файл успешно сохранён.': 'File saved successfully.',
-    'В книге не найден лист «Библиотека».':
-    'Лист «Библиотека» не содержит книг.':
-    'В книге не найден лист «Мои записи».':
-    'На листе «Мои записи» нет записей для импорта.':
-    'В книге не найден лист «Месяц».':
+    'В книге не найден лист «Библиотека».': 'The workbook does not contain a “Library” sheet.',
+    'Лист «Библиотека» не содержит книг.': 'The “Library” sheet contains no books.',
+    'В книге не найден лист «Мои записи».': 'The workbook does not contain a “My Entries” sheet.',
+    'На листе «Мои записи» нет записей для импорта.': 'The “My Entries” sheet contains no entries to import.',
+    'В книге не найден лист «Месяц».': 'The workbook does not contain a “Month” sheet.',
     'Скоро платёж по кредиту': 'Loan payment due soon',
     'Скоро дедлайн': 'Deadline approaching',
     'Предыдущий': 'Previous',
@@ -798,7 +798,7 @@ abstract final class LunoraLocalization {
     'Запись будет сохранена в твоей библиотеке знаний.': 'The entry will be saved to your knowledge library.',
     'Проверь стоимость': 'Check the price',
     'Изменения сохранены': 'Changes saved',
-    'Это желание уже есть в списке покупок':
+    'Это желание уже есть в списке покупок': 'This wish is already on the shopping list.',
     'Добавлено в список покупок': 'Added to shopping list',
     'Удалить желание?': 'Delete wish?',
     'Запись будет удалена из Вишлиста. Это действие нельзя отменить.': 'This wish will be removed from your wishlist. This action cannot be undone.',
@@ -808,7 +808,7 @@ abstract final class LunoraLocalization {
     'Убрать изображение': 'Remove image',
     'Добавить желание': 'Add wish',
     'Желания': 'Wishes',
-    'Добавленные желания появятся здесь.':
+    'Добавленные желания появятся здесь.': 'Your added wishes will appear here.',
     'Удалить задачу?': 'Delete task?',
     'Задача': 'Task',
     'На этот день пока ничего не запланировано': 'Nothing is planned for this day yet',
@@ -817,7 +817,7 @@ abstract final class LunoraLocalization {
     'Запланирована': 'Scheduled',
     'Выполнена': 'Completed',
     'Отменена': 'Cancelled',
-    'В этом разделе пока нет товаров.':
+    'В этом разделе пока нет товаров.': 'There are no items in this section yet.',
     'Например, Основная карта': 'For example, Main card',
     'RUB · Рубль': 'RUB · Russian ruble',
     'USD · Доллар': 'USD · US dollar',
@@ -855,7 +855,7 @@ abstract final class LunoraLocalization {
     'Не удалось загрузить бюджеты': 'Could not load budgets',
     'Прогресс просмотра': 'Viewing progress',
     'Подключены открытые каталоги TVmaze, AniList и Wikidata. Регистрация и API-ключ не нужны.': 'Open catalogs TVmaze, AniList and Wikidata are connected. No registration or API key is required.',
-    'Введи название фильма, сериала, аниме или имя актёра':
+    'Введи название фильма, сериала, аниме или имя актёра': 'Enter a movie, TV show or anime title, or an actor\'s name.',
     'Не удалось загрузить коллекцию': 'Could not load the collection',
     'Длительность (минуты)': 'Duration (minutes)',
     'Оценка': 'Rating',
@@ -892,8 +892,8 @@ abstract final class LunoraLocalization {
     'Название книги или автор': 'Book title or author',
     'Настроить': 'Configure',
     'Экспортировано записей': 'Entries exported',
-    'На сегодня пока ничего не запланировано.':
-    'Можно выдохнуть или добавить новое дело.':
+    'На сегодня пока ничего не запланировано.': 'Nothing is planned for today yet.',
+    'Можно выдохнуть или добавить новое дело.': 'Take a breather or add a new task.',
     'Покупка': 'Purchase',
     'Итого расходов': 'Total expenses',
     'Итого доходов': 'Total income',
@@ -918,29 +918,29 @@ abstract final class LunoraLocalization {
     'Следующий платёж': 'Next payment',
     'Выберите финансовую книгу Excel. ': 'Choose a financial Excel workbook. ',
     'Бюджет категории ': 'Category budget ',
-    'Установи лимиты расходов по категориям, ':
+    'Установи лимиты расходов по категориям, ': 'Set spending limits by category to stay on track. ',
     'Выбери Excel-файл книги рецептов. ': 'Choose an Excel recipe book. ',
-    'Выбери Excel-файл с учебными предметами, ':
+    'Выбери Excel-файл с учебными предметами, ': 'Choose an Excel file containing your study subjects. ',
     'Не удалось загрузить учебный планер': 'Could not load the study planner',
-    'Предметы, открытия и маленькие шаги к большим целям.':
+    'Предметы, открытия и маленькие шаги к большим целям.': 'Subjects, discoveries and small steps towards big goals.',
     '📖 Дневниковая запись': '📖 Diary entry',
     '✨ Воспоминание': '✨ Memory',
     'Не удалось загрузить фотографию': 'Could not load the photo',
     'Удалить фотографию?': 'Delete photo?',
-    'Фотография будет удалена из записи и из хранилища Lunora. ':
+    'Фотография будет удалена из записи и из хранилища Lunora. ': 'The photo will be removed from the entry and Lunora storage. ',
     'Фотография удалена': 'Photo deleted',
     'Не удалось удалить фотографию': 'Could not delete photo',
     'Здесь пока нет фотографий': 'There are no photos here yet',
-    'Добавляй фотографии в записи дневника,\nи они появятся здесь':
+    'Добавляй фотографии в записи дневника,\nи они появятся здесь': 'Add photos to your diary entries,\\nand they will appear here.',
     'В этой записи пока нет текста.': 'This entry has no text yet.',
     'Не удалось отобразить содержимое этой записи.': 'Could not display this entry.',
     'Фотография недоступна': 'Photo unavailable',
     'Создавай резервные копии и восстанавливай ': 'Create backups and restore ',
     'Читаем Excel-файл...': 'Reading Excel file...',
     'Ошибок в заголовках не найдено.': 'No header errors found.',
-    'Укажи, каким полям Lunora соответствуют колонки файла.':
+    'Укажи, каким полям Lunora соответствуют колонки файла.': 'Match the file columns to the corresponding Lunora fields.',
     'Не сопоставлено': 'Not mapped',
-    'Остальные строки не показаны в предпросмотре.':
+    'Остальные строки не показаны в предпросмотре.': 'The remaining rows are not shown in the preview.',
     'Готовность к импорту': 'Ready to import',
     'Не сопоставлены обязательные поля: ': 'Required fields are not mapped: ',
     'Импорт данных': 'Import data',
@@ -966,7 +966,7 @@ abstract final class LunoraLocalization {
     'Добавь счёт, чтобы видеть здесь баланс.': 'Add an account to see its balance here.',
     'Активных задолженностей нет.': 'There are no active debts.',
     'Ближайшие даты платежей не указаны.': 'No upcoming payment dates have been set.',
-    'Операций по выбранным условиям не найдено.':
+    'Операций по выбранным условиям не найдено.': 'No transactions match the selected criteria.',
     'Пока нет операций.': 'No transactions yet.',
     'Кредитов и рассрочек пока нет.': 'No loans or instalments yet.',
     'Платежей пока нет.': 'No payments yet.',
@@ -983,38 +983,38 @@ abstract final class LunoraLocalization {
     'Напоминание о просрочке': 'Overdue reminder',
     'Название не может быть пустым.': 'The name cannot be empty.',
     'Сумма должна быть больше нуля.': 'The amount must be greater than zero.',
-    'День платежа должен быть от 1 до 31.':
+    'День платежа должен быть от 1 до 31.': 'The payment day must be between 1 and 31.',
     'Год должен быть не меньше 2000.': 'Year must be 2000 or later.',
     'Месяц должен быть от 1 до 12.': 'Month must be between 1 and 12.',
-    'Дата окончания не может быть раньше даты начала.':
-    'Остаток не может превышать первоначальную сумму.':
+    'Дата окончания не может быть раньше даты начала.': 'The end date cannot be earlier than the start date.',
+    'Остаток не может превышать первоначальную сумму.': 'The remaining balance cannot exceed the original amount.',
     'Финансовый счёт не найден.': 'Financial account not found.',
     'Категория не найдена.': 'Category not found.',
     'Выбранная категория неактивна.': 'The selected category is inactive.',
-    'Тип категории не соответствует типу операции.':
-    'Категория не может быть родителем самой себе.':
-    'Обнаружена циклическая вложенность категорий.':
+    'Тип категории не соответствует типу операции.': 'The category type does not match the transaction type.',
+    'Категория не может быть родителем самой себе.': 'A category cannot be its own parent.',
+    'Обнаружена циклическая вложенность категорий.': 'A circular category hierarchy was detected.',
     'Укажи валюту счёта.': 'Choose an account currency.',
     'Счёт для изменения не найден.': 'The account to edit was not found.',
-    'Родительская категория должна иметь тот же тип.':
-    'Категория для изменения не найдена.':
+    'Родительская категория должна иметь тот же тип.': 'The parent category must have the same type.',
+    'Категория для изменения не найдена.': 'The category to edit could not be found.',
     'Выбранный счёт неактивен.': 'The selected account is inactive.',
-    'Для перевода нужен счёт получателя.':
-    'Нельзя переводить деньги на тот же счёт.':
+    'Для перевода нужен счёт получателя.': 'A destination account is required for a transfer.',
+    'Нельзя переводить деньги на тот же счёт.': 'You cannot transfer money to the same account.',
     'Счёт получателя неактивен.': 'The destination account is inactive.',
-    'Получатель указывается только для переводов.':
-    'Операция для изменения не найдена.':
+    'Получатель указывается только для переводов.': 'A destination account can only be specified for transfers.',
+    'Операция для изменения не найдена.': 'The transaction to edit could not be found.',
     'Некорректный счёт получателя.': 'Invalid destination account.',
     'Валюты счетов должны совпадать.': 'Account currencies must match.',
     'У перевода не может быть категории.': 'A transfer cannot have a category.',
     'Некорректный остаток задолженности.': 'Invalid remaining debt balance.',
-    'Задолженность для изменения не найдена.':
-    'Нельзя удалить задолженность с историей платежей.':
+    'Задолженность для изменения не найдена.': 'The debt to edit could not be found.',
+    'Нельзя удалить задолженность с историей платежей.': 'A debt with payment history cannot be deleted.',
     'Задолженность не найдена.': 'Debt not found.',
     'Счёт не найден.': 'Account not found.',
     'Счёт неактивен.': 'The account is inactive.',
     'Платёж не найден.': 'Payment not found.',
-    'Связанная финансовая операция не найдена.':
+    'Связанная финансовая операция не найдена.': 'The linked financial transaction could not be found.',
     'Бюджет для изменения не найден.': 'The budget to edit was not found.',
     'Укажи валюту накопления.': 'Choose a savings currency.',
     'Цель накопления не найдена.': 'Savings goal not found.',
