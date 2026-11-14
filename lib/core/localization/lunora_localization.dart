@@ -17,21 +17,18 @@ abstract final class LunoraLocalization {
         RegExp(r'^(\d+) пунктов ожидают покупки$').firstMatch(russian);
     if (shoppingCount != null) {
       final count = int.parse(shoppingCount.group(1)!);
-      return '$count ${count == 1 ? 'item' : 'items'} waiting to be purchased';
     }
 
     final obligationCount =
         RegExp(r'^(\d+) активных обязательств$').firstMatch(russian);
     if (obligationCount != null) {
       final count = int.parse(obligationCount.group(1)!);
-      return '$count active ${count == 1 ? 'obligation' : 'obligations'}';
     }
 
     final photoCount =
         RegExp(r'^(\d+) фотограф(?:ия|ии|ий)$').firstMatch(russian);
     if (photoCount != null) {
       final count = int.parse(photoCount.group(1)!);
-      return '$count ${count == 1 ? 'photo' : 'photos'}';
     }
 
     final exact = _catalog[russian] ?? _catalog[russian.trim()];
@@ -40,12 +37,10 @@ abstract final class LunoraLocalization {
     if (russian.startsWith('Задача «') &&
         russian.endsWith('» наступит через 15 минут.')) {
       final name = russian.substring('Задача «'.length, russian.indexOf('»'));
-      return 'Task “$name” is due in 15 minutes.';
     }
     if (russian.startsWith('Занятие «') &&
         russian.endsWith('» начнётся через 15 минут.')) {
       final name = russian.substring('Занятие «'.length, russian.indexOf('»'));
-      return 'Class “$name” starts in 15 minutes.';
     }
     if (russian.startsWith('Срок выполнения «') &&
         russian.endsWith('» наступит через 15 минут.')) {
@@ -53,22 +48,18 @@ abstract final class LunoraLocalization {
         'Срок выполнения «'.length,
         russian.indexOf('»'),
       );
-      return '“$name” is due in 15 minutes.';
     }
     if (russian.startsWith('«') &&
         russian.endsWith('» будет удалён из твоей коллекции.')) {
       final name = russian.substring(1, russian.indexOf('»'));
-      return '“$name” will be removed from your collection.';
     }
     if (russian.startsWith('Книга «') &&
         russian.endsWith('» будет удалена из библиотеки.')) {
       final name = russian.substring('Книга «'.length, russian.indexOf('»'));
-      return 'Book “$name” will be removed from the library.';
     }
     if (russian.startsWith('Рецепт «') &&
         russian.endsWith('» будет удалён вместе со списком ингредиентов.')) {
       final name = russian.substring('Рецепт «'.length, russian.indexOf('»'));
-      return 'Recipe “$name” will be deleted together with its ingredients.';
     }
     if (russian.startsWith('Сезон ') && russian.contains(', серия ')) {
       return russian
@@ -78,21 +69,17 @@ abstract final class LunoraLocalization {
     if (russian.startsWith('Запись «') &&
         russian.contains('» будет удалена без возможности восстановления')) {
       final name = russian.substring('Запись «'.length, russian.indexOf('»'));
-      return 'Entry “$name” will be permanently deleted.';
     }
     if (russian.startsWith('Запись «') &&
         russian.endsWith('» будет удалена.')) {
       final name = russian.substring('Запись «'.length, russian.indexOf('»'));
-      return 'Entry “$name” will be deleted.';
     }
     if (russian.startsWith('«') &&
         russian.endsWith('» будет удалён из списка.')) {
       final name = russian.substring(1, russian.indexOf('»'));
-      return '“$name” will be removed from the list.';
     }
     if (russian.startsWith('«') && russian.endsWith('» будет удалена.')) {
       final name = russian.substring(1, russian.indexOf('»'));
-      return '“$name” will be deleted.';
     }
 
     for (final entry in _prefixes.entries) {
@@ -1234,35 +1221,21 @@ abstract final class LunoraLocalization {
     'Добавь первый фильм или сериал, чтобы начать собирать свою коллекцию.': 'Add your first movie or series to start building your collection.',
     'Попробуй изменить поисковый запрос или выбранный фильтр.': 'Try changing your search query or selected filter.',
     'Попробуй изменить поисковый запрос или фильтры.': 'Try changing your search query or filters.',
-    'Всего импортировано: ${result.totalImported}': 'Total imported: ${result.totalImported}',
-    'Всего пропущено: ${result.totalSkipped}': 'Total skipped: ${result.totalSkipped}',
-    'Не удалось сохранить предмет: $error': 'Could not save subject: $error',
-    'Не удалось добавить предмет: $error': 'Could not add subject: $error',
     'Редактировать учебный период': 'Edit study period',
     'Новый учебный период': 'New study period',
     'Название периода *': 'Period name *',
     'Например, зимняя сессия': 'For example, winter semester',
     'Даты можно оставить пустыми и заполнить позже.': 'Dates can be left blank and filled in later.',
     'Дата окончания не может быть раньше даты начала.': 'The end date cannot be earlier than the start date.',
-    'Не удалось сохранить период: $error': 'Could not save period: $error',
-    'Не удалось добавить период: $error': 'Could not add period: $error',
     'Сначала добавь хотя бы один учебный предмет.': 'Add at least one subject first.',
     'Сначала выбери дату занятия.': 'Choose a class date first.',
     'Редактировать событие': 'Edit event',
     'Новое учебное событие': 'New study event',
     'Не указано': 'Not specified',
     'Не указан': 'Not specified',
-    'Не удалось сохранить событие: $error': 'Could not save event: $error',
-    'Не удалось добавить событие: $error': 'Could not add event: $error',
-    'Удалить предмет «${subject.name}»?': 'Delete subject “${subject.name}”?',
     'Связанные с ним учебные события могут потерять связь с предметом.': 'Study events linked to this subject may become unlinked.',
-    'Не удалось удалить предмет: $error': 'Could not delete subject: $error',
-    'Удалить период «${period.title}»?': 'Delete period “${period.title}”?',
     'Проверь связанные с ним учебные события перед удалением.': 'Check the study events linked to this period before deleting it.',
-    'Не удалось удалить период: $error': 'Could not delete period: $error',
-    'Удалить «${item.title}»?': 'Delete “${item.title}”?',
     'Это действие нельзя отменить.': 'This action cannot be undone.',
-    'Не удалось удалить событие: $error': 'Could not delete event: $error',
     'Семестр': 'Semester',
     'Экзаменационная сессия': 'Exam session',
     'Практика': 'Internship',
