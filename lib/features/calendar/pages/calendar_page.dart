@@ -56,7 +56,7 @@ class _CalendarEntry {
   final List<NotificationItem> reminders;
 
   String get timeLabel {
-    if (time == null) return 'Весь день';
+    if (time == null) return LunoraLocalization.text('Весь день', 'All day');
 
     final hour = time! ~/ 60;
     final minute = time! % 60;
@@ -301,38 +301,38 @@ class _CalendarPageState extends State<CalendarPage> {
   String _studyDescription(StudyItem item) {
     switch (item.type) {
       case StudyItemType.lecture:
-        return 'Лекция';
+        return LunoraLocalization.text('Лекция', 'Lecture');
       case StudyItemType.onlineLecture:
-        return 'Онлайн-лекция';
+        return LunoraLocalization.text('Онлайн-лекция', 'Online lecture');
       case StudyItemType.test:
-        return 'Тест';
+        return LunoraLocalization.text('Тест', 'Test');
       case StudyItemType.writtenAssignment:
-        return 'Письменное задание';
+        return LunoraLocalization.text('Письменное задание', 'Written assignment');
       case StudyItemType.exam:
-        return 'Экзамен';
+        return LunoraLocalization.text('Экзамен', 'Exam');
       case StudyItemType.credit:
-        return 'Зачёт';
+        return LunoraLocalization.text('Зачёт', 'Pass/fail test');
       case StudyItemType.practice:
-        return 'Практика';
+        return LunoraLocalization.text('Практика', 'Internship');
       case StudyItemType.coursework:
-        return 'Курсовая работа';
+        return LunoraLocalization.text('Курсовая работа', 'Coursework');
       case StudyItemType.diploma:
-        return 'Дипломная работа';
+        return LunoraLocalization.text('Дипломная работа', 'Thesis');
       case StudyItemType.other:
-        return 'Учебное событие';
+        return LunoraLocalization.text('Учебное событие', 'Study event');
     }
   }
 
   String _periodDescription(StudyPeriod period) {
     switch (period.type) {
       case StudyPeriodType.semester:
-        return 'Учебный семестр';
+        return LunoraLocalization.text('Учебный семестр', 'Semester');
       case StudyPeriodType.examSession:
-        return 'Экзаменационная сессия';
+        return LunoraLocalization.text('Экзаменационная сессия', 'Exam session');
       case StudyPeriodType.practice:
-        return 'Практика';
+        return LunoraLocalization.text('Практика', 'Internship');
       case StudyPeriodType.other:
-        return 'Учебный период';
+        return LunoraLocalization.text('Учебный период', 'Study period');
     }
   }
 
@@ -766,7 +766,7 @@ class _CalendarPageState extends State<CalendarPage> {
           _decorativeDivider('lunora-divider-03.svg', height: 13),
           const SizedBox(height: 7),
           Row(
-            children: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+            children: LunoraLocalization.isEnglish ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] : ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
                 .map(
                   (day) => Expanded(
                     child: Center(
@@ -904,11 +904,11 @@ class _CalendarPageState extends State<CalendarPage> {
   String _entryCountLabel(int count) {
     final mod10 = count % 10;
     final mod100 = count % 100;
-    if (mod10 == 1 && mod100 != 11) return 'запись';
+    if (mod10 == 1 && mod100 != 11) return LunoraLocalization.text('запись', 'entry');
     if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
-      return 'записи';
+      return LunoraLocalization.text('записи', 'entries');
     }
-    return 'записей';
+    return LunoraLocalization.text('записей', 'entries');
   }
 
   Widget _buildDayPanel() {
@@ -966,7 +966,7 @@ class _CalendarPageState extends State<CalendarPage> {
             const SizedBox(height: 8),
             Text(
               LunoraLocalization.text(
-                'На этот день пока ничего не запланировано',
+                LunoraLocalization.text('На этот день пока ничего не запланировано', 'Nothing is planned for this day yet'),
               ),
             ),
             const SizedBox(height: 14),
