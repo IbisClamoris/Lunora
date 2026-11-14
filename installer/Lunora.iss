@@ -28,7 +28,6 @@ WizardImageFile=..\assets\branding\wizard_image.bmp
 WizardSmallImageFile=..\assets\branding\wizard_image.bmp
 WizardImageBackColor=clNavy
 WizardSmallImageBackColor=clNavy
-SetupWindowTitle=Lunora Setup
 UsePreviousAppDir=yes
 UsePreviousGroup=yes
 SetupLogging=yes
