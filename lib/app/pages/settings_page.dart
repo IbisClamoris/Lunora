@@ -47,7 +47,7 @@ class _SettingsPageState extends State<SettingsPage> {
       }
     } catch (error) {
       if (mounted) {
-        _showMessage('Не удалось загрузить настройки: $error');
+        _showMessage(LunoraLocalization.text('Не удалось загрузить настройки: $error', 'Could not load settings: $error'));
       }
     }
 
@@ -67,7 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
       await _service.update(settings);
     } catch (error) {
       if (mounted) {
-        _showMessage('Не удалось сохранить настройки: $error');
+        _showMessage(LunoraLocalization.text('Не удалось сохранить настройки: $error', 'Could not save settings: $error'));
       }
     } finally {
       if (mounted) {
@@ -98,10 +98,10 @@ class _SettingsPageState extends State<SettingsPage> {
           enabled
               ? (_settings.language == AppLanguage.english
                     ? 'Lunora will start with Windows.'
-                    : 'Lunora будет запускаться вместе с Windows.')
+                    : LunoraLocalization.text('Lunora будет запускаться вместе с Windows.', 'Lunora will start with Windows.'))
               : (_settings.language == AppLanguage.english
                     ? 'Lunora was removed from Windows startup.'
-                    : 'Lunora удалена из автозагрузки Windows.'),
+                    : LunoraLocalization.text('Lunora удалена из автозагрузки Windows.', 'Lunora has been removed from Windows startup.')),
         );
       }
     } catch (error) {
@@ -125,7 +125,7 @@ class _SettingsPageState extends State<SettingsPage> {
         if (!silent) {
           _showMessage(_settings.language == AppLanguage.english
               ? 'You are using the latest version.'
-              : 'Установлена последняя версия Lunora.');
+              : LunoraLocalization.text('Установлена последняя версия Lunora.', 'The latest version of Lunora is installed.'));
         }
         return;
       }
@@ -142,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
               children: [
                 Text(english
                     ? 'Version ${update.version} is ready. Your data will be backed up before installation.'
-                    : 'Доступна версия ${update.version}. Перед установкой будет создана резервная копия данных.'),
+                    : LunoraLocalization.text('Доступна версия ${update.version}. Перед установкой будет создана резервная копия данных.', 'Version ${update.version} is available. A data backup will be created before installation.')),
                 if (update.notes.trim().isNotEmpty) ...[
                   const SizedBox(height: 12),
                   Text(english ? 'Release notes' : LunoraLocalization.text('Что нового'),
@@ -168,13 +168,13 @@ class _SettingsPageState extends State<SettingsPage> {
       if (install != true || !mounted) return;
       _showMessage(english
           ? 'Downloading and verifying the update…'
-          : 'Загружаю обновление и проверяю контрольную сумму…');
+          : LunoraLocalization.text('Загружаю обновление и проверяю контрольную сумму…', 'Downloading update and verifying checksum…'));
       await UpdateService.instance.downloadVerifyBackupAndInstall(update);
     } catch (error) {
       if (mounted) {
         _showMessage(_settings.language == AppLanguage.english
             ? 'Update failed: $error'
-            : 'Не удалось обновить Lunora: $error');
+            : LunoraLocalization.text('Не удалось обновить Lunora: $error', 'Could not update Lunora: $error'));
       }
     }
   }
@@ -213,11 +213,11 @@ class _SettingsPageState extends State<SettingsPage> {
           setState(() {
             _volumePreview = _settings.notificationVolume.toDouble();
           });
-          _showMessage('Настройки сброшены');
+          _showMessage(LunoraLocalization.text('Настройки сброшены', 'Settings reset'));
         }
       } catch (error) {
         if (mounted) {
-          _showMessage('Не удалось сбросить настройки: $error');
+          _showMessage(LunoraLocalization.text('Не удалось сбросить настройки: $error', 'Could not reset settings: $error'));
         }
       }
     }
