@@ -169,7 +169,7 @@ class _FinancePageState extends State<FinancePage>
     final amount = double.tryParse(normalized);
 
     if (amount == null) {
-      throw const FormatException(LunoraLocalization.text('Проверь введённую сумму.', 'Check the amount you entered.'));
+      throw FormatException(LunoraLocalization.text('Проверь введённую сумму.', 'Check the amount you entered.'));
     }
 
     return (amount * 100).round();
@@ -619,7 +619,7 @@ class _FinancePageState extends State<FinancePage>
         label: Text(LunoraLocalization.text('Добавить счёт')),
       ),
       child: _accounts.isEmpty
-          ? const _EmptyView(text: LunoraLocalization.text('Счетов пока нет.', 'No accounts yet.'))
+          ? _EmptyView(text: LunoraLocalization.text('Счетов пока нет.', 'No accounts yet.'))
           : LayoutBuilder(
               builder: (context, constraints) {
                 final columns = constraints.maxWidth >= 760 ? 2 : 1;
@@ -1225,7 +1225,7 @@ class _FinancePageState extends State<FinancePage>
             subtitle: LunoraLocalization.text('Найдено: ${filtered.length}'),
           ),
           if (filtered.isEmpty)
-            const _EmptyView(text: LunoraLocalization.text('Операций по выбранным условиям не найдено.', 'No transactions match the selected filters.'))
+            _EmptyView(text: LunoraLocalization.text('Операций по выбранным условиям не найдено.', 'No transactions match the selected filters.'))
           else
             LayoutBuilder(
               builder: (context, constraints) {
@@ -1326,7 +1326,7 @@ class _FinancePageState extends State<FinancePage>
                       children: [
                         _sectionTitle('$title · ${items.length}'),
                         if (items.isEmpty)
-                          const _EmptyView(text: LunoraLocalization.text('Пока нет операций.', 'No transactions yet.'))
+                          _EmptyView(text: LunoraLocalization.text('Пока нет операций.', 'No transactions yet.'))
                         else
                           ...items.map(
                             (item) => Padding(
@@ -1936,7 +1936,7 @@ class _FinancePageState extends State<FinancePage>
         label: Text(LunoraLocalization.text('Добавить задолженность')),
       ),
       child: _debts.isEmpty
-          ? const _EmptyView(text: LunoraLocalization.text('Кредитов и рассрочек пока нет.', 'No loans or instalments yet.'))
+          ? _EmptyView(text: LunoraLocalization.text('Кредитов и рассрочек пока нет.', 'No loans or instalments yet.'))
           : LayoutBuilder(
               builder: (context, constraints) {
                 final columns = constraints.maxWidth >= 900 ? 2 : 1;
@@ -2308,7 +2308,7 @@ class _FinancePageState extends State<FinancePage>
         );
 
         if (rateValue == null || rateValue < 0) {
-          throw const FormatException(LunoraLocalization.text('Укажи корректную процентную ставку.', 'Enter a valid interest rate.'));
+          throw FormatException(LunoraLocalization.text('Укажи корректную процентную ставку.', 'Enter a valid interest rate.'));
         }
 
         await _repository.createDebt(
@@ -2550,31 +2550,31 @@ class _FinancePageState extends State<FinancePage>
         );
 
         if (rateValue == null || rateValue < 0) {
-          throw const FormatException(LunoraLocalization.text('Укажи корректную процентную ставку.', 'Enter a valid interest rate.'));
+          throw FormatException(LunoraLocalization.text('Укажи корректную процентную ставку.', 'Enter a valid interest rate.'));
         }
 
         if (initialMinor <= 0 ||
             currentMinor < 0 ||
             currentMinor > initialMinor) {
-          throw const FormatException(
+          throw FormatException(
             LunoraLocalization.text('Проверь первоначальную сумму и текущий остаток.', 'Check the initial amount and current balance.'),
           );
         }
 
         if (paymentMinor < 0) {
-          throw const FormatException(
+          throw FormatException(
             LunoraLocalization.text('Ежемесячный платёж не может быть отрицательным.', 'Monthly payment cannot be negative.'),
           );
         }
 
         if (status == FinanceDebtStatus.paidOff && currentMinor != 0) {
-          throw const FormatException(
+          throw FormatException(
             LunoraLocalization.text('У погашенной задолженности остаток должен быть равен нулю.', 'A paid-off debt must have a zero balance.'),
           );
         }
 
         if (currentMinor == 0 && status != FinanceDebtStatus.paidOff) {
-          throw const FormatException(
+          throw FormatException(
             LunoraLocalization.text('При нулевом остатке задолженность должна иметь статус «Погашен».', 'A debt with a zero balance must have the status “Paid off”.'),
           );
         }
@@ -2966,15 +2966,15 @@ class _FinancePageState extends State<FinancePage>
           final interestMinor = _parseMinor(interest.text);
 
           if (title.text.trim().isEmpty) {
-            throw const FormatException(LunoraLocalization.text('Укажи название операции.', 'Enter a transaction name.'));
+            throw FormatException(LunoraLocalization.text('Укажи название операции.', 'Enter a transaction name.'));
           }
 
           if (principalMinor < 0 || interestMinor < 0) {
-            throw const FormatException(LunoraLocalization.text('Суммы не могут быть отрицательными.', 'Amounts cannot be negative.'));
+            throw FormatException(LunoraLocalization.text('Суммы не могут быть отрицательными.', 'Amounts cannot be negative.'));
           }
 
           if (principalMinor + interestMinor <= 0) {
-            throw const FormatException(
+            throw FormatException(
               LunoraLocalization.text('Сумма платежа должна быть больше нуля.', 'Payment amount must be greater than zero.'),
             );
           }
@@ -3024,7 +3024,7 @@ class _FinancePageState extends State<FinancePage>
           content: SizedBox(
             width: 500,
             child: payments.isEmpty
-                ? const _EmptyView(text: LunoraLocalization.text('Платежей пока нет.', 'No payments yet.'))
+                ? _EmptyView(text: LunoraLocalization.text('Платежей пока нет.', 'No payments yet.'))
                 : ListView.separated(
                     shrinkWrap: true,
                     itemCount: payments.length,
@@ -3169,7 +3169,7 @@ class _FinancePageState extends State<FinancePage>
     final items = _categories.where((category) => category.type == type);
 
     if (items.isEmpty) {
-      return [const _EmptyView(text: LunoraLocalization.text('Категорий пока нет.', 'No categories yet.'))];
+      return [_EmptyView(text: LunoraLocalization.text('Категорий пока нет.', 'No categories yet.'))];
     }
 
     return items.map((category) {
@@ -3296,7 +3296,7 @@ class _FinancePageState extends State<FinancePage>
 }
 
 class _EmptyView extends StatelessWidget {
-  const _EmptyView({required this.text});
+  _EmptyView({required this.text});
 
   final String text;
 
