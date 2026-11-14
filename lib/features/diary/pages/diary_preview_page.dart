@@ -136,7 +136,7 @@ class _DiaryPreviewPageState extends State<DiaryPreviewPage> {
 
       return Text(
         LunoraLocalization.text(
-          'Не удалось отобразить содержимое этой записи.',
+          LunoraLocalization.text('Не удалось отобразить содержимое этой записи.', 'Could not display the contents of this entry.'),
         ),
         style: TextStyle(color: palette.secondary),
       );
@@ -189,7 +189,7 @@ class _DiaryPreviewPageState extends State<DiaryPreviewPage> {
                           Expanded(
                             child: Text(
                               _entry.title.isEmpty
-                                  ? 'Без названия'
+                                  ? LunoraLocalization.text('Без названия', 'Untitled')
                                   : _entry.title,
                               style: Theme.of(context).textTheme.headlineSmall,
                             ),
