@@ -730,8 +730,8 @@ class _MoviesPageState extends State<MoviesPage> {
             const SizedBox(height: 18),
             Text(
               libraryIsEmpty
-                  ? 'Твоя коллекция пока пуста'
-                  : 'Ничего не найдено',
+                  ? LunoraLocalization.text('Твоя коллекция пока пуста')
+                   : LunoraLocalization.text('Ничего не найдено'),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge
                   ?.copyWith(fontWeight: FontWeight.w600),
@@ -739,8 +739,8 @@ class _MoviesPageState extends State<MoviesPage> {
             const SizedBox(height: 8),
             Text(
               libraryIsEmpty
-                  ? 'Добавь первый фильм или сериал, чтобы начать собирать свою коллекцию.'
-                  : 'Попробуй изменить поисковый запрос или выбранный фильтр.',
+                  ? LunoraLocalization.text('Добавь первый фильм или сериал, чтобы начать собирать свою коллекцию.')
+                  : LunoraLocalization.text('Попробуй изменить поисковый запрос или выбранный фильтр.'),
               textAlign: TextAlign.center,
               style: TextStyle(color: colors.onSurfaceVariant, height: 1.5),
             ),
