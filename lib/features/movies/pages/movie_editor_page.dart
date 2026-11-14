@@ -385,7 +385,7 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Редактирование записи' : 'Новая запись'),
+        title: Text(_isEditing ? LunoraLocalization.text('Редактирование записи') : LunoraLocalization.text('Новая запись')),
         actions: [
           IconButton(
             tooltip: LunoraLocalization.text('Сохранить'),
@@ -407,7 +407,7 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
                   _buildPoster(),
                   const SizedBox(height: 28),
 
-                  _sectionTitle('Тип записи'),
+                  _sectionTitle(LunoraLocalization.text('Тип записи')),
                   const SizedBox(height: 14),
 
                   SegmentedButton<String>(
@@ -432,7 +432,7 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
                   ),
 
                   const SizedBox(height: 28),
-                  _sectionTitle('Основная информация'),
+                  _sectionTitle(LunoraLocalization.text('Основная информация')),
                   const SizedBox(height: 16),
 
                   _buildTextField(
@@ -570,7 +570,7 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
                   _buildDateTile(),
 
                   const SizedBox(height: 28),
-                  _sectionTitle('Оценка и впечатления'),
+                  _sectionTitle(LunoraLocalization.text('Оценка и впечатления')),
                   const SizedBox(height: 14),
 
                   DropdownButtonFormField<double?>(
