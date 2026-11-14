@@ -23,7 +23,7 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
 
   final KnowledgeRepository _repository = KnowledgeRepository.instance;
 
-  String _selectedCategory = 'Другое';
+  String _selectedCategory = LunoraLocalization.text('Другое', 'Other');
   bool _isSaving = false;
 
   bool get _isEditing => widget.entry != null;
@@ -179,12 +179,12 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
                   controller: _titleController,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: _decoration(
-                    'Например, Основные формулы физики',
+                    LunoraLocalization.text('Например, Основные формулы физики', 'For example, Basic physics formulas'),
                     prefixIcon: const Icon(Icons.title),
                   ),
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Введите название записи';
+                      return LunoraLocalization.text('Введите название записи', 'Enter an entry title');
                     }
                     return null;
                   },
@@ -196,7 +196,7 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
                 DropdownButtonFormField<String>(
                   initialValue: _selectedCategory,
                   decoration: _decoration(
-                    'Выберите категорию',
+                    LunoraLocalization.text('Выберите категорию', 'Choose a category'),
                     prefixIcon: const Icon(Icons.folder_outlined),
                   ),
                   items: KnowledgeEntry.categories.map((category) {
@@ -223,7 +223,7 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
                   maxLines: 25,
                   textCapitalization: TextCapitalization.sentences,
                   decoration: _decoration(
-                    'Добавь текст, заметки, формулы или другую информацию...',
+                    LunoraLocalization.text('Добавь текст, заметки, формулы или другую информацию...', 'Add text, notes, formulas, or other information...'),
                   ),
                   keyboardType: TextInputType.multiline,
                 ),
@@ -235,11 +235,11 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
                   controller: _tagsController,
                   decoration:
                       _decoration(
-                        'Например: экзамен, важное, теория',
+                        LunoraLocalization.text('Например: экзамен, важное, теория', 'For example: exam, important, theory'),
                         prefixIcon: const Icon(Icons.sell_outlined),
                       ).copyWith(
                         helperText: LunoraLocalization.text(
-                          'Разделяй теги запятыми или точками с запятой',
+                          LunoraLocalization.text('Разделяй теги запятыми или точками с запятой', 'Separate tags with commas or semicolons'),
                         ),
                       ),
                 ),
@@ -286,7 +286,7 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
                           )
                         : const Icon(Icons.save_outlined),
                     label: Text(
-                      _isEditing ? 'Сохранить изменения' : 'Создать запись',
+                      _isEditing ? LunoraLocalization.text('Сохранить изменения', 'Save changes') : LunoraLocalization.text('Создать запись', 'Create entry'),
                     ),
                   ),
                 ),
@@ -295,7 +295,7 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
 
                 Text(
                   LunoraLocalization.text(
-                    'Запись будет сохранена в твоей библиотеке знаний.',
+                    LunoraLocalization.text('Запись будет сохранена в твоей библиотеке знаний.', 'The entry will be saved in your knowledge library.'),
                   ),
                   textAlign: TextAlign.center,
                   style: TextStyle(
