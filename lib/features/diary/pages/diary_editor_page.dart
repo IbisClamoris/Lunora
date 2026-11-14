@@ -36,7 +36,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
   late DateTime _entryDate;
 
   String? _mood;
-  String _category = 'Без категории';
+  String _category = LunoraLocalization.text('Без категории', 'Uncategorized');
   String _entryType = 'diary';
   bool _isFavorite = false;
   bool _isSaving = false;
@@ -60,7 +60,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
   ];
 
   static const List<String> _categories = [
-    'Без категории',
+    LunoraLocalization.text('Без категории', 'Uncategorized'),
     'Семья',
     'Дом',
     'Друзья',
@@ -90,7 +90,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
     final savedMood = entry?.mood?.trim();
     _mood = savedMood == null || savedMood.isEmpty ? null : savedMood;
 
-    _category = entry?.category ?? 'Без категории';
+    _category = entry?.category ?? LunoraLocalization.text('Без категории', 'Uncategorized');
     _entryType = entry?.entryType ?? 'diary';
     _isFavorite = entry?.isFavorite ?? false;
 
@@ -480,7 +480,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                _isEditing ? 'МОИ ВОСПОМИНАНИЯ' : 'МОЙ ДНЕВНИК',
+                                _isEditing ? LunoraLocalization.text('МОИ ВОСПОМИНАНИЯ', 'MY MEMORIES') : LunoraLocalization.text('МОЙ ДНЕВНИК', 'MY DIARY'),
                                 style: TextStyle(
                                   color: palette.accent,
                                   fontSize: 10,
@@ -491,8 +491,8 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                               const SizedBox(height: 4),
                               Text(
                                 _isEditing
-                                    ? 'Редактирование записи'
-                                    : 'Новая запись',
+                                    ? LunoraLocalization.text('Редактирование записи', 'Edit entry')
+                                    : LunoraLocalization.text('Новая запись', 'New entry'),
                                 style: Theme.of(context).textTheme.titleLarge
                                     ?.copyWith(
                                       fontWeight: FontWeight.w700,
@@ -578,7 +578,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                     DropdownButtonFormField<String>(
                       initialValue: categories.contains(_category)
                           ? _category
-                          : 'Без категории',
+                          : LunoraLocalization.text('Без категории', 'Uncategorized'),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                       ),
@@ -628,7 +628,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
                               hintText: LunoraLocalization.text(
-                                'Например: лето, семья, поездка',
+                                LunoraLocalization.text('Например: лето, семья, поездка', 'For example: summer, family, trip'),
                               ),
                             ),
                             onSubmitted: (_) => _addTag(),
@@ -663,7 +663,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                       controller: _titleController,
                       decoration: InputDecoration(
                         hintText: LunoraLocalization.text(
-                          'О чём сегодняшний день?',
+                          LunoraLocalization.text('О чём сегодняшний день?', 'What was today about?'),
                         ),
                         border: OutlineInputBorder(),
                       ),
