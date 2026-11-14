@@ -1198,7 +1198,15 @@ abstract final class LunoraLocalization {
     'Выбери другую категорию или покажи все записи.': 'Choose another category or show all entries.',
     'Пока здесь тихо': 'It is quiet here for now',
     'Твои записи будут храниться здесь.': 'Your entries will be kept here.',
-    'Создай первую заметку': 'Create your first note',
-
+    'Создай первую заметку': 'Create your first note',,
+    'Удалить ': 'Delete ',
+    'Редактировать предмет': 'Edit subject',
+    'Новый предмет': 'New subject',
+    'Пока нет предметов': 'No subjects yet',
+    'Учебные периоды не добавлены': 'No study periods added',
+    'Редактирование товара': 'Edit item',
+    'Новый товар': 'New item',
+    'Сохранение...': 'Saving...',
+    'Сохранить товар': 'Save item',
   };
 }
