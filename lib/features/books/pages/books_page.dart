@@ -828,14 +828,14 @@ class _BooksPageState extends State<BooksPage> {
     String description;
 
     if (isSearching) {
-      title = 'Ничего не найдено';
-      description = 'Попробуй изменить поисковый запрос';
+      title = LunoraLocalization.text('Ничего не найдено');
+      description = LunoraLocalization.text('Попробуй изменить поисковый запрос');
     } else if (isFiltered) {
-      title = 'Здесь пока пусто';
-      description = 'В этой категории пока нет книг';
+      title = LunoraLocalization.text('Здесь пока пусто');
+      description = LunoraLocalization.text('В этой категории пока нет книг');
     } else {
-      title = 'Твоя библиотека пока пуста';
-      description = 'Здесь будут храниться книги, которые ты читаешь';
+      title = LunoraLocalization.text('Твоя библиотека пока пуста');
+      description = LunoraLocalization.text('Здесь будут храниться книги, которые ты читаешь');
     }
 
     return Container(
