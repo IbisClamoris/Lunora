@@ -134,7 +134,7 @@ class _SettingsPageState extends State<SettingsPage> {
       final install = await showDialog<bool>(
         context: context,
         builder: (dialogContext) => AlertDialog(
-          title: Text(english ? 'Lunora update available' : 'Доступно обновление Lunora'),
+          title: Text(english ? 'Lunora update available' : LunoraLocalization.text('Доступно обновление Lunora')),
           content: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -145,7 +145,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     : 'Доступна версия ${update.version}. Перед установкой будет создана резервная копия данных.'),
                 if (update.notes.trim().isNotEmpty) ...[
                   const SizedBox(height: 12),
-                  Text(english ? 'Release notes' : 'Что нового',
+                  Text(english ? 'Release notes' : LunoraLocalization.text('Что нового'),
                       style: const TextStyle(fontWeight: FontWeight.w700)),
                   const SizedBox(height: 6),
                   Text(update.notes),
@@ -156,11 +156,11 @@ class _SettingsPageState extends State<SettingsPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(dialogContext, false),
-              child: Text(english ? 'Later' : 'Позже'),
+              child: Text(english ? 'Later' : LunoraLocalization.text('Позже')),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(dialogContext, true),
-              child: Text(english ? 'Install update' : 'Установить'),
+              child: Text(english ? 'Install update' : LunoraLocalization.text('Установить')),
             ),
           ],
         ),
