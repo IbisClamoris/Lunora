@@ -14,21 +14,21 @@ abstract final class LunoraLocalization {
     if (english != null) return english;
 
     final shoppingCount =
-        RegExp(r'^(\\d+) пунктов ожидают покупки$').firstMatch(russian);
+        RegExp(r'^(\d+) пунктов ожидают покупки$').firstMatch(russian);
     if (shoppingCount != null) {
       final count = int.parse(shoppingCount.group(1)!);
       return '$count ${count == 1 ? 'item' : 'items'} waiting to be purchased';
     }
 
     final obligationCount =
-        RegExp(r'^(\\d+) активных обязательств$').firstMatch(russian);
+        RegExp(r'^(\d+) активных обязательств$').firstMatch(russian);
     if (obligationCount != null) {
       final count = int.parse(obligationCount.group(1)!);
       return '$count active ${count == 1 ? 'obligation' : 'obligations'}';
     }
 
     final photoCount =
-        RegExp(r'^(\\d+) фотограф(?:ия|ии|ий)$').firstMatch(russian);
+        RegExp(r'^(\d+) фотограф(?:ия|ии|ий)$').firstMatch(russian);
     if (photoCount != null) {
       final count = int.parse(photoCount.group(1)!);
       return '$count ${count == 1 ? 'photo' : 'photos'}';
