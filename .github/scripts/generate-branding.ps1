@@ -66,7 +66,9 @@ $writer.Write([UInt16]1); $writer.Write([UInt16]32)
 $writer.Write([UInt32]$pngBytes.Length); $writer.Write([UInt32]22)
 $writer.Write($pngBytes)
 $writer.Dispose(); $iconStream.Dispose(); $pngStream.Dispose()
-$large.Save((Join-Path $brandingDir 'wizard_small.bmp'),[System.Drawing.Imaging.ImageFormat]::Bmp)
+$smallWizard = Draw-LunoraIcon 55
+$smallWizard.Save((Join-Path $brandingDir 'wizard_small.bmp'),[System.Drawing.Imaging.ImageFormat]::Bmp)
+$smallWizard.Dispose()
 $large.Dispose()
 
 $wizard = Draw-LunoraWizardArt 164 314
