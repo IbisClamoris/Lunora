@@ -189,7 +189,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
       style: TextStyle(color: palette.text, fontSize: 14),
       decoration: InputDecoration(
         hintText: LunoraLocalization.text(
-          'Поиск по названию, содержимому и тегам',
+          LunoraLocalization.text('Поиск по названию, содержимому и тегам'),
         ),
         hintStyle: TextStyle(color: palette.secondary),
         prefixIcon: Icon(Icons.search, color: palette.secondary),
@@ -311,8 +311,8 @@ class _KnowledgePageState extends State<KnowledgePage> {
                   ),
                   IconButton(
                     tooltip: entry.isFavorite
-                        ? 'Убрать из избранного'
-                        : 'В избранное',
+                        ? LunoraLocalization.text('Убрать из избранного')
+                        : LunoraLocalization.text('В избранное'),
                     onPressed: () => _toggleFavorite(entry),
                     icon: Icon(
                       entry.isFavorite
@@ -439,7 +439,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
           ),
           const SizedBox(height: 14),
           Text(
-            hasFilters ? 'Ничего не найдено' : 'Твоя библиотека пока пуста',
+            hasFilters ? LunoraLocalization.text('Ничего не найдено') : LunoraLocalization.text('Твоя библиотека пока пуста'),
             style: TextStyle(
               color: palette.text,
               fontSize: 16,
@@ -449,7 +449,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
           const SizedBox(height: 7),
           Text(
             hasFilters
-                ? 'Попробуй изменить поисковый запрос или фильтры.'
+                ? LunoraLocalization.text('Попробуй изменить поисковый запрос или фильтры.')
                 : 'Добавляй материалы, конспекты, идеи и всё, '
                       'что захочется сохранить.',
             textAlign: TextAlign.center,
@@ -534,7 +534,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
                 const SizedBox(height: 3),
                 Text(
                   LunoraLocalization.text(
-                    'Материалы, заметки и идеи, которые хочется сохранить.',
+                    LunoraLocalization.text('Материалы, заметки и идеи, которые хочется сохранить.'),
                   ),
                   style: TextStyle(color: palette.secondary, fontSize: 12),
                 ),
