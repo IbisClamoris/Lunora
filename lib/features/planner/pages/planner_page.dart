@@ -695,7 +695,7 @@ class _PlannerPageState extends State<PlannerPage> {
   }
 
   Future<void> _deleteGoal(PlannerGoal goal) async {
-    final confirmed = await _confirmDelete('цель');
+    final confirmed = await _confirmDelete(LunoraLocalization.text('цель', 'goal'));
 
     if (!confirmed) return;
 
@@ -856,7 +856,7 @@ class _PlannerPageState extends State<PlannerPage> {
   }
 
   Future<void> _deleteNote(String id) async {
-    final confirmed = await _confirmDelete('заметку');
+    final confirmed = await _confirmDelete(LunoraLocalization.text('заметку', 'note'));
 
     if (!confirmed) return;
 
