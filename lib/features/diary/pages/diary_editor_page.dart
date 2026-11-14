@@ -36,7 +36,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
   late DateTime _entryDate;
 
   String? _mood;
-  String _category = LunoraLocalization.text('Без категории', 'Uncategorized');
+  String _category = 'Без категории';
   String _entryType = 'diary';
   bool _isFavorite = false;
   bool _isSaving = false;
@@ -60,7 +60,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
   ];
 
   static const List<String> _categories = [
-    LunoraLocalization.text('Без категории', 'Uncategorized'),
+    'Без категории',
     'Семья',
     'Дом',
     'Друзья',
@@ -564,7 +564,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                         ),
                         ...moods.map(
                           (mood) =>
-                              DropdownMenuItem(value: mood, child: Text(mood)),
+                              DropdownMenuItem(value: mood, child: Text(LunoraLocalization.text(mood))),
                         ),
                       ],
                       onChanged: (value) {
@@ -586,7 +586,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                           .map(
                             (category) => DropdownMenuItem(
                               value: category,
-                              child: Text(category),
+                              child: Text(LunoraLocalization.text(category)),
                             ),
                           )
                           .toList(),
@@ -627,9 +627,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                             controller: _tagController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              hintText: LunoraLocalization.text(
-                                LunoraLocalization.text('Например: лето, семья, поездка', 'For example: summer, family, trip'),
-                              ),
+                              hintText: LunoraLocalization.text('Например: лето, семья, поездка', 'For example: summer, family, trip'),
                             ),
                             onSubmitted: (_) => _addTag(),
                           ),
