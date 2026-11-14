@@ -275,7 +275,7 @@ class _DiaryPageState extends State<DiaryPage> {
   }
 
   String _entryTypeLabel(String type) {
-    return type == 'memory' ? 'Воспоминание' : 'Дневниковая запись';
+    return type == 'memory' ? LunoraLocalization.text('Воспоминание') : LunoraLocalization.text('Дневниковая запись');
   }
 
   String _contentPreview(String content) {
@@ -542,20 +542,20 @@ class _DiaryPageState extends State<DiaryPage> {
       String description;
 
       if (_searchQuery.isNotEmpty) {
-        title = 'Ничего не найдено';
-        description = 'Попробуй изменить поисковый запрос.';
+        title = LunoraLocalization.text('Ничего не найдено');
+        description = LunoraLocalization.text('Попробуй изменить поисковый запрос.');
       } else if (_showFavoritesOnly) {
-        title = 'Пока нет любимых моментов';
-        description = 'Отмечай сердечком важные для себя записи.';
+        title = LunoraLocalization.text('Пока нет любимых моментов');
+        description = LunoraLocalization.text('Отмечай сердечком важные для себя записи.');
       } else if (_selectedMood != _allMoods) {
-        title = 'Записей с таким настроением нет';
-        description = 'Выбери другое настроение или сбрось фильтр.';
+        title = LunoraLocalization.text('Записей с таким настроением нет');
+        description = LunoraLocalization.text('Выбери другое настроение или сбрось фильтр.');
       } else if (_selectedCategory != _allCategories) {
-        title = 'В этой категории пока пусто';
-        description = 'Выбери другую категорию или покажи все записи.';
+        title = LunoraLocalization.text('В этой категории пока пусто');
+        description = LunoraLocalization.text('Выбери другую категорию или покажи все записи.');
       } else {
-        title = 'Пока здесь тихо';
-        description = 'Твои записи будут храниться здесь.';
+        title = LunoraLocalization.text('Пока здесь тихо');
+        description = LunoraLocalization.text('Твои записи будут храниться здесь.');
       }
 
       return Center(
