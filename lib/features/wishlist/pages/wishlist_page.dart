@@ -30,8 +30,8 @@ class _WishlistPageState extends State<WishlistPage> {
   bool _showPurchased = false;
 
   String _searchQuery = '';
-  String _selectedCategory = 'Все категории';
-  String _selectedPriority = 'Все приоритеты';
+  String _selectedCategory = LunoraLocalization.text('Все категории', 'All categories');
+  String _selectedPriority = LunoraLocalization.text('Все приоритеты', 'All priorities');
 
   @override
   void initState() {
@@ -104,12 +104,12 @@ class _WishlistPageState extends State<WishlistPage> {
     return _entries.where((entry) {
       if (entry.isPurchased != _showPurchased) return false;
 
-      if (_selectedCategory != 'Все категории' &&
+      if (_selectedCategory != LunoraLocalization.text('Все категории', 'All categories') &&
           entry.category != _selectedCategory) {
         return false;
       }
 
-      if (_selectedPriority != 'Все приоритеты' &&
+      if (_selectedPriority != LunoraLocalization.text('Все приоритеты', 'All priorities') &&
           entry.priority != _selectedPriority) {
         return false;
       }
@@ -159,11 +159,11 @@ class _WishlistPageState extends State<WishlistPage> {
   String _priorityLabel(String priority) {
     switch (priority) {
       case 'high':
-        return 'Высокий';
+        return LunoraLocalization.text('Высокий', 'High');
       case 'low':
-        return 'Низкий';
+        return LunoraLocalization.text('Низкий', 'Low');
       default:
-        return 'Обычный';
+        return LunoraLocalization.text('Обычный', 'Normal');
     }
   }
 
@@ -205,7 +205,7 @@ class _WishlistPageState extends State<WishlistPage> {
     return LunoraSectionHeader(
       title: LunoraLocalization.text('Мой вишлист'),
       subtitle: LunoraLocalization.text(
-        'Всё, что хочется сохранить и однажды приобрести.',
+        LunoraLocalization.text('Всё, что хочется сохранить и однажды приобрести.', 'Everything you want to save and eventually buy.'),
       ),
       icon: Icons.auto_awesome_rounded,
       actions: [
@@ -231,21 +231,21 @@ class _WishlistPageState extends State<WishlistPage> {
           runSpacing: 12,
           children: [
             _statCard(
-              'Всего желаний',
+              LunoraLocalization.text('Всего желаний', 'Total wishes'),
               _totalCount.toString(),
               Icons.auto_awesome_outlined,
               palette,
               cardWidth,
             ),
             _statCard(
-              'Уже приобретено',
+              LunoraLocalization.text('Уже приобретено', 'Already purchased'),
               _purchasedCount.toString(),
               Icons.shopping_bag_outlined,
               palette,
               cardWidth,
             ),
             _statCard(
-              'Планируемая сумма',
+              LunoraLocalization.text('Планируемая сумма', 'Planned amount'),
               _totalPrice.toStringAsFixed(2),
               Icons.account_balance_wallet_outlined,
               palette,
@@ -332,7 +332,7 @@ class _WishlistPageState extends State<WishlistPage> {
         _buildDropdown(
           value: _selectedCategory,
           items: [
-            'Все категории',
+            LunoraLocalization.text('Все категории', 'All categories'),
             ..._categories.where((item) => item != 'Все категории'),
           ],
           onChanged: (value) {
@@ -344,12 +344,12 @@ class _WishlistPageState extends State<WishlistPage> {
         ),
         _buildDropdown(
           value: _selectedPriority,
-          items: const ['Все приоритеты', 'high', 'normal', 'low'],
+          items: const [LunoraLocalization.text('Все приоритеты', 'All priorities'), 'high', 'normal', 'low'],
           labels: const {
-            'Все приоритеты': 'Все приоритеты',
-            'high': 'Высокий приоритет',
-            'normal': 'Обычный приоритет',
-            'low': 'Низкий приоритет',
+            LunoraLocalization.text('Все приоритеты', 'All priorities'): LunoraLocalization.text('Все приоритеты', 'All priorities'),
+            'high': LunoraLocalization.text('Высокий приоритет', 'High priority'),
+            'normal': LunoraLocalization.text('Обычный приоритет', 'Normal priority'),
+            'low': LunoraLocalization.text('Низкий приоритет', 'Low priority'),
           },
           onChanged: (value) {
             setState(() {
@@ -439,8 +439,8 @@ class _WishlistPageState extends State<WishlistPage> {
             const SizedBox(height: 15),
             Text(
               _showPurchased
-                  ? 'Пока ничего не приобретено'
-                  : 'Здесь пока пусто',
+                  ? LunoraLocalization.text('Пока ничего не приобретено', 'Nothing purchased yet')
+                  : LunoraLocalization.text('Здесь пока пусто', 'Nothing here yet'),
               style: TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w600,
@@ -554,7 +554,7 @@ class _WishlistPageState extends State<WishlistPage> {
                       Expanded(
                         child: Text(
                           entry.description.isEmpty
-                              ? 'Без описания'
+                              ? LunoraLocalization.text('Без описания', 'No description')
                               : entry.description,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -581,8 +581,8 @@ class _WishlistPageState extends State<WishlistPage> {
                           const SizedBox(width: 6),
                           Tooltip(
                             message: entry.isPurchased
-                                ? 'Вернуть в желания'
-                                : 'Отметить купленным',
+                                ? LunoraLocalization.text('Вернуть в желания', 'Move back to wishlist')
+                                : LunoraLocalization.text('Отметить купленным', 'Mark as purchased'),
                             child: IconButton(
                               visualDensity: VisualDensity.compact,
                               constraints: const BoxConstraints(
