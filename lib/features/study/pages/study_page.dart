@@ -1227,7 +1227,7 @@ class _StudyPageState extends State<StudyPage> {
         _showError(
           isEditing
               ? LunoraLocalization.text('Не удалось сохранить событие: $error', 'Could not save event: $error')
-              : LunoraLocalization.text('Не удалось add event: $error', 'Could not add event: $error'),
+              : LunoraLocalization.text('Не удалось добавить событие: $error', 'Could not add event: $error'),
         );
       }
     }
