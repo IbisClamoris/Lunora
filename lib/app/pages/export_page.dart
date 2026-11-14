@@ -478,7 +478,7 @@ class _ExportPageState extends State<ExportPage> {
                 child: CircularProgressIndicator(strokeWidth: 2),
               )
             : const Icon(Icons.file_download_outlined),
-        label: Text(_isExporting ? 'Подготовка файла...' : 'Экспортировать'),
+        label: Text(_isExporting ? LunoraLocalization.text('Подготовка файла...') : LunoraLocalization.text('Экспортировать')),
         style: FilledButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 18),
         ),
