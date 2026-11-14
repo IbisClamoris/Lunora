@@ -1210,5 +1210,9 @@ abstract final class LunoraLocalization {
     'МОЙ ДНЕВНИК': 'MY DIARY',
     'МОИ ВОСПОМИНАНИЯ': 'MY MEMORIES',
     'Например, Основные формулы физики': 'For example, Basic physics formulas',
+    'Твоя коллекция пока пуста': 'Your collection is empty for now',
+    'Добавь первый фильм или сериал, чтобы начать собирать свою коллекцию.': 'Add your first movie or series to start building your collection.',
+    'Попробуй изменить поисковый запрос или выбранный фильтр.': 'Try changing your search query or selected filter.',
+    'Попробуй изменить поисковый запрос или фильтры.': 'Try changing your search query or filters.',
   };
 }
