@@ -628,7 +628,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
         icon: Icons.info_outline,
         title: LunoraLocalization.text('Сопоставление пока недоступно'),
         description:
-            LunoraLocalization.text('Для этого раздела ещё не настроены поля данных. ', 'Data fields have not yet been configured for this section. ')
+            LunoraLocalization.text('Для этого раздела ещё не настроены поля данных. ', 'Data fields have not yet been configured for this section. ') +
             LunoraLocalization.text('Сейчас можно проверить структуру файла и просмотреть его содержимое.', 'For now, you can validate the file structure and preview its contents.'),
       );
     }
@@ -842,7 +842,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
         icon: Icons.lock_outline,
         title: LunoraLocalization.text('Запись пока не подключена'),
         description:
-            LunoraLocalization.text('Сначала нужно создать модель данных и безопасный обработчик ', 'A data model and a safe import handler must be created first ')
+            LunoraLocalization.text('Сначала нужно создать модель данных и безопасный обработчик ', 'A data model and a safe import handler must be created first ') +
             LunoraLocalization.text('импорта для этого раздела. Просмотр файла не изменяет базу данных.', 'for this section. Previewing the file does not change the database.'),
       );
     }
