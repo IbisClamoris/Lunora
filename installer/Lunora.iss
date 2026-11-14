@@ -23,9 +23,9 @@ UninstallDisplayIcon={app}\{#AppExeName}
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
-WizardSizePercent=110
+WizardSizePercent=115
 WizardImageFile=..\assets\branding\wizard_image.bmp
-WizardSmallImageFile=..\assets\branding\wizard_image.bmp
+WizardSmallImageFile=..\assets\branding\wizard_small.bmp
 WizardImageBackColor=clNavy
 WizardSmallImageBackColor=clNavy
 UsePreviousAppDir=yes
@@ -34,6 +34,15 @@ SetupLogging=yes
 CloseApplications=yes
 RestartApplications=no
 Uninstallable=yes
+
+[Languages]
+Name: "russian"; MessagesFile: "compiler:Languages\Russian.isl"
+
+[Messages]
+WelcomeLabel1=Добро пожаловать в Lunora
+WelcomeLabel2=Ваше личное пространство для книг, планов, заметок и идей.%n%nУстановим приложение и бережно сохраним ваши данные.
+FinishedHeadingLabel=Установка Lunora завершена
+FinishedLabel=Приложение готово к работе. Запустите Lunora и продолжайте с того места, где остановились.
 
 [Tasks]
 Name: "desktopicon"; Description: "Создать ярлык на рабочем столе"; GroupDescription: "Дополнительные ярлыки:"; Flags: unchecked
