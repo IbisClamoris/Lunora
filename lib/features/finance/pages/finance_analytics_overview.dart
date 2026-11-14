@@ -220,7 +220,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
       if (_transactionCurrency(transaction) != currency) continue;
 
       final category = _category(transaction.categoryId);
-      final name = category?.name ?? 'Без категории';
+      final name = category?.name ?? LunoraLocalization.text('Без категории', 'Uncategorized');
 
       result[name] = (result[name] ?? 0) + transaction.amountMinor;
     }
@@ -438,7 +438,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
 
     if (currencies.isEmpty) {
       return const _AnalyticsEmpty(
-        text: 'За этот месяц пока нет доходов и расходов.',
+        text: LunoraLocalization.text('За этот месяц пока нет доходов и расходов.', 'There is no income or expense data for this month yet.'),
       );
     }
 
@@ -463,7 +463,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
                   ),
                   Text(
                     LunoraLocalization.text(
-                      'Итого: ${_money(difference, currency)}',
+                      LunoraLocalization.text('Итого: ${_money(difference, currency)}', 'Total: ${_money(difference, currency)}'),
                     ),
                     style: TextStyle(
                       fontSize: 12,
@@ -518,7 +518,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
 
     if (currencies.isEmpty) {
       return const _AnalyticsEmpty(
-        text: 'Расходов за выбранный месяц пока нет.',
+        text: LunoraLocalization.text('Расходов за выбранный месяц пока нет.', 'No expenses for the selected month yet.'),
       );
     }
 
@@ -623,7 +623,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
 
     if (history.isEmpty) {
       return const _AnalyticsEmpty(
-        text: 'Для графика пока недостаточно операций.',
+        text: LunoraLocalization.text('Для графика пока недостаточно операций.', 'Not enough transactions to display the chart.'),
       );
     }
 
@@ -776,7 +776,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
 
     if (activeAccounts.isEmpty) {
       return const _AnalyticsEmpty(
-        text: 'Добавь счёт, чтобы видеть здесь баланс.',
+        text: LunoraLocalization.text('Добавь счёт, чтобы видеть здесь баланс.', 'Add an account to see your balance here.'),
       );
     }
 
@@ -888,10 +888,10 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
 
   String _accountTypeName(FinanceAccountType type) {
     return switch (type) {
-      FinanceAccountType.card => 'Банковская карта',
-      FinanceAccountType.bankAccount => 'Банковский счёт',
-      FinanceAccountType.cash => 'Наличные',
-      FinanceAccountType.other => 'Другой счёт',
+      FinanceAccountType.card => LunoraLocalization.text('Банковская карта', 'Bank card'),
+      FinanceAccountType.bankAccount => LunoraLocalization.text('Банковский счёт', 'Bank account'),
+      FinanceAccountType.cash => LunoraLocalization.text('Наличные', 'Cash'),
+      FinanceAccountType.other => LunoraLocalization.text('Другой счёт', 'Other account'),
     };
   }
 
@@ -956,7 +956,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
                   ),
                   subtitle: Text(
                     LunoraLocalization.text(
-                      'Платёж ${_date(debt.nextPaymentDate!)}',
+                      LunoraLocalization.text('Платёж ${_date(debt.nextPaymentDate!)}', 'Payment ${_date(debt.nextPaymentDate!)}'),
                     ),
                     style: const TextStyle(fontSize: 10),
                   ),
@@ -1030,10 +1030,10 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
               const SizedBox(height: _sectionSpacing),
               _twoColumnSections(
                 width: constraints.maxWidth,
-                leftTitle: 'Расходы по категориям',
+                leftTitle: LunoraLocalization.text('Расходы по категориям', 'Expenses by category'),
                 leftSubtitle: LunoraLocalization.text('Распределение расходов за выбранный месяц'),
                 leftChild: _buildCategoryBreakdown(),
-                rightTitle: 'Динамика за 6 месяцев',
+                rightTitle: LunoraLocalization.text('Динамика за 6 месяцев', 'Six-month trend'),
                 rightSubtitle: LunoraLocalization.text('Зелёный — доходы, красный — расходы'),
                 rightChild: _buildHistoryChart(),
               ),
@@ -1041,9 +1041,9 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
               if (wide)
                 _twoColumnSections(
                   width: constraints.maxWidth,
-                  leftTitle: 'Баланс счетов',
+                  leftTitle: LunoraLocalization.text('Баланс счетов', 'Account balances'),
                   leftChild: _buildAccountBalances(),
-                  rightTitle: 'Кредиты и рассрочки',
+                  rightTitle: LunoraLocalization.text('Кредиты и рассрочки', 'Loans and instalments'),
                   rightChild: _buildDebtSummary(),
                 )
               else ...[
