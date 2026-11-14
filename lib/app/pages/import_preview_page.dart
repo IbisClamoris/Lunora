@@ -91,14 +91,14 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
       final path = result.first.path;
 
       if (path == null || path.isEmpty) {
-        _showMessage('Не удалось получить путь к файлу.');
+        _showMessage(LunoraLocalization.text('Не удалось получить путь к файлу.', 'Could not get the file path.'));
         return;
       }
 
       await _loadExcelFile(File(path));
     } catch (error) {
       if (!mounted) return;
-      _showMessage('Ошибка выбора файла: $error');
+      _showMessage(LunoraLocalization.text('Ошибка выбора файла: $error', 'File selection error: $error'));
     }
   }
 
@@ -163,24 +163,24 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
     final errors = <String>[];
 
     if (sheet.rows.isEmpty) {
-      errors.add('Лист не содержит данных.');
+      errors.add(LunoraLocalization.text('Лист не содержит данных.', 'The sheet contains no data.'));
       return errors;
     }
 
     if (sheet.rows.length < 2) {
-      errors.add('В листе отсутствуют строки с данными.');
+      errors.add(LunoraLocalization.text('В листе отсутствуют строки с данными.', 'The sheet has no data rows.'));
     }
 
     final headers = sheet.headers;
 
     if (headers.isEmpty) {
-      errors.add('Не удалось определить заголовки колонок.');
+      errors.add(LunoraLocalization.text('Не удалось определить заголовки колонок.', 'Could not detect column headers.'));
       return errors;
     }
 
     for (var index = 0; index < headers.length; index++) {
       if (headers[index].trim().isEmpty) {
-        errors.add('Не заполнен заголовок колонки ${index + 1}.');
+        errors.add(LunoraLocalization.text('Не заполнен заголовок колонки ${index + 1}.', 'Column ${index + 1} has no header.'));
       }
     }
 
@@ -192,7 +192,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
       if (normalized.isEmpty) continue;
 
       if (!normalizedHeaders.add(normalized)) {
-        errors.add('Обнаружен повторяющийся заголовок "$header".');
+        errors.add(LunoraLocalization.text('Обнаружен повторяющийся заголовок "$header".', 'Duplicate header detected: "$header".'));
       }
     }
 
@@ -704,7 +704,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
               const SizedBox(height: 4),
               Text(
                 LunoraLocalization.text(
-                  'Обязательные поля: ${widget.requiredFields.join(', ')}',
+                  LunoraLocalization.text('Обязательные поля: ${widget.requiredFields.join(', ')}', 'Required fields: ${widget.requiredFields.join(', ')}'),
                 ),
                 style: TextStyle(
                   fontSize: 12,
