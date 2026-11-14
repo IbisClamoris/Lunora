@@ -153,7 +153,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
         title: Text(LunoraLocalization.text('Очистить купленное?')),
         content: Text(
           LunoraLocalization.text(
-            'Все товары из раздела «Куплено» будут удалены.',
+            LunoraLocalization.text('Все товары из раздела «Куплено» будут удалены.', 'All items in the Purchased section will be deleted.'),
           ),
         ),
         actions: [
@@ -269,7 +269,7 @@ class _ShoppingPageState extends State<ShoppingPage> {
                       const SizedBox(height: 12),
                       Text(
                         LunoraLocalization.text(
-                          'Файл будет сохранён в папку Lunora/Exports.',
+                          LunoraLocalization.text('Файл будет сохранён в папку Lunora/Exports.', 'The file will be saved to the Lunora/Exports folder.'),
                         ),
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
@@ -740,13 +740,13 @@ class _ShoppingPageState extends State<ShoppingPage> {
               const SizedBox(height: 12),
               Text(
                 _showPurchased
-                    ? 'Пока ничего не куплено'
-                    : 'Корзина пока пуста',
+                    ? LunoraLocalization.text('Пока ничего не куплено', 'Nothing purchased yet')
+                    : LunoraLocalization.text('Корзина пока пуста', 'Your shopping list is empty'),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 6),
               Text(
-                _showPurchased ? 'Купленные товары появятся здесь' : 'Добавь нужное вручную или перенеси ингредиенты из рецепта',
+                _showPurchased ? LunoraLocalization.text('Купленные товары появятся здесь', 'Purchased items will appear here') : LunoraLocalization.text('Добавь нужное вручную или перенеси ингредиенты из рецепта', 'Add items manually or transfer ingredients from a recipe'),
                 textAlign: TextAlign.center,
                 style: TextStyle(color: palette?.secondary ?? Colors.grey),
               ),
