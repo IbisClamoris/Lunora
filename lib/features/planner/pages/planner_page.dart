@@ -253,8 +253,8 @@ class _PlannerPageState extends State<PlannerPage> {
       ),
       child: Row(
         children: [
-          _viewButton('Месяц', _PlannerView.month),
-          _viewButton('Неделя', _PlannerView.week),
+          _viewButton(LunoraLocalization.text('Месяц'), _PlannerView.month),
+          _viewButton(LunoraLocalization.text('Неделя'), _PlannerView.week),
         ],
       ),
     );
@@ -484,7 +484,7 @@ class _PlannerPageState extends State<PlannerPage> {
         ),
         const SizedBox(height: 12),
         if (tasks.isEmpty)
-          _emptyCard('На этот день задач пока нет.')
+          _emptyCard(LunoraLocalization.text('На этот день задач пока нет.'))
         else
           ...tasks.map(_buildTaskCard),
       ],
@@ -582,7 +582,7 @@ class _PlannerPageState extends State<PlannerPage> {
           const SizedBox(height: 12),
         ],
         if (_goals.isEmpty)
-          _emptyCard('Добавь цели, которые хочешь выполнить в этом месяце.')
+          _emptyCard(LunoraLocalization.text('Добавь цели, которые хочешь выполнить в этом месяце.'))
         else
           ..._goals.map(_buildGoalCard),
       ],
@@ -646,7 +646,7 @@ class _PlannerPageState extends State<PlannerPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(goal == null ? 'Новая цель' : 'Редактирование цели'),
+          title: Text(goal == null ? LunoraLocalization.text('Новая цель') : LunoraLocalization.text('Редактирование цели')),
           content: TextField(
             controller: controller,
             autofocus: true,
@@ -713,7 +713,7 @@ class _PlannerPageState extends State<PlannerPage> {
         ),
         const SizedBox(height: 8),
         if (_notes.isEmpty)
-          _emptyCard('Здесь будут твои личные заметки планера.')
+          _emptyCard(LunoraLocalization.text('Здесь будут твои личные заметки планера.'))
         else
           ..._notes.map(_buildNoteCard),
       ],
@@ -786,7 +786,7 @@ class _PlannerPageState extends State<PlannerPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(note == null ? 'Новая заметка' : 'Редактирование'),
+          title: Text(note == null ? LunoraLocalization.text('Новая заметка') : LunoraLocalization.text('Редактирование')),
           content: SizedBox(
             width: 450,
             child: SingleChildScrollView(
@@ -968,11 +968,11 @@ class _PlannerPageState extends State<PlannerPage> {
       icon: Icons.event_note_outlined,
       actions: [
         Tooltip(
-          message: 'Импортировать планер из Excel',
+          message: LunoraLocalization.text('Импортировать планер из Excel'),
           child: OutlinedButton.icon(
             onPressed: _importPlanner,
             icon: const Icon(Icons.file_upload_outlined, size: 18),
-            label: Text(compact ? 'Excel' : 'Импорт Excel'),
+            label: Text(compact ? 'Excel' : LunoraLocalization.text('Импорт Excel')),
             style: OutlinedButton.styleFrom(
               foregroundColor: _palette.text,
               side: BorderSide(color: _palette.border),
