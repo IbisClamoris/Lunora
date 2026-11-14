@@ -856,9 +856,9 @@ class _CalendarPageState extends State<CalendarPage> {
             spacing: 16,
             runSpacing: 8,
             children: [
-              _legend('Задачи', const Color(0xFF91A98D)),
-              _legend('Учёба', const Color(0xFF9C91B8)),
-              _legend('Платежи', const Color(0xFFC69A86)),
+              _legend(LunoraLocalization.text('Задачи'), const Color(0xFF91A98D)),
+              _legend(LunoraLocalization.text('Учёба'), const Color(0xFF9C91B8)),
+              _legend(LunoraLocalization.text('Платежи'), const Color(0xFFC69A86)),
             ],
           ),
         ],
@@ -1299,7 +1299,7 @@ class _TaskEditorDialogState extends State<_TaskEditorDialog> {
     final editing = widget.task != null;
 
     return AlertDialog(
-      title: Text(editing ? 'Редактирование задачи' : 'Новая задача'),
+      title: Text(editing ? LunoraLocalization.text('Редактирование задачи') : LunoraLocalization.text('Новая задача')),
       content: SizedBox(
         width: 440,
         child: SingleChildScrollView(
