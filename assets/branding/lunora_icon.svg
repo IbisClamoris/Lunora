@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256">
+  <defs>
+    <linearGradient id="night" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#292044"/><stop offset="1" stop-color="#11172e"/>
+    </linearGradient>
+    <linearGradient id="moon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff3c4"/><stop offset="1" stop-color="#c6a8ee"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="62" fill="url(#night)"/>
+  <circle cx="128" cy="128" r="82" fill="#ffffff" opacity=".045"/>
+  <path d="M159 43c-37 10-61 49-53 89 8 41 48 67 89 59-17 18-42 28-69 24-48-7-81-52-74-100 7-47 52-80 100-72 2 0 5 0 7 0z" fill="url(#moon)"/>
+  <path d="m185 56 8 18 19 8-19 8-8 19-8-19-19-8 19-8z" fill="#fff0bd"/>
+  <circle cx="67" cy="81" r="4" fill="#fff0bd"/><circle cx="194" cy="157" r="3" fill="#d9c6ff"/>
+  <path d="m65 169 5 11 12 5-12 5-5 12-5-12-12-5 12-5z" fill="#d9c6ff"/>
+  <path d="M72 216c14-17 28-23 42-20m-17 23c7-12 15-18 26-21" fill="none" stroke="#9bb9a6" stroke-width="4" stroke-linecap="round"/>
+</svg>
