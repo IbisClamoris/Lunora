@@ -38,7 +38,7 @@ class _StudyExcelImportPageState extends State<StudyExcelImportPage> {
       final path = file.path;
 
       if (path == null || path.isEmpty) {
-        throw Exception('Не удалось получить путь к файлу.');
+        throw Exception(LunoraLocalization.text('Не удалось получить путь к файлу.', 'Could not get the file path.'));
       }
 
       final document = await ExcelService.instance.readWorkbook(File(path));
@@ -53,7 +53,7 @@ class _StudyExcelImportPageState extends State<StudyExcelImportPage> {
       if (!mounted) return;
 
       setState(() {
-        _error = 'Не удалось импортировать файл:\n$e';
+        _error = LunoraLocalization.text('Не удалось импортировать файл:\n$e', 'Could not import file:\n$e');
       });
     } finally {
       if (mounted) {
@@ -116,7 +116,7 @@ class _StudyExcelImportPageState extends State<StudyExcelImportPage> {
                       SizedBox(height: 12),
                       Text(
                         LunoraLocalization.text(
-                          'Форматы файлов: .xlsx и .xlsm',
+                          LunoraLocalization.text('Форматы файлов: .xlsx и .xlsm', 'File formats: .xlsx and .xlsm'),
                         ),
                       ),
                     ],
@@ -152,7 +152,7 @@ class _StudyExcelImportPageState extends State<StudyExcelImportPage> {
                           )
                         : const Icon(Icons.file_open_outlined),
                     label: Text(
-                      _isImporting ? 'Импортируем...' : 'Выбрать Excel-файл',
+                      _isImporting ? LunoraLocalization.text('Импортируем...', 'Importing...') : LunoraLocalization.text('Выбрать Excel-файл', 'Choose Excel file'),
                     ),
                   ),
                 ),
