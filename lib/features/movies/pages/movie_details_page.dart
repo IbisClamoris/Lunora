@@ -38,7 +38,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось обновить запись: $e');
+        _showMessage(LunoraLocalization.text('Не удалось обновить запись: $e', 'Could not update entry: $e'));
       }
     } finally {
       if (mounted) {
@@ -95,7 +95,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
       Navigator.of(context).pop(true);
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось удалить запись: $e');
+        _showMessage(LunoraLocalization.text('Не удалось удалить запись: $e', 'Could not delete entry: $e'));
       }
     }
   }
@@ -191,7 +191,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось обновить прогресс: $e');
+        _showMessage(LunoraLocalization.text('Не удалось обновить прогресс: $e', 'Could not update progress: $e'));
       }
     }
   }
