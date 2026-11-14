@@ -406,7 +406,7 @@ class _StudyPageState extends State<StudyPage> {
 
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text(isEditing ? 'Редактировать предмет' : 'Новый предмет'),
+          title: Text(isEditing ? LunoraLocalization.text('Редактировать предмет') : LunoraLocalization.text('Новый предмет')),
 
           content: SizedBox(
             width: 420,
@@ -474,7 +474,7 @@ class _StudyPageState extends State<StudyPage> {
                 Navigator.pop(dialogContext, true);
               },
 
-              child: Text(isEditing ? 'Сохранить' : 'Добавить'),
+              child: Text(isEditing ? LunoraLocalization.text('Сохранить') : LunoraLocalization.text('Добавить')),
             ),
           ],
         );
@@ -559,7 +559,7 @@ class _StudyPageState extends State<StudyPage> {
 
         lastDate: DateTime(2100),
 
-        helpText: 'Выбери начало периода',
+        helpText: LunoraLocalization.text('Выбери начало периода'),
       );
 
       if (picked == null) return;
@@ -583,7 +583,7 @@ class _StudyPageState extends State<StudyPage> {
 
         lastDate: DateTime(2100),
 
-        helpText: 'Выбери окончание периода',
+        helpText: LunoraLocalization.text('Выбери окончание периода'),
       );
 
       if (picked == null) return;
@@ -777,7 +777,7 @@ class _StudyPageState extends State<StudyPage> {
                     Navigator.pop(dialogContext, true);
                   },
 
-                  child: Text(isEditing ? 'Сохранить' : 'Добавить'),
+                  child: Text(isEditing ? LunoraLocalization.text('Сохранить') : LunoraLocalization.text('Добавить')),
                 ),
               ],
             );
@@ -879,7 +879,7 @@ class _StudyPageState extends State<StudyPage> {
 
         lastDate: DateTime(2100),
 
-        helpText: 'Выбери дату занятия',
+        helpText: LunoraLocalization.text('Выбери дату занятия'),
       );
 
       if (picked == null) return;
@@ -911,7 +911,7 @@ class _StudyPageState extends State<StudyPage> {
 
         initialTime: TimeOfDay.fromDateTime(selectedScheduledAt!),
 
-        helpText: 'Выбери время занятия',
+        helpText: LunoraLocalization.text('Выбери время занятия'),
       );
 
       if (picked == null) return;
@@ -941,7 +941,7 @@ class _StudyPageState extends State<StudyPage> {
 
         lastDate: DateTime(2100),
 
-        helpText: 'Выбери срок сдачи',
+        helpText: LunoraLocalization.text('Выбери срок сдачи'),
       );
 
       if (picked == null) return;
@@ -1174,7 +1174,7 @@ class _StudyPageState extends State<StudyPage> {
                     Navigator.pop(dialogContext, true);
                   },
 
-                  child: Text(isEditing ? 'Сохранить' : 'Добавить'),
+                  child: Text(isEditing ? LunoraLocalization.text('Сохранить') : LunoraLocalization.text('Добавить')),
                 ),
               ],
             );
@@ -2326,7 +2326,7 @@ class _StudyPageState extends State<StudyPage> {
       return _emptyCard(
         context,
         icon: Icons.menu_book_outlined,
-        message: 'Пока нет предметов',
+        message: LunoraLocalization.text('Пока нет предметов'),
         hint: 'Добавь первый предмет, чтобы начать вести учебный план.',
       );
     }
@@ -2433,7 +2433,7 @@ class _StudyPageState extends State<StudyPage> {
       return _emptyCard(
         context,
         icon: Icons.date_range_outlined,
-        message: 'Учебные периоды не добавлены',
+        message: LunoraLocalization.text('Учебные периоды не добавлены'),
         hint: 'Здесь будут семестры, сессии и практика.',
       );
     }
