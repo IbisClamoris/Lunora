@@ -437,7 +437,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
       ..sort();
 
     if (currencies.isEmpty) {
-      return const _AnalyticsEmpty(
+      return _AnalyticsEmpty(
         text: LunoraLocalization.text('За этот месяц пока нет доходов и расходов.', 'There is no income or expense data for this month yet.'),
       );
     }
@@ -517,7 +517,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
           ..sort();
 
     if (currencies.isEmpty) {
-      return const _AnalyticsEmpty(
+      return _AnalyticsEmpty(
         text: LunoraLocalization.text('Расходов за выбранный месяц пока нет.', 'No expenses for the selected month yet.'),
       );
     }
@@ -622,7 +622,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
     final history = _historyByCurrency();
 
     if (history.isEmpty) {
-      return const _AnalyticsEmpty(
+      return _AnalyticsEmpty(
         text: LunoraLocalization.text('Для графика пока недостаточно операций.', 'Not enough transactions to display the chart.'),
       );
     }
@@ -775,7 +775,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
         .toList();
 
     if (activeAccounts.isEmpty) {
-      return const _AnalyticsEmpty(
+      return _AnalyticsEmpty(
         text: LunoraLocalization.text('Добавь счёт, чтобы видеть здесь баланс.', 'Add an account to see your balance here.'),
       );
     }
@@ -927,9 +927,9 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
         ),
         const SizedBox(height: 9),
         if (activeDebts.isEmpty)
-          const _AnalyticsEmpty(text: LunoraLocalization.text('Активных задолженностей нет.', 'No active debts.'))
+          _AnalyticsEmpty(text: LunoraLocalization.text('Активных задолженностей нет.', 'No active debts.'))
         else if (upcoming.isEmpty)
-          const _AnalyticsEmpty(text: LunoraLocalization.text('Ближайшие даты платежей не указаны.', 'Upcoming payment dates are not specified.'))
+          _AnalyticsEmpty(text: LunoraLocalization.text('Ближайшие даты платежей не указаны.', 'Upcoming payment dates are not specified.'))
         else
           _card(
             child: Column(
@@ -1103,7 +1103,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
 }
 
 class _AnalyticsEmpty extends StatelessWidget {
-  const _AnalyticsEmpty({required this.text});
+  _AnalyticsEmpty({required this.text});
 
   final String text;
 
