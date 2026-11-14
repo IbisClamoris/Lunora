@@ -120,19 +120,19 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final status = metadata['systemDeliveryStatus']?.toString();
 
     if (_isScheduled(notification)) {
-      return 'Запланировано';
+      return LunoraLocalization.text('Запланировано', 'Scheduled');
     }
 
     if (status == 'disabled') {
-      return 'Отключено настройками';
+      return LunoraLocalization.text('Отключено настройками', 'Disabled in settings');
     }
 
     if (status == 'delivered' || metadata['systemDeliveredAt'] != null) {
-      return 'Доставлено';
+      return LunoraLocalization.text('Доставлено', 'Delivered');
     }
 
     if (notification.scheduledAt != null) {
-      return 'Ожидает доставки';
+      return LunoraLocalization.text('Ожидает доставки', 'Pending delivery');
     }
 
     return null;
@@ -142,7 +142,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     if (_isScheduled(notification) &&
         notification.eventType == 'task_overdue') {
       return LunoraLocalization.text(
-        'Напоминание о просрочке',
+        LunoraLocalization.text('Напоминание о просрочке', 'Overdue reminder'),
         'Overdue reminder',
       );
     }
@@ -155,22 +155,22 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     if (status == null) return null;
 
-    if (status == 'Запланировано' && notification.scheduledAt != null) {
-      return 'Запланировано на ${_formatDate(notification.scheduledAt!)}';
+    if (status == LunoraLocalization.text('Запланировано', 'Scheduled') && notification.scheduledAt != null) {
+      return LunoraLocalization.text('Запланировано на ${_formatDate(notification.scheduledAt!)}', 'Scheduled for ${_formatDate(notification.scheduledAt!)}');
     }
 
     final deliveredAt = notification.metadata['systemDeliveredAt']?.toString();
 
-    if (status == 'Доставлено' && deliveredAt != null) {
+    if (status == LunoraLocalization.text('Доставлено', 'Delivered') && deliveredAt != null) {
       final date = DateTime.tryParse(deliveredAt);
 
       if (date != null) {
-        return 'Доставлено: ${_formatDate(date)}';
+        return LunoraLocalization.text('Доставлено: ${_formatDate(date)}', 'Delivered: ${_formatDate(date)}');
       }
     }
 
-    if (status == 'Ожидает доставки' && notification.scheduledAt != null) {
-      return 'Время события: ${_formatDate(notification.scheduledAt!)}';
+    if (status == LunoraLocalization.text('Ожидает доставки', 'Pending delivery') && notification.scheduledAt != null) {
+      return LunoraLocalization.text('Время события: ${_formatDate(notification.scheduledAt!)}', 'Event time: ${_formatDate(notification.scheduledAt!)}');
     }
 
     return null;
@@ -178,20 +178,20 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   Color _deliveryStatusColor(String status, LunoraPalette palette) {
     return switch (status) {
-      'Запланировано' => palette.accent,
-      'Ожидает доставки' => Colors.orange.shade700,
-      'Доставлено' => Colors.green.shade700,
-      'Отключено настройками' => palette.secondary,
+      LunoraLocalization.text('Запланировано', 'Scheduled') => palette.accent,
+      LunoraLocalization.text('Ожидает доставки', 'Pending delivery') => Colors.orange.shade700,
+      LunoraLocalization.text('Доставлено', 'Delivered') => Colors.green.shade700,
+      LunoraLocalization.text('Отключено настройками', 'Disabled in settings') => palette.secondary,
       _ => palette.secondary,
     };
   }
 
   IconData _deliveryStatusIcon(String status) {
     return switch (status) {
-      'Запланировано' => Icons.schedule,
-      'Ожидает доставки' => Icons.hourglass_empty,
-      'Доставлено' => Icons.check_circle_outline,
-      'Отключено настройками' => Icons.notifications_off_outlined,
+      LunoraLocalization.text('Запланировано', 'Scheduled') => Icons.schedule,
+      LunoraLocalization.text('Ожидает доставки', 'Pending delivery') => Icons.hourglass_empty,
+      LunoraLocalization.text('Доставлено', 'Delivered') => Icons.check_circle_outline,
+      LunoraLocalization.text('Отключено настройками', 'Disabled in settings') => Icons.notifications_off_outlined,
       _ => Icons.info_outline,
     };
   }
@@ -237,8 +237,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     final confirmed = await _showConfirmation(
       title: LunoraLocalization.text('Удалить уведомление?'),
-      message: 'Запись «${notification.title}» будет удалена из истории.',
-      confirmLabel: 'Удалить',
+      message: LunoraLocalization.text('Запись «${notification.title}» будет удалена из истории.', 'Entry “${notification.title}” will be removed from history.'),
+      confirmLabel: LunoraLocalization.text('Удалить', 'Delete'),
     );
 
     if (confirmed != true || !mounted) return;
@@ -260,8 +260,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     final confirmed = await _showConfirmation(
       title: LunoraLocalization.text('Очистить историю?'),
-      message: 'Все уведомления будут удалены без возможности восстановления.',
-      confirmLabel: 'Очистить',
+      message: LunoraLocalization.text('Все уведомления будут удалены без возможности восстановления.', 'All notifications will be permanently deleted.'),
+      confirmLabel: LunoraLocalization.text('Очистить', 'Clear'),
     );
 
     if (confirmed != true || !mounted) return;
@@ -340,15 +340,15 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   String _categoryName(NotificationCategory category) {
     return switch (category) {
-      NotificationCategory.tasks => 'Задачи',
-      NotificationCategory.calendar => 'Календарь',
-      NotificationCategory.finance => 'Финансы',
-      NotificationCategory.study => 'Учёба',
-      NotificationCategory.cooking => 'Готовка',
-      NotificationCategory.importExport => 'Импорт и экспорт',
-      NotificationCategory.backups => 'Резервные копии',
-      NotificationCategory.system => 'Система',
-      NotificationCategory.other => 'Другое',
+      NotificationCategory.tasks => LunoraLocalization.text('Задачи', 'Tasks'),
+      NotificationCategory.calendar => LunoraLocalization.text('Календарь', 'Calendar'),
+      NotificationCategory.finance => LunoraLocalization.text('Финансы', 'Finances'),
+      NotificationCategory.study => LunoraLocalization.text('Учёба', 'Study'),
+      NotificationCategory.cooking => LunoraLocalization.text('Готовка', 'Cooking'),
+      NotificationCategory.importExport => LunoraLocalization.text('Импорт и экспорт', 'Import & export'),
+      NotificationCategory.backups => LunoraLocalization.text('Резервные копии', 'Backups'),
+      NotificationCategory.system => LunoraLocalization.text('Система', 'System'),
+      NotificationCategory.other => LunoraLocalization.text('Другое', 'Other'),
     };
   }
 
@@ -397,7 +397,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
     bool compact,
   ) {
     final unreadDescription = _unreadCount == 0
-        ? 'Все события на своих местах.'
+        ? LunoraLocalization.text('Все события на своих местах.', 'Everything is in its place.')
         : '$_unreadCount ${_unreadCount == 1
               ? 'новое уведомление'
               : _unreadCount < 5
@@ -479,7 +479,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
                 const SizedBox(width: 7),
                 Text(
                   _selectedCategory == null
-                      ? 'Все категории'
+                      ? LunoraLocalization.text('Все категории', 'All categories')
                       : _categoryName(_selectedCategory!),
                   style: TextStyle(color: palette.text, fontSize: 12),
                 ),
@@ -706,8 +706,8 @@ class _NotificationsPageState extends State<NotificationsPage> {
                           value: 'read',
                           child: Text(
                             notification.isRead
-                                ? 'Вернуть в непрочитанные'
-                                : 'Отметить прочитанным',
+                                ? LunoraLocalization.text('Вернуть в непрочитанные', 'Mark as unread')
+                                : LunoraLocalization.text('Отметить прочитанным', 'Mark as read'),
                           ),
                         ),
                         PopupMenuItem(
@@ -812,7 +812,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           ),
           const SizedBox(height: 12),
           Text(
-            hasFilters ? 'Ничего не найдено' : 'Пока тихо',
+            hasFilters ? LunoraLocalization.text('Ничего не найдено', 'Nothing found') : LunoraLocalization.text('Пока тихо', 'All quiet'),
             style: TextStyle(
               color: palette.text,
               fontSize: 17,
@@ -821,7 +821,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
           ),
           const SizedBox(height: 7),
           Text(
-            hasFilters ? 'Измени фильтры, чтобы увидеть другие уведомления.' : 'Здесь появятся напоминания и события из разных разделов Lunora.',
+            hasFilters ? LunoraLocalization.text('Измени фильтры, чтобы увидеть другие уведомления.', 'Change the filters to see other notifications.') : LunoraLocalization.text('Здесь появятся напоминания и события из разных разделов Lunora.', 'Reminders and events from different Lunora sections will appear here.'),
             textAlign: TextAlign.center,
             style: TextStyle(
               color: palette.secondary,
