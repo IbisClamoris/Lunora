@@ -31,7 +31,9 @@ class PlannerPage extends StatefulWidget {
 }
 
 class _PlannerPageState extends State<PlannerPage> {
-  static const List<String> _months = [
+  static List<String> get _months => LunoraLocalization.isEnglish
+      ? ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+      : [
     'Январь',
     'Февраль',
     'Март',
@@ -46,7 +48,9 @@ class _PlannerPageState extends State<PlannerPage> {
     'Декабрь',
   ];
 
-  static const List<String> _weekdays = [
+  static List<String> get _weekdays => LunoraLocalization.isEnglish
+      ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      : [
     'Пн',
     'Вт',
     'Ср',
@@ -187,7 +191,7 @@ class _PlannerPageState extends State<PlannerPage> {
   }
 
   String _formatTime(int? minutes) {
-    if (minutes == null) return 'Весь день';
+    if (minutes == null) return LunoraLocalization.text('Весь день', 'All day');
 
     final hour = minutes ~/ 60;
     final minute = minutes % 60;
@@ -476,7 +480,7 @@ class _PlannerPageState extends State<PlannerPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle(
-          'Задачи на ${_formatDate(_selectedDate)}',
+          LunoraLocalization.text('Задачи на ${_formatDate(_selectedDate)}', 'Tasks for ${_formatDate(_selectedDate)}'),
           trailing: Text(
             '${tasks.length}',
             style: TextStyle(color: _palette.secondary),
@@ -556,7 +560,7 @@ class _PlannerPageState extends State<PlannerPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle(
-          'Цели месяца',
+          LunoraLocalization.text('Цели месяца', 'Monthly goals'),
           trailing: TextButton.icon(
             onPressed: _showGoalDialog,
             icon: const Icon(Icons.add, size: 18),
@@ -704,7 +708,7 @@ class _PlannerPageState extends State<PlannerPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle(
-          'Заметки',
+          LunoraLocalization.text('Заметки', 'Notes'),
           trailing: TextButton.icon(
             onPressed: _showNoteDialog,
             icon: const Icon(Icons.add, size: 18),
