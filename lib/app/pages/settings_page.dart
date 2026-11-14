@@ -84,7 +84,7 @@ class _SettingsPageState extends State<SettingsPage> {
       _showMessage(
         _settings.language == AppLanguage.english
             ? 'Windows startup is available only on Windows.'
-            : 'Автозапуск доступен только в Windows.',
+            : LunoraLocalization.text('Автозапуск доступен только в Windows.', 'Startup is only available on Windows.'),
       );
       return;
     }
@@ -109,7 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
         _showMessage(
           _settings.language == AppLanguage.english
               ? 'Could not change Windows startup: $error'
-              : 'Не удалось изменить автозапуск Windows: $error',
+              : LunoraLocalization.text('Не удалось изменить автозапуск Windows: $error', 'Could not change Windows startup settings: $error'),
         );
       }
     } finally {
@@ -186,7 +186,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(LunoraLocalization.text('Сбросить настройки?')),
         content: Text(
           LunoraLocalization.text(
-            'Все настройки Lunora вернутся к значениям по умолчанию.',
+            LunoraLocalization.text('Все настройки Lunora вернутся к значениям по умолчанию.', 'All Lunora settings will be restored to their defaults.'),
           ),
         ),
         actions: [
@@ -357,7 +357,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _themePicker() {
     const themeData = <AppColorTheme, (String, List<Color>)>{
       AppColorTheme.botanical: (
-        'Ботаника',
+        LunoraLocalization.text('Ботаника', 'Botanical'),
         [
           Color(0xFFF3F5EF),
           Color(0xFFE8EEE4),
@@ -366,7 +366,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       AppColorTheme.lavender: (
-        'Лаванда',
+        LunoraLocalization.text('Лаванда', 'Lavender'),
         [
           Color(0xFFF4F1F8),
           Color(0xFFEAE3F1),
@@ -375,7 +375,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       AppColorTheme.roseGarden: (
-        'Розовый сад',
+        LunoraLocalization.text('Розовый сад', 'Rose Garden'),
         [
           Color(0xFFF8F1F0),
           Color(0xFFF0E1E0),
@@ -384,7 +384,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       AppColorTheme.vintageLibrary: (
-        'Винтажная библиотека',
+        LunoraLocalization.text('Винтажная библиотека', 'Vintage Library'),
         [
           Color(0xFFF2EBDD),
           Color(0xFFE7DCC7),
@@ -393,7 +393,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       AppColorTheme.midnight: (
-        'Полночь',
+        LunoraLocalization.text('Полночь', 'Midnight'),
         [
           Color(0xFFF0EDF5),
           Color(0xFFE3DCEB),
@@ -402,7 +402,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ],
       ),
       AppColorTheme.moonlight: (
-        'Лунный свет',
+        LunoraLocalization.text('Лунный свет', 'Moonlight'),
         [
           Color(0xFFEEF3F7),
           Color(0xFFDDE8F0),
@@ -561,10 +561,10 @@ class _SettingsPageState extends State<SettingsPage> {
         LunoraSectionHeader(
           title: _settings.language == AppLanguage.english
               ? 'Settings'
-              : 'Настройки',
+              : LunoraLocalization.text('Настройки', 'Settings'),
           subtitle: _settings.language == AppLanguage.english
               ? 'Make Lunora feel like your own space'
-              : 'Настрой Lunora под себя',
+              : LunoraLocalization.text('Настрой Lunora под себя', 'Make Lunora your own'),
           icon: Icons.tune_rounded,
         ),
         const SizedBox(height: 24),
@@ -573,16 +573,16 @@ class _SettingsPageState extends State<SettingsPage> {
         _section(
           title: _settings.language == AppLanguage.english
               ? 'Appearance'
-              : 'Внешний вид',
+              : LunoraLocalization.text('Внешний вид', 'Appearance'),
           icon: Icons.palette_outlined,
           children: [
             _settingRow(
               title: _settings.language == AppLanguage.english
                   ? 'App appearance'
-                  : 'Режим оформления',
+                  : LunoraLocalization.text('Режим оформления', 'Theme mode'),
               description: _settings.language == AppLanguage.english
                   ? 'Choose light, dark or follow your Windows settings.'
-                  : 'Выбери светлое, тёмное оформление или режим Windows.',
+                  : LunoraLocalization.text('Выбери светлое, тёмное оформление или режим Windows.', 'Choose a light or dark theme, or follow Windows settings.'),
               control: _dropdown<AppThemeMode>(
                 value: _settings.themeMode,
                 items: [
@@ -614,7 +614,7 @@ class _SettingsPageState extends State<SettingsPage> {
             _settingRow(
               title: _settings.language == AppLanguage.english
                   ? 'Interface density'
-                  : 'Плотность интерфейса',
+                  : LunoraLocalization.text('Плотность интерфейса', 'Interface density'),
               control: _dropdown<AppDensity>(
                 value: _settings.density,
                 items: [
@@ -623,7 +623,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Text(
                       _settings.language == AppLanguage.english
                           ? 'Compact'
-                          : 'Компактная',
+                          : LunoraLocalization.text('Компактная', 'Compact'),
                     ),
                   ),
                   DropdownMenuItem(
@@ -631,7 +631,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Text(
                       _settings.language == AppLanguage.english
                           ? 'Comfortable'
-                          : 'Обычная',
+                          : LunoraLocalization.text('Обычная', 'Comfortable'),
                     ),
                   ),
                   DropdownMenuItem(
@@ -639,7 +639,7 @@ class _SettingsPageState extends State<SettingsPage> {
                     child: Text(
                       _settings.language == AppLanguage.english
                           ? 'Spacious'
-                          : 'Просторная',
+                          : LunoraLocalization.text('Просторная', 'Spacious'),
                     ),
                   ),
                 ],
@@ -654,10 +654,10 @@ class _SettingsPageState extends State<SettingsPage> {
             _settingRow(
               title: _settings.language == AppLanguage.english
                   ? 'Theme decorations'
-                  : 'Декоративные элементы',
+                  : LunoraLocalization.text('Декоративные элементы', 'Decorative elements'),
               description: _settings.language == AppLanguage.english
                   ? 'Themed decorative artwork across the app'
-                  : 'Декоративные элементы интерфейса',
+                  : LunoraLocalization.text('Декоративные элементы интерфейса', 'Interface decorations'),
               control: _switch(
                 value: _settings.botanicalDecorations,
                 onChanged: (value) =>
@@ -667,10 +667,10 @@ class _SettingsPageState extends State<SettingsPage> {
             _settingRow(
               title: _settings.language == AppLanguage.english
                   ? 'Animations'
-                  : 'Анимации',
+                  : LunoraLocalization.text('Анимации', 'Animations'),
               description: _settings.language == AppLanguage.english
                   ? 'Smooth transitions and effects'
-                  : 'Плавные переходы и эффекты',
+                  : LunoraLocalization.text('Плавные переходы и эффекты', 'Smooth transitions and effects'),
               control: _switch(
                 value: _settings.animationsEnabled,
                 onChanged: (value) =>
@@ -683,19 +683,19 @@ class _SettingsPageState extends State<SettingsPage> {
         _section(
           title: _settings.language == AppLanguage.english
               ? 'Your spaces'
-              : 'Твои разделы',
+              : LunoraLocalization.text('Твои разделы', 'Your sections'),
           icon: Icons.dashboard_customize_outlined,
           children: [
             Text(
               _settings.language == AppLanguage.english
                   ? 'Hide sections you do not use. You can turn them back on at any time.'
-                  : 'Отключай ненужные разделы. Их можно включить обратно в любой момент.',
+                  : LunoraLocalization.text('Отключай ненужные разделы. Их можно включить обратно в любой момент.', 'Disable sections you do not need. You can turn them back on at any time.'),
               style: Theme.of(context).textTheme.bodySmall,
             ),
             const SizedBox(height: 10),
             for (final item in <(String, String, String)>[
               ('calendar', 'Календарь', 'Calendar'),
-              ('notifications', 'Уведомления', 'Notifications'),
+              ('notifications', LunoraLocalization.text('Уведомления', 'Notifications'), 'Notifications'),
               ('shoppingList', 'Список покупок', 'Shopping list'),
               ('planner', 'Мой планер', 'My planner'),
               ('studyPlanner', 'Учебный планер', 'Study planner'),
@@ -725,13 +725,13 @@ class _SettingsPageState extends State<SettingsPage> {
         _section(
           title: _settings.language == AppLanguage.english
               ? 'Language & region'
-              : 'Региональные настройки',
+              : LunoraLocalization.text('Региональные настройки', 'Regional settings'),
           icon: Icons.language,
           children: [
             _settingRow(
               title: _settings.language == AppLanguage.english
                   ? 'Interface language'
-                  : 'Язык интерфейса',
+                  : LunoraLocalization.text('Язык интерфейса', 'Interface language'),
               control: _dropdown<AppLanguage>(
                 value: _settings.language,
                 items: [
@@ -754,7 +754,7 @@ class _SettingsPageState extends State<SettingsPage> {
             _settingRow(
               title: _settings.language == AppLanguage.english
                   ? 'Currency'
-                  : 'Валюта',
+                  : LunoraLocalization.text('Валюта', 'Currency'),
               control: _dropdown<String>(
                 value: _settings.currency,
                 items: const [
@@ -773,7 +773,7 @@ class _SettingsPageState extends State<SettingsPage> {
             _settingRow(
               title: _settings.language == AppLanguage.english
                   ? 'Date format'
-                  : 'Формат даты',
+                  : LunoraLocalization.text('Формат даты', 'Date format'),
               control: _dropdown<String>(
                 value: _settings.dateFormat,
                 items: const [
@@ -821,7 +821,7 @@ class _SettingsPageState extends State<SettingsPage> {
         _section(
           title: _settings.language == AppLanguage.english
               ? 'Notifications'
-              : 'Уведомления',
+              : LunoraLocalization.text('Уведомления', 'Notifications'),
           icon: Icons.notifications_outlined,
           children: [
             _settingRow(
@@ -896,7 +896,7 @@ class _SettingsPageState extends State<SettingsPage> {
         _section(
           title: _settings.language == AppLanguage.english
               ? 'Startup & behaviour'
-              : 'Запуск и поведение',
+              : LunoraLocalization.text('Запуск и поведение', 'Startup and behaviour'),
           icon: Icons.desktop_windows_outlined,
           children: [
             _settingRow(
@@ -917,7 +917,7 @@ class _SettingsPageState extends State<SettingsPage> {
             const SizedBox(height: 8),
             Text(
               LunoraLocalization.text(
-                'Управление окном и выход доступны через значок Lunora в области уведомлений Windows.',
+                LunoraLocalization.text('Управление окном и выход доступны через значок Lunora в области уведомлений Windows.', 'Window controls and exit are available from the Lunora icon in the Windows notification area.'),
                 'Window controls and exit are available from the Lunora icon in the Windows notification area.',
               ),
               style: Theme.of(context).textTheme.bodySmall,
@@ -928,16 +928,16 @@ class _SettingsPageState extends State<SettingsPage> {
         _section(
           title: _settings.language == AppLanguage.english
               ? 'Updates'
-              : 'Обновления',
+              : LunoraLocalization.text('Обновления', 'Updates'),
           icon: Icons.system_update_alt_rounded,
           children: [
             _settingRow(
               title: _settings.language == AppLanguage.english
                   ? 'Check for updates when opening Settings'
-                  : 'Проверять обновления при открытии настроек',
+                  : LunoraLocalization.text('Проверять обновления при открытии настроек', 'Check for updates when opening settings'),
               description: _settings.language == AppLanguage.english
                   ? 'Updates are never installed without your confirmation.'
-                  : 'Обновления никогда не устанавливаются без подтверждения.',
+                  : LunoraLocalization.text('Обновления никогда не устанавливаются без подтверждения.', 'Updates are never installed without confirmation.'),
               control: _switch(
                 value: _settings.checkForUpdatesAutomatically,
                 onChanged: (value) => _update(
@@ -963,12 +963,12 @@ class _SettingsPageState extends State<SettingsPage> {
         _section(
           title: _settings.language == AppLanguage.english
               ? 'Data & backups'
-              : 'Данные и резервные копии',
+              : LunoraLocalization.text('Данные и резервные копии', 'Data and backups'),
           icon: Icons.storage_outlined,
           children: [
             Text(
               LunoraLocalization.text(
-                'Управление резервными копиями базы данных Lunora.',
+                LunoraLocalization.text('Управление резервными копиями базы данных Lunora.', 'Manage Lunora database backups.'),
               ),
             ),
             const SizedBox(height: 12),
@@ -980,7 +980,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 label: Text(
                   _settings.language == AppLanguage.english
                       ? 'Manage backups'
-                      : 'Управление резервными копиями',
+                      : LunoraLocalization.text('Управление резервными копиями', 'Manage backups'),
                 ),
               ),
             ),
@@ -995,7 +995,7 @@ class _SettingsPageState extends State<SettingsPage> {
             label: Text(
               _settings.language == AppLanguage.english
                   ? 'Reset settings'
-                  : 'Сбросить настройки',
+                  : LunoraLocalization.text('Сбросить настройки', 'Reset settings'),
             ),
           ),
         ),
