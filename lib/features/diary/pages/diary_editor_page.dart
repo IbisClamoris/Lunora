@@ -90,7 +90,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
     final savedMood = entry?.mood?.trim();
     _mood = savedMood == null || savedMood.isEmpty ? null : savedMood;
 
-    _category = entry?.category ?? LunoraLocalization.text('Без категории', 'Uncategorized');
+    _category = entry?.category ?? 'Без категории';
     _entryType = entry?.entryType ?? 'diary';
     _isFavorite = entry?.isFavorite ?? false;
 
@@ -578,7 +578,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                     DropdownButtonFormField<String>(
                       initialValue: categories.contains(_category)
                           ? _category
-                          : LunoraLocalization.text('Без категории', 'Uncategorized'),
+                          : 'Без категории',
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                       ),
