@@ -513,8 +513,8 @@ class _StudyPageState extends State<StudyPage> {
       } catch (error) {
         _showError(
           isEditing
-              ? 'Не удалось сохранить предмет: $error'
-              : 'Не удалось добавить предмет: $error',
+              ? LunoraLocalization.text('Не удалось сохранить предмет: $error', 'Could not save subject: $error')
+              : LunoraLocalization.text('Не удалось добавить предмет: $error', 'Could not add subject: $error'),
         );
       }
     }
@@ -609,8 +609,8 @@ class _StudyPageState extends State<StudyPage> {
               constraints: const BoxConstraints(maxWidth: 520),
               title: Text(
                 isEditing
-                    ? 'Редактировать учебный период'
-                    : 'Новый учебный период',
+                    ? LunoraLocalization.text('Редактировать учебный период', 'Edit study period')
+                    : LunoraLocalization.text('Новый учебный период', 'New study period'),
               ),
 
               content: SizedBox(
@@ -631,9 +631,7 @@ class _StudyPageState extends State<StudyPage> {
                             'Название периода *',
                           ),
 
-                          hintText: LunoraLocalization.text(
-                            'Например, зимняя сессия',
-                          ),
+                          hintText: LunoraLocalization.text('Например, зимняя сессия', 'For example, winter exam session'),
 
                           border: OutlineInputBorder(),
                         ),
@@ -734,9 +732,7 @@ class _StudyPageState extends State<StudyPage> {
                         alignment: Alignment.centerLeft,
 
                         child: Text(
-                          LunoraLocalization.text(
-                            'Даты можно оставить пустыми и заполнить позже.',
-                          ),
+                          LunoraLocalization.text('Даты можно оставить пустыми и заполнить позже.', 'You can leave the dates blank and fill them in later.'),
 
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(
@@ -767,8 +763,7 @@ class _StudyPageState extends State<StudyPage> {
                         _dateOnly(selectedEndsAt!)
                             .isBefore(_dateOnly(selectedStartsAt!))) {
                       setDialogState(() {
-                        dateError =
-                            'Дата окончания не может быть раньше даты начала.';
+                        dateError = LunoraLocalization.text('Дата окончания не может быть раньше даты начала.', 'The end date cannot be earlier than the start date.');
                       });
 
                       return;
@@ -826,8 +821,8 @@ class _StudyPageState extends State<StudyPage> {
       } catch (error) {
         _showError(
           isEditing
-              ? 'Не удалось сохранить период: $error'
-              : 'Не удалось добавить период: $error',
+              ? LunoraLocalization.text('Не удалось сохранить период: $error', 'Could not save study period: $error')
+              : LunoraLocalization.text('Не удалось добавить период: $error', 'Could not add study period: $error'),
         );
       }
     }
@@ -839,7 +834,7 @@ class _StudyPageState extends State<StudyPage> {
 
   Future<void> _addItem() async {
     if (_subjects.isEmpty) {
-      _showError('Сначала добавь хотя бы один учебный предмет.');
+      _showError(LunoraLocalization.text('Сначала добавь хотя бы один учебный предмет.', 'Add at least one study subject first.'));
 
       return;
     }
@@ -901,7 +896,7 @@ class _StudyPageState extends State<StudyPage> {
 
     Future<void> pickScheduledTime(StateSetter setDialogState) async {
       if (selectedScheduledAt == null) {
-        _showError('Сначала выбери дату занятия.');
+        _showError(LunoraLocalization.text('Сначала выбери дату занятия.', 'Choose the class date first.'));
 
         return;
       }
@@ -959,7 +954,7 @@ class _StudyPageState extends State<StudyPage> {
           builder: (context, setDialogState) {
             return AlertDialog(
               title: Text(
-                isEditing ? 'Редактировать событие' : 'Новое учебное событие',
+                isEditing ? LunoraLocalization.text('Редактировать событие', 'Edit event') : LunoraLocalization.text('Новое учебное событие', 'New study event'),
               ),
 
               content: SizedBox(
@@ -1084,7 +1079,7 @@ class _StudyPageState extends State<StudyPage> {
                         label: LunoraLocalization.text('Дата и время занятия'),
 
                         value: selectedScheduledAt == null
-                            ? 'Не указано'
+                            ? LunoraLocalization.text('Не указано', 'Not specified')
                             : _dateTimeLabel(selectedScheduledAt!),
 
                         onPickDate: () {
@@ -1114,7 +1109,7 @@ class _StudyPageState extends State<StudyPage> {
                         label: LunoraLocalization.text('Срок сдачи'),
 
                         value: selectedDueAt == null
-                            ? 'Не указан'
+                            ? LunoraLocalization.text('Не указан', 'Not specified')
                             : _dateLabel(selectedDueAt),
 
                         onPickDate: () {
@@ -1231,8 +1226,8 @@ class _StudyPageState extends State<StudyPage> {
       } catch (error) {
         _showError(
           isEditing
-              ? 'Не удалось сохранить событие: $error'
-              : 'Не удалось добавить событие: $error',
+              ? LunoraLocalization.text('Не удалось сохранить событие: $error', 'Could not save event: $error')
+              : LunoraLocalization.text('Не удалось add event: $error', 'Could not add event: $error'),
         );
       }
     }
@@ -1337,9 +1332,9 @@ class _StudyPageState extends State<StudyPage> {
 
   Future<void> _deleteSubject(StudySubject subject) async {
     final confirmed = await _confirmDelete(
-      'Удалить предмет «${subject.name}»?',
+      LunoraLocalization.text('Удалить предмет «${subject.name}»?', 'Delete subject “${subject.name}”?'),
 
-      'Связанные с ним учебные события могут потерять связь с предметом.',
+      LunoraLocalization.text('Связанные с ним учебные события могут потерять связь с предметом.', 'Related study events may become unlinked from this subject.'),
     );
 
     if (!confirmed) return;
@@ -1349,15 +1344,15 @@ class _StudyPageState extends State<StudyPage> {
 
       await _loadData();
     } catch (error) {
-      _showError('Не удалось удалить предмет: $error');
+      _showError(LunoraLocalization.text('Не удалось удалить предмет: $error', 'Could not delete subject: $error'));
     }
   }
 
   Future<void> _deletePeriod(StudyPeriod period) async {
     final confirmed = await _confirmDelete(
-      'Удалить период «${period.title}»?',
+      LunoraLocalization.text('Удалить период «${period.title}»?', 'Delete period “${period.title}”?'),
 
-      'Проверь связанные с ним учебные события перед удалением.',
+      LunoraLocalization.text('Проверь связанные с ним учебные события перед удалением.', 'Check related study events before deleting.'),
     );
 
     if (!confirmed) return;
@@ -1367,15 +1362,15 @@ class _StudyPageState extends State<StudyPage> {
 
       await _loadData();
     } catch (error) {
-      _showError('Не удалось удалить период: $error');
+      _showError(LunoraLocalization.text('Не удалось удалить период: $error', 'Could not delete study period: $error'));
     }
   }
 
   Future<void> _deleteItem(StudyItem item) async {
     final confirmed = await _confirmDelete(
-      'Удалить «${item.title}»?',
+      LunoraLocalization.text('Удалить «${item.title}»?', 'Delete “${item.title}”?'),
 
-      'Это действие нельзя отменить.',
+      LunoraLocalization.text('Это действие нельзя отменить.', 'This action cannot be undone.'),
     );
 
     if (!confirmed) return;
@@ -1385,7 +1380,7 @@ class _StudyPageState extends State<StudyPage> {
 
       await _loadData();
     } catch (error) {
-      _showError('Не удалось удалить событие: $error');
+      _showError(LunoraLocalization.text('Не удалось удалить событие: $error', 'Could not delete event: $error'));
     }
   }
 
@@ -2157,7 +2152,7 @@ class _StudyPageState extends State<StudyPage> {
                               if (subject != null) subject.name,
                               if (date != null)
                                 showDueDate
-                                    ? 'Сдать до ${_dateLabel(date)}'
+                                    ? LunoraLocalization.text('Сдать до ${_dateLabel(date)}', 'Due by ${_dateLabel(date)}')
                                     : _dateTimeLabel(date),
                             ].join(' · '),
                             style: Theme.of(context).textTheme.bodySmall
@@ -2525,9 +2520,7 @@ class _StudyPageState extends State<StudyPage> {
               onChanged: (_) => setState(() {}),
               decoration: InputDecoration(
                 labelText: LunoraLocalization.text('Поиск по событиям'),
-                hintText: LunoraLocalization.text(
-                  'Название, описание, заметки или предмет',
-                ),
+                hintText: LunoraLocalization.text('Название, описание, заметки или предмет', 'Title, description, notes or subject'),
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: _itemSearchController.text.isEmpty
                     ? null
@@ -2828,7 +2821,7 @@ class _StudyPageState extends State<StudyPage> {
                                     if (item.scheduledAt != null)
                                       _dateTimeLabel(item.scheduledAt!),
                                     if (item.dueAt != null)
-                                      'Срок: ${_dateLabel(item.dueAt)}',
+                                      LunoraLocalization.text('Срок: ${_dateLabel(item.dueAt)}', 'Due: ${_dateLabel(item.dueAt)}'),
                                   ].join(' · '),
                                   maxLines: 2,
                                   overflow: TextOverflow.ellipsis,
