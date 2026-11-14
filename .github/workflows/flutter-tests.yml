@@ -49,7 +49,9 @@ jobs:
 
       - name: Generate Lunora branding assets
         shell: pwsh
-        run: |\n          .\.github\scripts\generate-branding.ps1\n          .\.github\scripts\generate-theme-icons.ps1
+        run: |
+          .\.github\scripts\generate-branding.ps1
+          .\.github\scripts\generate-theme-icons.ps1
 
       - name: Install dependencies
         run: flutter pub get
