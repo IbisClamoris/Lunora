@@ -38,7 +38,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось обновить книгу: $e');
+        _showMessage(LunoraLocalization.text('Не удалось обновить книгу: $e', 'Could not update book: $e'));
       }
     } finally {
       if (mounted) {
@@ -95,7 +95,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
       Navigator.of(context).pop(true);
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось удалить книгу: $e');
+        _showMessage(LunoraLocalization.text('Не удалось удалить книгу: $e', 'Could not delete book: $e'));
       }
     }
   }
@@ -159,7 +159,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось обновить прогресс: $e');
+        _showMessage(LunoraLocalization.text('Не удалось обновить прогресс: $e', 'Could not update progress: $e'));
       }
     }
   }
@@ -173,7 +173,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось изменить избранное: $e');
+        _showMessage(LunoraLocalization.text('Не удалось изменить избранное: $e', 'Could not update favourites: $e'));
       }
     }
   }
