@@ -31,7 +31,7 @@ class _RecipesPageState extends State<RecipesPage> {
   List<RecipeEntry> _recipes = [];
   List<String> _categories = [];
 
-  String _selectedCategory = LunoraLocalization.text('Все', 'All');
+  String _selectedCategory = 'Все';
   bool _favoritesOnly = false;
   bool _isLoading = true;
 
@@ -168,7 +168,7 @@ class _RecipesPageState extends State<RecipesPage> {
   }
 
   Widget _buildCategorySelector() {
-    final categories = [LunoraLocalization.text('Все', 'All'), ..._categories];
+    final categories = ['Все', ..._categories];
 
     return SizedBox(
       height: 42,
@@ -183,7 +183,7 @@ class _RecipesPageState extends State<RecipesPage> {
           final palette = Theme.of(context).extension<LunoraPalette>()!;
           return ChoiceChip(
             label: Text(
-              category == LunoraLocalization.text('Все', 'All') ? LunoraLocalization.text('Все') : category,
+              category == 'Все' ? LunoraLocalization.text('Все', 'All') : category,
             ),
             selected: selected,
             showCheckmark: true,
@@ -467,24 +467,17 @@ class _RecipesPageState extends State<RecipesPage> {
                       children: [
                         Expanded(
                           child: Text(
-                            LunoraLocalization.text(
-                              LunoraLocalization.text('Моя книга рецептов', 'My recipe book'),
-                              'My recipe book',
-                            ),
+                            LunoraLocalization.text('Моя книга рецептов', 'My recipe book'),
                             style: Theme.of(context).textTheme.headlineMedium,
                           ),
                         ),
                         IconButton(
-                          tooltip: LunoraLocalization.text(
-                            LunoraLocalization.text('Найти рецепты в интернете', 'Find recipes online'),
-                          ),
+                          tooltip: LunoraLocalization.text('Найти рецепты в интернете', 'Find recipes online'),
                           onPressed: _openExternalSearch,
                           icon: const Icon(Icons.travel_explore_rounded),
                         ),
                         IconButton(
-                          tooltip: LunoraLocalization.text(
-                            LunoraLocalization.text('Импортировать из Excel', 'Import from Excel'),
-                          ),
+                          tooltip: LunoraLocalization.text('Импортировать из Excel', 'Import from Excel'),
                           onPressed: _openImport,
                           icon: const Icon(Icons.file_upload_outlined),
                         ),
@@ -492,9 +485,7 @@ class _RecipesPageState extends State<RecipesPage> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      LunoraLocalization.text(
-                        LunoraLocalization.text('Коллекция блюд, которые хочется готовить снова', 'A collection of dishes worth making again'),
-                      ),
+                      LunoraLocalization.text('Коллекция блюд, которые хочется готовить снова', 'A collection of dishes worth making again'),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     const SizedBox(height: 20),
