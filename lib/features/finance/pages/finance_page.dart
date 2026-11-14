@@ -118,7 +118,7 @@ class _FinancePageState extends State<FinancePage>
         'Кредиты: ${result.debts}\n'
         'Бюджеты: ${result.budgets}\n'
         'Накопления: ${result.savingsGoals}\n'
-        'Пропущено дубликатов операций: ${result.skippedTransactions}',
+        LunoraLocalization.text('Пропущено дубликатов операций: ${result.skippedTransactions}', 'Duplicate transactions skipped: ${result.skippedTransactions}'),
       );
     } catch (error) {
       await _showError(error);
@@ -200,7 +200,7 @@ class _FinancePageState extends State<FinancePage>
 
   Future<void> _runAction(
     Future<void> Function() action, {
-    String successMessage = 'Изменения сохранены.',
+    String successMessage = LunoraLocalization.text('Изменения сохранены.', 'Changes saved.'),
   }) async {
     try {
       await action();
@@ -281,7 +281,7 @@ class _FinancePageState extends State<FinancePage>
                           const SizedBox(height: 2),
                           Text(
                             LunoraLocalization.text(
-                              'Счета, планы, накопления и финансовые решения.',
+                              LunoraLocalization.text('Счета, планы, накопления и финансовые решения.', 'Accounts, budgets, savings, and financial decisions.'),
                             ),
                             style: theme.textTheme.bodySmall?.copyWith(
                               color: colors.onSurfaceVariant,
@@ -565,10 +565,10 @@ class _FinancePageState extends State<FinancePage>
 
   String _accountTypeName(FinanceAccountType type) {
     return switch (type) {
-      FinanceAccountType.card => 'Банковская карта',
-      FinanceAccountType.bankAccount => 'Банковский счёт',
-      FinanceAccountType.cash => 'Наличные',
-      FinanceAccountType.other => 'Другое',
+      FinanceAccountType.card => LunoraLocalization.text('Банковская карта', 'Bank card'),
+      FinanceAccountType.bankAccount => LunoraLocalization.text('Банковский счёт', 'Bank account'),
+      FinanceAccountType.cash => LunoraLocalization.text('Наличные', 'Cash'),
+      FinanceAccountType.other => LunoraLocalization.text('Другое', 'Other'),
     };
   }
 
@@ -699,7 +699,7 @@ class _FinancePageState extends State<FinancePage>
                     decoration: InputDecoration(
                       labelText: LunoraLocalization.text('Название'),
                       hintText: LunoraLocalization.text(
-                        'Например, Основная карта',
+                        LunoraLocalization.text('Например, Основная карта', 'For example, Main card'),
                       ),
                     ),
                   ),
@@ -880,15 +880,15 @@ class _FinancePageState extends State<FinancePage>
 
   Future<void> _deleteAccount(FinanceAccount account) async {
     final confirmed = await _confirm(
-      'Удалить счёт «${account.name}»?',
-      'Если к счёту привязаны операции, база данных не позволит его удалить.',
+      LunoraLocalization.text('Удалить счёт «${account.name}»?', 'Delete account “${account.name}”?'),
+      LunoraLocalization.text('Если к счёту привязаны операции, база данных не позволит его удалить.', 'If transactions are linked to this account, the database will prevent its deletion.'),
     );
 
     if (!confirmed) return;
 
     await _runAction(
       () => _repository.deleteAccount(account.id),
-      successMessage: 'Счёт удалён.',
+      successMessage: LunoraLocalization.text('Счёт удалён.', 'Account deleted.'),
     );
   }
 
@@ -1001,7 +1001,7 @@ class _FinancePageState extends State<FinancePage>
                       InputDecoration(
                         labelText: LunoraLocalization.text('Поиск операций'),
                         hintText: LunoraLocalization.text(
-                          'Название или описание',
+                          LunoraLocalization.text('Название или описание', 'Name or description'),
                         ),
                         prefixIcon: Icon(Icons.search),
                         isDense: true,
@@ -1040,7 +1040,7 @@ class _FinancePageState extends State<FinancePage>
                             isDense: true,
                             decoration: InputDecoration(
                               labelText: LunoraLocalization.text(
-                                'Тип операции',
+                                LunoraLocalization.text('Тип операции', 'Transaction type'),
                               ),
                               isDense: true,
                             ),
@@ -1147,7 +1147,7 @@ class _FinancePageState extends State<FinancePage>
                                 value: _TransactionSort.amountHighest,
                                 child: Text(
                                   LunoraLocalization.text(
-                                    'Сначала крупные суммы',
+                                    LunoraLocalization.text('Сначала крупные суммы', 'Largest amounts first'),
                                   ),
                                 ),
                               ),
@@ -1155,7 +1155,7 @@ class _FinancePageState extends State<FinancePage>
                                 value: _TransactionSort.amountLowest,
                                 child: Text(
                                   LunoraLocalization.text(
-                                    'Сначала маленькие суммы',
+                                    LunoraLocalization.text('Сначала маленькие суммы', 'Smallest amounts first'),
                                   ),
                                 ),
                               ),
@@ -1221,7 +1221,7 @@ class _FinancePageState extends State<FinancePage>
           ),
           const SizedBox(height: 10),
           _sectionTitle(
-            'Операции',
+            LunoraLocalization.text('Операции', 'Transactions'),
             subtitle: LunoraLocalization.text('Найдено: ${filtered.length}'),
           ),
           if (filtered.isEmpty)
@@ -1285,7 +1285,7 @@ class _FinancePageState extends State<FinancePage>
                                   avatar: Icon(Icons.lock_outline, size: 15),
                                   label: Text(
                                     LunoraLocalization.text(
-                                      'Платёж по кредиту',
+                                      LunoraLocalization.text('Платёж по кредиту', 'Loan payment'),
                                     ),
                                   ),
                                 ),
@@ -1347,8 +1347,8 @@ class _FinancePageState extends State<FinancePage>
                       runSpacing: 12,
                       crossAxisAlignment: WrapCrossAlignment.start,
                       children: [
-                        transactionColumn('Доходы', incomes),
-                        transactionColumn('Расходы', expenses),
+                        transactionColumn(LunoraLocalization.text('Доходы', 'Income'), incomes),
+                        transactionColumn(LunoraLocalization.text('Расходы', 'Expenses'), expenses),
                       ],
                     ),
                     if (transfers.isNotEmpty) ...[
@@ -1405,9 +1405,9 @@ class _FinancePageState extends State<FinancePage>
     final details = <String>[
       _date(transaction.transactionDate),
       if (isTransfer)
-        '${account?.name ?? 'Счёт'} → ${destination?.name ?? 'Получатель'}'
+        '${account?.name ?? LunoraLocalization.text('Счёт', 'Account')} → ${destination?.name ?? LunoraLocalization.text('Получатель', 'Recipient')}'
       else
-        account?.name ?? 'Счёт',
+        account?.name ?? LunoraLocalization.text('Счёт', 'Account'),
       if (!isTransfer && category != null) category.name,
     ];
 
@@ -1916,15 +1916,15 @@ class _FinancePageState extends State<FinancePage>
 
   Future<void> _deleteTransaction(FinanceTransaction transaction) async {
     final confirmed = await _confirm(
-      'Удалить операцию?',
-      'Операция «${transaction.title}» будет удалена.',
+      LunoraLocalization.text('Удалить операцию?', 'Delete transaction?'),
+      LunoraLocalization.text('Операция «${transaction.title}» будет удалена.', 'Transaction “${transaction.title}” will be deleted.'),
     );
 
     if (!confirmed) return;
 
     await _runAction(
       () => _repository.deleteTransaction(transaction.id),
-      successMessage: 'Операция удалена.',
+      successMessage: LunoraLocalization.text('Операция удалена.', 'Transaction deleted.'),
     );
   }
 
@@ -2102,9 +2102,9 @@ class _FinancePageState extends State<FinancePage>
 
   String _debtStatus(FinanceDebtStatus status) {
     return switch (status) {
-      FinanceDebtStatus.active => 'Активен',
-      FinanceDebtStatus.paidOff => 'Погашен',
-      FinanceDebtStatus.paused => 'На паузе',
+      FinanceDebtStatus.active => LunoraLocalization.text('Активен', 'Active'),
+      FinanceDebtStatus.paidOff => LunoraLocalization.text('Погашен', 'Paid off'),
+      FinanceDebtStatus.paused => LunoraLocalization.text('На паузе', 'Paused'),
     };
   }
 
@@ -2218,7 +2218,7 @@ class _FinancePageState extends State<FinancePage>
                     ),
                     decoration: InputDecoration(
                       labelText: LunoraLocalization.text(
-                        'Первоначальная сумма',
+                        LunoraLocalization.text('Первоначальная сумма', 'Initial amount'),
                       ),
                     ),
                   ),
@@ -2230,7 +2230,7 @@ class _FinancePageState extends State<FinancePage>
                     ),
                     decoration: InputDecoration(
                       labelText: LunoraLocalization.text(
-                        'Текущий остаток (необязательно)',
+                        LunoraLocalization.text('Текущий остаток (необязательно)', 'Current balance (optional)'),
                       ),
                     ),
                   ),
@@ -2424,7 +2424,7 @@ class _FinancePageState extends State<FinancePage>
                     ),
                     decoration: InputDecoration(
                       labelText: LunoraLocalization.text(
-                        'Первоначальная сумма',
+                        LunoraLocalization.text('Первоначальная сумма', 'Initial amount'),
                       ),
                     ),
                   ),
@@ -2557,25 +2557,25 @@ class _FinancePageState extends State<FinancePage>
             currentMinor < 0 ||
             currentMinor > initialMinor) {
           throw const FormatException(
-            'Проверь первоначальную сумму и текущий остаток.',
+            LunoraLocalization.text('Проверь первоначальную сумму и текущий остаток.', 'Check the initial amount and current balance.'),
           );
         }
 
         if (paymentMinor < 0) {
           throw const FormatException(
-            'Ежемесячный платёж не может быть отрицательным.',
+            LunoraLocalization.text('Ежемесячный платёж не может быть отрицательным.', 'Monthly payment cannot be negative.'),
           );
         }
 
         if (status == FinanceDebtStatus.paidOff && currentMinor != 0) {
           throw const FormatException(
-            'У погашенной задолженности остаток должен быть равен нулю.',
+            LunoraLocalization.text('У погашенной задолженности остаток должен быть равен нулю.', 'A paid-off debt must have a zero balance.'),
           );
         }
 
         if (currentMinor == 0 && status != FinanceDebtStatus.paidOff) {
           throw const FormatException(
-            'При нулевом остатке задолженность должна иметь статус «Погашен».',
+            LunoraLocalization.text('При нулевом остатке задолженность должна иметь статус «Погашен».', 'A debt with a zero balance must have the status “Paid off”.'),
           );
         }
 
@@ -2654,7 +2654,7 @@ class _FinancePageState extends State<FinancePage>
                 children: [
                   Text(
                     LunoraLocalization.text(
-                      'Остаток долга: ${_money(debt.currentBalanceMinor)}',
+                      LunoraLocalization.text('Остаток долга: ${_money(debt.currentBalanceMinor)}', 'Remaining balance: ${_money(debt.currentBalanceMinor)}'),
                     ),
                     style: const TextStyle(fontWeight: FontWeight.w600),
                   ),
@@ -2684,7 +2684,7 @@ class _FinancePageState extends State<FinancePage>
                     ),
                     decoration: InputDecoration(
                       labelText: LunoraLocalization.text(
-                        'Погашение основного долга',
+                        LunoraLocalization.text('Погашение основного долга', 'Principal repayment'),
                       ),
                     ),
                   ),
@@ -2872,7 +2872,7 @@ class _FinancePageState extends State<FinancePage>
                       ),
                       decoration: InputDecoration(
                         labelText: LunoraLocalization.text(
-                          'Погашение основного долга',
+                          LunoraLocalization.text('Погашение основного долга', 'Principal repayment'),
                         ),
                       ),
                     ),
@@ -2891,7 +2891,7 @@ class _FinancePageState extends State<FinancePage>
                       initialValue: categoryId,
                       decoration: InputDecoration(
                         labelText: LunoraLocalization.text(
-                          'Категория расходов',
+                          LunoraLocalization.text('Категория расходов', 'Expense category'),
                         ),
                       ),
                       items: [
@@ -2975,7 +2975,7 @@ class _FinancePageState extends State<FinancePage>
 
           if (principalMinor + interestMinor <= 0) {
             throw const FormatException(
-              'Сумма платежа должна быть больше нуля.',
+              LunoraLocalization.text('Сумма платежа должна быть больше нуля.', 'Payment amount must be greater than zero.'),
             );
           }
 
@@ -3040,9 +3040,9 @@ class _FinancePageState extends State<FinancePage>
                         ),
                         subtitle: Text(
                           '${_date(payment.paidAt)}\n'
-                          'Основной долг: '
+                          LunoraLocalization.text('Основной долг: ', 'Principal: ')
                           '${_money(payment.principalMinor)}\n'
-                          'Проценты: ${_money(payment.interestMinor)}'
+                          LunoraLocalization.text('Проценты: ${_money(payment.interestMinor)}', 'Interest: ${_money(payment.interestMinor)}')
                           '${payment.notes.trim().isNotEmpty ? '\n${payment.notes}' : ''}',
                         ),
                         isThreeLine: true,
@@ -3051,7 +3051,7 @@ class _FinancePageState extends State<FinancePage>
                           children: [
                             IconButton(
                               tooltip: LunoraLocalization.text(
-                                'Изменить платёж',
+                                LunoraLocalization.text('Изменить платёж', 'Edit payment'),
                               ),
                               icon: const Icon(Icons.edit_outlined),
                               onPressed: () async {
@@ -3062,13 +3062,13 @@ class _FinancePageState extends State<FinancePage>
                             ),
                             IconButton(
                               tooltip: LunoraLocalization.text(
-                                'Удалить платёж',
+                                LunoraLocalization.text('Удалить платёж', 'Delete payment'),
                               ),
                               icon: const Icon(Icons.delete_outline),
                               onPressed: () async {
                                 final confirmed = await _confirm(
-                                  'Удалить платёж?',
-                                  'Остаток задолженности будет восстановлен.',
+                                  LunoraLocalization.text('Удалить платёж?', 'Delete payment?'),
+                                  LunoraLocalization.text('Остаток задолженности будет восстановлен.', 'The outstanding balance will be restored.'),
                                 );
 
                                 if (!confirmed) return;
@@ -3076,7 +3076,7 @@ class _FinancePageState extends State<FinancePage>
                                 await _runAction(
                                   () =>
                                       _repository.deleteDebtPayment(payment.id),
-                                  successMessage: 'Платёж удалён.',
+                                  successMessage: LunoraLocalization.text('Платёж удалён.', 'Payment deleted.'),
                                 );
 
                                 if (dialogContext.mounted) {
@@ -3105,15 +3105,15 @@ class _FinancePageState extends State<FinancePage>
 
   Future<void> _deleteDebt(FinanceDebt debt) async {
     final confirmed = await _confirm(
-      'Удалить задолженность?',
-      'Удалить «${debt.name}»? Задолженность с историей платежей удалить нельзя.',
+      LunoraLocalization.text('Удалить задолженность?', 'Delete debt?'),
+      LunoraLocalization.text('Удалить «${debt.name}»? Задолженность с историей платежей удалить нельзя.', 'Delete “${debt.name}”? A debt with payment history cannot be deleted.'),
     );
 
     if (!confirmed) return;
 
     await _runAction(
       () => _repository.deleteDebt(debt.id),
-      successMessage: 'Задолженность удалена.',
+      successMessage: LunoraLocalization.text('Задолженность удалена.', 'Debt deleted.'),
     );
   }
 
@@ -3282,15 +3282,15 @@ class _FinancePageState extends State<FinancePage>
 
   Future<void> _deleteCategory(FinanceCategory category) async {
     final confirmed = await _confirm(
-      'Удалить категорию?',
-      'Категория «${category.name}» будет удалена. Операции сохранятся без категории.',
+      LunoraLocalization.text('Удалить категорию?', 'Delete category?'),
+      LunoraLocalization.text('Категория «${category.name}» будет удалена. Операции сохранятся без категории.', 'Category “${category.name}” will be deleted. Transactions will remain uncategorized.'),
     );
 
     if (!confirmed) return;
 
     await _runAction(
       () => _repository.deleteCategory(category.id),
-      successMessage: 'Категория удалена.',
+      successMessage: LunoraLocalization.text('Категория удалена.', 'Category deleted.'),
     );
   }
 }
