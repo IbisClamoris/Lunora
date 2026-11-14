@@ -126,7 +126,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
     final sourceFile = File(sourcePath);
 
     if (!await sourceFile.exists()) {
-      throw Exception('Файл обложки не найден: $sourcePath');
+      throw Exception(LunoraLocalization.text('Файл обложки не найден: $sourcePath', 'Cover image file not found: $sourcePath'));
     }
 
     final coversDirectory = await StorageService.instance.coversDirectory;
