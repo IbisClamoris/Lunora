@@ -602,7 +602,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
             const SizedBox(width: 4),
             _buildSortMenu(palette),
             IconButton(
-              tooltip: _descending ? 'Сначала новые' : 'Сначала старые',
+              tooltip: _descending ? LunoraLocalization.text('Сначала новые') : LunoraLocalization.text('Сначала старые'),
               onPressed: () {
                 setState(() => _descending = !_descending);
                 _loadEntries();
