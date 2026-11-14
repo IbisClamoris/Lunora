@@ -171,7 +171,7 @@ class _ExportPageState extends State<ExportPage> {
       if (!mounted) return;
 
       _showMessage(
-        LunoraLocalization.text('Внутренняя копия создана, но не удалось сохранить файл ', 'An internal copy was created, but the file could not be saved to ')
+        LunoraLocalization.text('Внутренняя копия создана, но не удалось сохранить файл ', 'An internal copy was created, but the file could not be saved to ') +
         LunoraLocalization.text('в выбранное место: $error', 'the selected location: $error'),
       );
     }
