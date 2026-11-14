@@ -302,7 +302,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
       );
     } catch (error) {
       result = ImportResult.failure(
-        message: 'Не удалось выполнить импорт.',
+        message: LunoraLocalization.text('Не удалось выполнить импорт.'),
         errors: [error.toString()],
       );
     }

@@ -357,7 +357,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Фотография блюда', Icons.image_outlined),
+        _buildSectionTitle(LunoraLocalization.text('Фотография блюда'), Icons.image_outlined),
         if (_coverPath != null && File(_coverPath!).existsSync())
           ClipRRect(
             borderRadius: BorderRadius.circular(12),
@@ -405,7 +405,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Ингредиенты', Icons.shopping_basket_outlined),
+        _buildSectionTitle(LunoraLocalization.text('Ингредиенты'), Icons.shopping_basket_outlined),
         if (_ingredients.isEmpty)
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
@@ -503,7 +503,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Моя оценка', Icons.star_outline),
+        _buildSectionTitle(LunoraLocalization.text('Моя оценка'), Icons.star_outline),
         Wrap(
           spacing: 4,
           children: List.generate(5, (index) {
@@ -542,7 +542,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Редактирование рецепта' : 'Новый рецепт'),
+        title: Text(_isEditing ? LunoraLocalization.text('Редактирование рецепта') : LunoraLocalization.text('Новый рецепт')),
         actions: [
           IconButton(
             tooltip: LunoraLocalization.text('Сохранить'),
@@ -577,7 +577,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
                     maxLines: 2,
                   ),
                   _buildCoverSection(),
-                  _buildSectionTitle('Основная информация', Icons.tune),
+                  _buildSectionTitle(LunoraLocalization.text('Основная информация'), Icons.tune),
                   _buildTextField(
                     controller: _categoryController,
                     label: LunoraLocalization.text('Категория'),
@@ -617,14 +617,14 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
                     keyboardType: TextInputType.number,
                   ),
                   _buildIngredientsSection(),
-                  _buildSectionTitle('Приготовление', Icons.menu_book_outlined),
+                  _buildSectionTitle(LunoraLocalization.text('Приготовление'), Icons.menu_book_outlined),
                   _buildTextField(
                     controller: _instructionsController,
                     label: LunoraLocalization.text('Шаги приготовления'),
                     hint: 'Опиши процесс приготовления...',
                     maxLines: 8,
                   ),
-                  _buildSectionTitle('Дополнительно', Icons.bookmark_outline),
+                  _buildSectionTitle(LunoraLocalization.text('Дополнительно'), Icons.bookmark_outline),
                   _buildTextField(
                     controller: _tagsController,
                     label: LunoraLocalization.text('Теги'),

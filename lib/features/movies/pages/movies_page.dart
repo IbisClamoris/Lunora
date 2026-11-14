@@ -84,7 +84,7 @@ class _MoviesPageState extends State<MoviesPage> {
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Не удалось изменить статус: $error')),
+        SnackBar(content: Text(LunoraLocalization.text('Не удалось изменить статус: $error'))),
       );
     }
   }
@@ -562,29 +562,29 @@ class _MoviesPageState extends State<MoviesPage> {
                     Row(
                       children: [
                         PopupMenuButton<String>(
-                          tooltip: 'Быстро изменить статус',
+                          tooltip: LunoraLocalization.text('Быстро изменить статус'),
                           onSelected: (value) =>
                               _changeMovieStatus(movie, value),
-                          itemBuilder: (context) => const [
+                          itemBuilder: (context) => [
                             PopupMenuItem(
                               value: 'planned',
-                              child: Text('В планах'),
+                              child: Text(LunoraLocalization.text('В планах')),
                             ),
                             PopupMenuItem(
                               value: 'watching',
-                              child: Text('Смотрю'),
+                              child: Text(LunoraLocalization.text('Смотрю')),
                             ),
                             PopupMenuItem(
                               value: 'completed',
-                              child: Text('Просмотрено'),
+                              child: Text(LunoraLocalization.text('Просмотрено')),
                             ),
                             PopupMenuItem(
                               value: 'on_hold',
-                              child: Text('Отложено'),
+                              child: Text(LunoraLocalization.text('Отложено')),
                             ),
                             PopupMenuItem(
                               value: 'dropped',
-                              child: Text('Брошено'),
+                              child: Text(LunoraLocalization.text('Брошено')),
                             ),
                           ],
                           padding: EdgeInsets.zero,

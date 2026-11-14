@@ -157,9 +157,9 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
       initialDate: _entryDate,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
-      helpText: 'Дата записи',
-      cancelText: 'Отмена',
-      confirmText: 'Выбрать',
+      helpText: LunoraLocalization.text('Дата записи'),
+      cancelText: LunoraLocalization.text('Отмена'),
+      confirmText: LunoraLocalization.text('Выбрать'),
     );
 
     if (selected != null && mounted) {
@@ -406,7 +406,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
               child: QuillEditor.basic(
                 controller: _quillController,
                 config: QuillEditorConfig(
-                  placeholder: 'Запиши свои мысли, события и впечатления...',
+                  placeholder: LunoraLocalization.text('Запиши свои мысли, события и впечатления...'),
                   padding: EdgeInsets.zero,
                   embedBuilders: const [DiaryImageEmbedBuilder()],
                 ),
@@ -435,7 +435,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
     return Scaffold(
       backgroundColor: palette.background,
       appBar: AppBar(
-        title: Text(_isEditing ? 'Редактирование записи' : 'Новая запись'),
+        title: Text(_isEditing ? LunoraLocalization.text('Редактирование записи') : LunoraLocalization.text('Новая запись')),
         backgroundColor: palette.background,
         actions: [
           TextButton.icon(
@@ -521,7 +521,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                       ),
                     ),
                     const SizedBox(height: 24),
-                    _sectionTitle('Тип записи'),
+                    _sectionTitle(LunoraLocalization.text('Тип записи')),
                     DropdownButtonFormField<String>(
                       initialValue: _entryType,
                       decoration: const InputDecoration(
@@ -550,7 +550,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    _sectionTitle('Настроение'),
+                    _sectionTitle(LunoraLocalization.text('Настроение')),
                     DropdownButtonFormField<String>(
                       initialValue: _mood ?? '',
                       decoration: InputDecoration(
@@ -574,7 +574,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    _sectionTitle('Категория'),
+                    _sectionTitle(LunoraLocalization.text('Категория')),
                     DropdownButtonFormField<String>(
                       initialValue: categories.contains(_category)
                           ? _category
@@ -619,7 +619,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                       },
                     ),
                     const SizedBox(height: 16),
-                    _sectionTitle('Теги'),
+                    _sectionTitle(LunoraLocalization.text('Теги')),
                     Row(
                       children: [
                         Expanded(
@@ -658,7 +658,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                       ),
                     ],
                     const SizedBox(height: 24),
-                    _sectionTitle('Заголовок'),
+                    _sectionTitle(LunoraLocalization.text('Заголовок')),
                     TextFormField(
                       controller: _titleController,
                       decoration: InputDecoration(
@@ -671,7 +671,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                       maxLength: 120,
                     ),
                     const SizedBox(height: 16),
-                    _sectionTitle('Запись'),
+                    _sectionTitle(LunoraLocalization.text('Запись')),
                     _buildTextEditor(palette),
                     const SizedBox(height: 12),
                     const LunoraBotanicalDivider(variant: 7, height: 30),

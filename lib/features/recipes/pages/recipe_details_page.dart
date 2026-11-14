@@ -665,7 +665,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
 
                       if (_recipe.tags.isNotEmpty) ...[
                         const SizedBox(height: 24),
-                        _buildSectionTitle('Теги', icon: Icons.sell_outlined),
+                        _buildSectionTitle(LunoraLocalization.text('Теги'), icon: Icons.sell_outlined),
                         _buildTags(),
                       ],
 
@@ -726,7 +726,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                       if (_recipe.sourceUrl != null &&
                           _recipe.sourceUrl!.trim().isNotEmpty) ...[
                         const SizedBox(height: 28),
-                        _buildSectionTitle('Источник', icon: Icons.link),
+                        _buildSectionTitle(LunoraLocalization.text('Источник'), icon: Icons.link),
                         Material(
                           color: Colors.transparent,
                           child: InkWell(

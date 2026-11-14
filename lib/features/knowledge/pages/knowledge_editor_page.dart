@@ -150,7 +150,7 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Редактирование записи' : 'Новая запись'),
+        title: Text(_isEditing ? LunoraLocalization.text('Редактирование записи') : LunoraLocalization.text('Новая запись')),
         actions: [
           TextButton.icon(
             onPressed: _isSaving ? null : _saveEntry,
@@ -174,7 +174,7 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
             child: ListView(
               padding: const EdgeInsets.all(24),
               children: [
-                _buildSectionTitle('Название'),
+                _buildSectionTitle(LunoraLocalization.text('Название')),
                 TextFormField(
                   controller: _titleController,
                   textCapitalization: TextCapitalization.sentences,
@@ -192,7 +192,7 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
 
                 const SizedBox(height: 22),
 
-                _buildSectionTitle('Категория'),
+                _buildSectionTitle(LunoraLocalization.text('Категория')),
                 DropdownButtonFormField<String>(
                   initialValue: _selectedCategory,
                   decoration: _decoration(
@@ -216,7 +216,7 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
 
                 const SizedBox(height: 22),
 
-                _buildSectionTitle('Содержимое'),
+                _buildSectionTitle(LunoraLocalization.text('Содержимое')),
                 TextFormField(
                   controller: _contentController,
                   minLines: 10,
@@ -230,7 +230,7 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
 
                 const SizedBox(height: 22),
 
-                _buildSectionTitle('Теги'),
+                _buildSectionTitle(LunoraLocalization.text('Теги')),
                 TextFormField(
                   controller: _tagsController,
                   decoration:
@@ -246,7 +246,7 @@ class _KnowledgeEditorPageState extends State<KnowledgeEditorPage> {
 
                 const SizedBox(height: 22),
 
-                _buildSectionTitle('Источник'),
+                _buildSectionTitle(LunoraLocalization.text('Источник')),
                 TextFormField(
                   controller: _sourceUrlController,
                   keyboardType: TextInputType.url,

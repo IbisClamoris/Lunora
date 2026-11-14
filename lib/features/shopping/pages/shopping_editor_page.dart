@@ -139,7 +139,7 @@ class _ShoppingEditorPageState extends State<ShoppingEditorPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Редактирование товара' : 'Новый товар'),
+        title: Text(_isEditing ? LunoraLocalization.text('Редактирование товара') : LunoraLocalization.text('Новый товар')),
       ),
       body: Center(
         child: ConstrainedBox(
@@ -149,7 +149,7 @@ class _ShoppingEditorPageState extends State<ShoppingEditorPage> {
             child: ListView(
               padding: const EdgeInsets.all(24),
               children: [
-                _buildSectionTitle('Основная информация'),
+                _buildSectionTitle(LunoraLocalization.text('Основная информация')),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _titleController,
@@ -181,7 +181,7 @@ class _ShoppingEditorPageState extends State<ShoppingEditorPage> {
                   textCapitalization: TextCapitalization.sentences,
                 ),
                 const SizedBox(height: 28),
-                _buildSectionTitle('Количество'),
+                _buildSectionTitle(LunoraLocalization.text('Количество')),
                 const SizedBox(height: 16),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -233,7 +233,7 @@ class _ShoppingEditorPageState extends State<ShoppingEditorPage> {
                   ],
                 ),
                 const SizedBox(height: 28),
-                _buildSectionTitle('Дополнительно'),
+                _buildSectionTitle(LunoraLocalization.text('Дополнительно')),
                 const SizedBox(height: 16),
                 TextFormField(
                   controller: _notesController,
@@ -259,7 +259,7 @@ class _ShoppingEditorPageState extends State<ShoppingEditorPage> {
                           child: CircularProgressIndicator(strokeWidth: 2),
                         )
                       : const Icon(Icons.save_outlined),
-                  label: Text(_isSaving ? 'Сохранение...' : 'Сохранить товар'),
+                  label: Text(_isSaving ? LunoraLocalization.text('Сохранение...') : LunoraLocalization.text('Сохранить товар')),
                 ),
                 const SizedBox(height: 10),
                 OutlinedButton(

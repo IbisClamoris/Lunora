@@ -250,7 +250,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_movie.isSeries ? 'О сериале' : 'О фильме'),
+        title: Text(_movie.isSeries ? LunoraLocalization.text('О сериале') : LunoraLocalization.text('О фильме')),
         actions: [
           IconButton(
             tooltip: LunoraLocalization.text('Редактировать'),
@@ -283,26 +283,26 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                     ],
 
                     if (_movie.description.isNotEmpty) ...[
-                      _sectionTitle('Описание', Icons.description_outlined),
+                      _sectionTitle(LunoraLocalization.text('Описание'), Icons.description_outlined),
                       const SizedBox(height: 12),
                       _textCard(colors, _movie.description),
                       const SizedBox(height: 26),
                     ],
 
-                    _sectionTitle('Информация', Icons.info_outline_rounded),
+                    _sectionTitle(LunoraLocalization.text('Информация'), Icons.info_outline_rounded),
                     const SizedBox(height: 12),
                     _buildInformation(colors),
                     const SizedBox(height: 26),
 
                     if (_movie.genres.isNotEmpty) ...[
-                      _sectionTitle('Жанры', Icons.category_outlined),
+                      _sectionTitle(LunoraLocalization.text('Жанры'), Icons.category_outlined),
                       const SizedBox(height: 12),
                       _buildChips(colors, _movie.genres),
                       const SizedBox(height: 26),
                     ],
 
                     if (_movie.tags.isNotEmpty) ...[
-                      _sectionTitle('Теги', Icons.sell_outlined),
+                      _sectionTitle(LunoraLocalization.text('Теги'), Icons.sell_outlined),
                       const SizedBox(height: 12),
                       _buildChips(colors, _movie.tags),
                       const SizedBox(height: 26),

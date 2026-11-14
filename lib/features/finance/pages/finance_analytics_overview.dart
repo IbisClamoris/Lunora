@@ -1025,16 +1025,16 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
             children: [
               _buildMonthSelector(),
               const SizedBox(height: _sectionSpacing),
-              _sectionTitle('Финансовый результат'),
+              _sectionTitle(LunoraLocalization.text('Финансовый результат')),
               _buildMonthlySummary(),
               const SizedBox(height: _sectionSpacing),
               _twoColumnSections(
                 width: constraints.maxWidth,
                 leftTitle: 'Расходы по категориям',
-                leftSubtitle: 'Распределение расходов за выбранный месяц',
+                leftSubtitle: LunoraLocalization.text('Распределение расходов за выбранный месяц'),
                 leftChild: _buildCategoryBreakdown(),
                 rightTitle: 'Динамика за 6 месяцев',
-                rightSubtitle: 'Зелёный — доходы, красный — расходы',
+                rightSubtitle: LunoraLocalization.text('Зелёный — доходы, красный — расходы'),
                 rightChild: _buildHistoryChart(),
               ),
               SizedBox(height: wide ? _sectionSpacing : 0),
@@ -1047,10 +1047,10 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
                   rightChild: _buildDebtSummary(),
                 )
               else ...[
-                _sectionTitle('Баланс счетов'),
+                _sectionTitle(LunoraLocalization.text('Баланс счетов')),
                 _card(child: _buildAccountBalances()),
                 const SizedBox(height: _sectionSpacing),
-                _sectionTitle('Кредиты и рассрочки'),
+                _sectionTitle(LunoraLocalization.text('Кредиты и рассрочки')),
                 _buildDebtSummary(),
               ],
               const SizedBox(height: 20),

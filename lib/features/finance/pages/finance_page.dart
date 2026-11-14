@@ -990,7 +990,7 @@ class _FinancePageState extends State<FinancePage>
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle('Поиск и фильтры'),
+          _sectionTitle(LunoraLocalization.text('Поиск и фильтры')),
           _card(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -1353,7 +1353,7 @@ class _FinancePageState extends State<FinancePage>
                     ),
                     if (transfers.isNotEmpty) ...[
                       const SizedBox(height: 12),
-                      _sectionTitle('Переводы · ${transfers.length}'),
+                      _sectionTitle(LunoraLocalization.text('Переводы · ${transfers.length}')),
                       ...transfers.map(
                         (item) => Padding(
                           padding: const EdgeInsets.only(bottom: 9),
@@ -2119,7 +2119,7 @@ class _FinancePageState extends State<FinancePage>
       contentPadding: EdgeInsets.zero,
       minVerticalPadding: 0,
       title: Text(title, style: Theme.of(context).textTheme.bodySmall),
-      subtitle: Text(date == null ? 'Не указана' : _date(date)),
+      subtitle: Text(date == null ? LunoraLocalization.text('Не указана') : _date(date)),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -3124,7 +3124,7 @@ class _FinancePageState extends State<FinancePage>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _sectionTitle(isIncome ? 'Доходы' : 'Расходы'),
+            _sectionTitle(isIncome ? LunoraLocalization.text('Доходы') : LunoraLocalization.text('Расходы')),
             ..._categoryList(type),
           ],
         ),
@@ -3143,10 +3143,10 @@ class _FinancePageState extends State<FinancePage>
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _sectionTitle('Доходы'),
+                _sectionTitle(LunoraLocalization.text('Доходы')),
                 ..._categoryList(FinanceCategoryType.income),
                 const SizedBox(height: 14),
-                _sectionTitle('Расходы'),
+                _sectionTitle(LunoraLocalization.text('Расходы')),
                 ..._categoryList(FinanceCategoryType.expense),
               ],
             );

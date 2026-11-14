@@ -182,7 +182,7 @@ class _FinanceBudgetsPageState extends State<FinanceBudgetsPage> {
           categories: availableCategories,
           initialCategoryId: budget?.categoryId,
           initialAmountMinor: budget?.limitMinor,
-          title: budget == null ? 'Новый бюджет' : 'Изменить бюджет',
+          title: budget == null ? LunoraLocalization.text('Новый бюджет') : LunoraLocalization.text('Изменить бюджет'),
         );
       },
     );

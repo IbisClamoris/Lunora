@@ -148,7 +148,7 @@ class _DataHistoryPageState extends State<DataHistoryPage>
                       'Импортировано записей',
                       '${entry.recordCount ?? 0}',
                     ),
-                  _detailRow('Статус', _statusText(entry)),
+                  _detailRow(LunoraLocalization.text('Статус'), _statusText(entry)),
                   const SizedBox(height: 12),
                   Text(
                     LunoraLocalization.text('Дополнительная информация'),

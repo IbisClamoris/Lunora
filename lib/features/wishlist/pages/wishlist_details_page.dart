@@ -313,9 +313,9 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
       initialDate: _desiredDate ?? now,
       firstDate: DateTime(2000),
       lastDate: DateTime(2100),
-      helpText: 'Выбери желаемую дату',
-      cancelText: 'Отмена',
-      confirmText: 'Выбрать',
+      helpText: LunoraLocalization.text('Выбери желаемую дату'),
+      cancelText: LunoraLocalization.text('Отмена'),
+      confirmText: LunoraLocalization.text('Выбрать'),
     );
 
     if (selected == null || !mounted) return;
@@ -638,7 +638,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle('Информация', palette),
+          _sectionTitle(LunoraLocalization.text('Информация'), palette),
           const SizedBox(height: 16),
           _buildTextField(
             controller: _categoryController,
@@ -700,7 +700,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle('Желаемая дата', palette),
+          _sectionTitle(LunoraLocalization.text('Желаемая дата'), palette),
           const SizedBox(height: 12),
           Row(
             children: [
@@ -785,7 +785,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle('Открыть сохранённый источник', palette),
+          _sectionTitle(LunoraLocalization.text('Открыть сохранённый источник'), palette),
           const SizedBox(height: 10),
           Material(
             color: Colors.transparent,
@@ -819,7 +819,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
       Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _sectionTitle('История', palette),
+          _sectionTitle(LunoraLocalization.text('История'), palette),
           const SizedBox(height: 12),
           _dateRow('Добавлено', _formatDate(_entry.createdAt), palette),
           const SizedBox(height: 8),

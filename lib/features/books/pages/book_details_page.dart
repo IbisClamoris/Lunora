@@ -267,19 +267,19 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                     ],
 
                     if (_book.description.isNotEmpty) ...[
-                      _sectionTitle('Описание', Icons.description_outlined),
+                      _sectionTitle(LunoraLocalization.text('Описание'), Icons.description_outlined),
                       const SizedBox(height: 12),
                       _textCard(colors, _book.description),
                       const SizedBox(height: 26),
                     ],
 
-                    _sectionTitle('Информация', Icons.info_outline_rounded),
+                    _sectionTitle(LunoraLocalization.text('Информация'), Icons.info_outline_rounded),
                     const SizedBox(height: 12),
                     _buildInformation(colors),
                     const SizedBox(height: 26),
 
                     if (_book.tags.isNotEmpty) ...[
-                      _sectionTitle('Теги', Icons.sell_outlined),
+                      _sectionTitle(LunoraLocalization.text('Теги'), Icons.sell_outlined),
                       const SizedBox(height: 12),
                       _buildTags(colors),
                       const SizedBox(height: 26),
