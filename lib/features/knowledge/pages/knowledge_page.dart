@@ -449,7 +449,7 @@ class _KnowledgePageState extends State<KnowledgePage> {
             hasFilters
                 ? LunoraLocalization.text('Попробуй изменить поисковый запрос или фильтры.')
                 : LunoraLocalization.text(
-                    'Добавляй материалы, конспекты, идеи и всё, что захочется сохранить.',
+                    LunoraLocalization.text('Добавляй материалы, конспекты, идеи и всё, что захочется сохранить.', 'Add materials, notes, ideas, and anything you want to keep.'),
                   ),
             textAlign: TextAlign.center,
             style: TextStyle(
