@@ -345,7 +345,7 @@ class _WishlistPageState extends State<WishlistPage> {
         _buildDropdown(
           value: _selectedPriority,
           items: const ['Все приоритеты', 'high', 'normal', 'low'],
-          labels: const {
+          labels: {
             'Все приоритеты': LunoraLocalization.text('Все приоритеты', 'All priorities'),
             'high': LunoraLocalization.text('Высокий приоритет', 'High priority'),
             'normal': LunoraLocalization.text('Обычный приоритет', 'Normal priority'),
