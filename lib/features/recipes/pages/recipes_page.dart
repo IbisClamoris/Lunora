@@ -31,7 +31,7 @@ class _RecipesPageState extends State<RecipesPage> {
   List<RecipeEntry> _recipes = [];
   List<String> _categories = [];
 
-  String _selectedCategory = 'Все';
+  String _selectedCategory = LunoraLocalization.text('Все', 'All');
   bool _favoritesOnly = false;
   bool _isLoading = true;
 
@@ -168,7 +168,7 @@ class _RecipesPageState extends State<RecipesPage> {
   }
 
   Widget _buildCategorySelector() {
-    final categories = ['Все', ..._categories];
+    final categories = [LunoraLocalization.text('Все', 'All'), ..._categories];
 
     return SizedBox(
       height: 42,
@@ -183,7 +183,7 @@ class _RecipesPageState extends State<RecipesPage> {
           final palette = Theme.of(context).extension<LunoraPalette>()!;
           return ChoiceChip(
             label: Text(
-              category == 'Все' ? LunoraLocalization.text('Все') : category,
+              category == LunoraLocalization.text('Все', 'All') ? LunoraLocalization.text('Все') : category,
             ),
             selected: selected,
             showCheckmark: true,
@@ -253,8 +253,8 @@ class _RecipesPageState extends State<RecipesPage> {
                       child: IconButton(
                         tooltip: LunoraLocalization.text(
                           recipe.isFavorite
-                              ? 'Убрать из избранного'
-                              : 'В избранное',
+                              ? LunoraLocalization.text('Убрать из избранного', 'Remove from favourites')
+                              : LunoraLocalization.text('В избранное', 'Add to favourites'),
                         ),
                         onPressed: () => _toggleFavorite(recipe),
                         icon: Icon(
@@ -468,7 +468,7 @@ class _RecipesPageState extends State<RecipesPage> {
                         Expanded(
                           child: Text(
                             LunoraLocalization.text(
-                              'Моя книга рецептов',
+                              LunoraLocalization.text('Моя книга рецептов', 'My recipe book'),
                               'My recipe book',
                             ),
                             style: Theme.of(context).textTheme.headlineMedium,
@@ -476,14 +476,14 @@ class _RecipesPageState extends State<RecipesPage> {
                         ),
                         IconButton(
                           tooltip: LunoraLocalization.text(
-                            'Найти рецепты в интернете',
+                            LunoraLocalization.text('Найти рецепты в интернете', 'Find recipes online'),
                           ),
                           onPressed: _openExternalSearch,
                           icon: const Icon(Icons.travel_explore_rounded),
                         ),
                         IconButton(
                           tooltip: LunoraLocalization.text(
-                            'Импортировать из Excel',
+                            LunoraLocalization.text('Импортировать из Excel', 'Import from Excel'),
                           ),
                           onPressed: _openImport,
                           icon: const Icon(Icons.file_upload_outlined),
@@ -493,7 +493,7 @@ class _RecipesPageState extends State<RecipesPage> {
                     const SizedBox(height: 6),
                     Text(
                       LunoraLocalization.text(
-                        'Коллекция блюд, которые хочется готовить снова',
+                        LunoraLocalization.text('Коллекция блюд, которые хочется готовить снова', 'A collection of dishes worth making again'),
                       ),
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
