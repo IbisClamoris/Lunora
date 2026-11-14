@@ -193,7 +193,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
         SnackBar(
           content: Text(
             LunoraLocalization.text(
-              'Количество прочитанных страниц не может превышать общее количество.',
+              LunoraLocalization.text('Количество прочитанных страниц не может превышать общее количество.', 'Pages read cannot exceed the total page count.'),
             ),
           ),
         ),
@@ -206,7 +206,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
         SnackBar(
           content: Text(
             LunoraLocalization.text(
-              'Количество страниц не может быть отрицательным.',
+              LunoraLocalization.text('Количество страниц не может быть отрицательным.', 'Page count cannot be negative.'),
             ),
           ),
         ),
@@ -219,7 +219,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
         SnackBar(
           content: Text(
             LunoraLocalization.text(
-              'Количество прочитанных страниц не может быть отрицательным.',
+              LunoraLocalization.text('Количество прочитанных страниц не может быть отрицательным.', 'Pages read cannot be negative.'),
             ),
           ),
         ),
@@ -344,14 +344,14 @@ class _BookEditorPageState extends State<BookEditorPage> {
                   _buildTextField(
                     controller: _seriesNameController,
                     label: LunoraLocalization.text('Серия'),
-                    hint: 'Например, Вселенная Гришей',
+                    hint: LunoraLocalization.text('Например, Вселенная Гришей', 'For example, The Universe of Grisha'),
                   ),
                   const SizedBox(height: 14),
 
                   _buildTextField(
                     controller: _seriesNumberController,
                     label: LunoraLocalization.text('Номер книги в серии'),
-                    hint: 'Например, 1 или 1.5',
+                    hint: LunoraLocalization.text('Например, 1 или 1.5', 'For example, 1 or 1.5'),
                     keyboardType: const TextInputType.numberWithOptions(
                       decimal: true,
                     ),
@@ -368,7 +368,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
                   _buildTextField(
                     controller: _tagsController,
                     label: LunoraLocalization.text('Теги'),
-                    hint: 'Фэнтези, магия, классика',
+                    hint: LunoraLocalization.text('Фэнтези, магия, классика', 'Fantasy, magic, classics'),
                   ),
 
                   const SizedBox(height: 28),
@@ -520,7 +520,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
                             )
                           : const Icon(Icons.check),
                       label: Text(
-                        _isEditing ? 'Сохранить изменения' : 'Добавить книгу',
+                        _isEditing ? LunoraLocalization.text('Сохранить изменения', 'Save changes') : LunoraLocalization.text('Добавить книгу', 'Add book'),
                       ),
                     ),
                   ),
@@ -622,7 +622,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
       validator: required
           ? (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Заполни это поле';
+                return LunoraLocalization.text('Заполни это поле', 'Fill in this field');
               }
 
               return null;
@@ -638,7 +638,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
     required VoidCallback onClear,
   }) {
     final formattedDate = date == null
-        ? 'Не указана'
+        ? LunoraLocalization.text('Не указана', 'Not specified')
         : '${date.day.toString().padLeft(2, '0')}.'
               '${date.month.toString().padLeft(2, '0')}.'
               '${date.year}';
