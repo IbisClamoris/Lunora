@@ -122,7 +122,7 @@ class _BooksPageState extends State<BooksPage> {
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Не удалось изменить статус: $error')),
+        SnackBar(content: Text(LunoraLocalization.text('Не удалось изменить статус: $error'))),
       );
     }
   }
@@ -399,7 +399,7 @@ class _BooksPageState extends State<BooksPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _sectionTitle(palette, 'Сейчас читаю', Icons.auto_stories_rounded),
+        _sectionTitle(palette, LunoraLocalization.text('Сейчас читаю'), Icons.auto_stories_rounded),
         const SizedBox(height: 14),
         ...books.map(
           (book) => Padding(
@@ -688,17 +688,17 @@ class _BooksPageState extends State<BooksPage> {
                     ],
                     const SizedBox(height: 9),
                     PopupMenuButton<String>(
-                      tooltip: 'Быстро изменить статус',
+                      tooltip: LunoraLocalization.text('Быстро изменить статус'),
                       onSelected: (value) => _changeBookStatus(book, value),
                       itemBuilder: (context) => const [
                         PopupMenuItem(
                           value: 'planned',
-                          child: Text('В планах'),
+                          child: Text(LunoraLocalization.text('В планах')),
                         ),
-                        PopupMenuItem(value: 'reading', child: Text('Читаю')),
+                        PopupMenuItem(value: 'reading', child: Text(LunoraLocalization.text('Читаю'))),
                         PopupMenuItem(
                           value: 'completed',
-                          child: Text('Прочитано'),
+                          child: Text(LunoraLocalization.text('Прочитано')),
                         ),
                       ],
                       child: Container(
