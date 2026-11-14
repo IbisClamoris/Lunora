@@ -152,7 +152,7 @@ class _ExportPageState extends State<ExportPage> {
       if (!mounted) return;
 
       final savedUri = await FilePicker.saveFile(
-        dialogTitle: 'Сохранить Excel-файл',
+        dialogTitle: LunoraLocalization.text('Сохранить Excel-файл', 'Save Excel file'),
         fileName: exportedFile.uri.pathSegments.last,
         bytes: bytes,
       );
@@ -161,7 +161,7 @@ class _ExportPageState extends State<ExportPage> {
 
       if (savedUri == null) {
         _showMessage(
-          'Экспорт завершён. Внутренняя копия сохранена в папке Lunora.',
+          LunoraLocalization.text('Экспорт завершён. Внутренняя копия сохранена в папке Lunora.', 'Export complete. An internal copy was saved in the Lunora folder.'),
         );
         return;
       }
@@ -171,8 +171,8 @@ class _ExportPageState extends State<ExportPage> {
       if (!mounted) return;
 
       _showMessage(
-        'Внутренняя копия создана, но не удалось сохранить файл '
-        'в выбранное место: $error',
+        LunoraLocalization.text('Внутренняя копия создана, но не удалось сохранить файл ', 'An internal copy was created, but the file could not be saved to ')
+        LunoraLocalization.text('в выбранное место: $error', 'the selected location: $error'),
       );
     }
   }
@@ -194,9 +194,9 @@ class _ExportPageState extends State<ExportPage> {
             children: [
               Text(LunoraLocalization.text('Excel-файл успешно сохранён.')),
               const SizedBox(height: 16),
-              _resultInfo('Листов', _selectedSheetCount.toString()),
+              _resultInfo(LunoraLocalization.text('Листов', 'Sheets'), _selectedSheetCount.toString()),
               const SizedBox(height: 8),
-              _resultInfo('Строк', _selectedRowCount.toString()),
+              _resultInfo(LunoraLocalization.text('Строк', 'Rows'), _selectedRowCount.toString()),
               const SizedBox(height: 16),
               Text(
                 LunoraLocalization.text('Внутренняя копия Lunora:'),
@@ -429,22 +429,22 @@ class _ExportPageState extends State<ExportPage> {
             const SizedBox(height: 16),
             _summaryRow(
               Icons.table_chart_outlined,
-              'Выбрано листов',
+              LunoraLocalization.text('Выбрано листов', 'Sheets selected'),
               _selectedSheetCount.toString(),
             ),
             const SizedBox(height: 12),
             _summaryRow(
               Icons.format_list_numbered,
-              'Строк для экспорта',
+              LunoraLocalization.text('Строк для экспорта', 'Rows to export'),
               _selectedRowCount.toString(),
             ),
             const SizedBox(height: 12),
-            _summaryRow(Icons.insert_drive_file_outlined, 'Формат', 'XLSX'),
+            _summaryRow(Icons.insert_drive_file_outlined, LunoraLocalization.text('Формат', 'Format'), 'XLSX'),
             if (_selectedSheetCount == 0) ...[
               const SizedBox(height: 16),
               Text(
                 LunoraLocalization.text(
-                  'Выбери хотя бы один лист для экспорта.',
+                  LunoraLocalization.text('Выбери хотя бы один лист для экспорта.', 'Select at least one sheet to export.'),
                 ),
                 style: TextStyle(color: Theme.of(context).colorScheme.error),
               ),
