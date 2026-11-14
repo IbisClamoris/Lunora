@@ -204,7 +204,7 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
     final sourceFile = File(sourcePath);
 
     if (!await sourceFile.exists()) {
-      throw Exception('Файл изображения не найден: $sourcePath');
+      throw Exception(LunoraLocalization.text('Файл изображения не найден: $sourcePath', 'Image file not found: $sourcePath'));
     }
 
     final directory = await StorageService.instance.coversDirectory;
@@ -270,7 +270,7 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
 
     if (_isSeries) {
       if (currentSeason < 0 || currentEpisode < 0) {
-        _showMessage('Прогресс не может быть отрицательным.');
+        _showMessage(LunoraLocalization.text('Прогресс не может быть отрицательным.', 'Progress cannot be negative.'));
         return;
       }
 
@@ -290,17 +290,17 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
     }
 
     if (year != null && (year < 1888 || year > DateTime.now().year + 10)) {
-      _showMessage('Проверь год выпуска.');
+      _showMessage(LunoraLocalization.text('Проверь год выпуска.', 'Check the release year.'));
       return;
     }
 
     if (runtime != null && runtime < 0) {
-      _showMessage('Длительность не может быть отрицательной.');
+      _showMessage(LunoraLocalization.text('Длительность не может быть отрицательной.', 'Duration cannot be negative.'));
       return;
     }
 
     if (seasons != null && seasons < 0 || episodes != null && episodes < 0) {
-      _showMessage('Количество сезонов и серий не может быть отрицательным.');
+      _showMessage(LunoraLocalization.text('Количество сезонов и серий не может быть отрицательным.', 'Season and episode counts cannot be negative.'));
       return;
     }
 
