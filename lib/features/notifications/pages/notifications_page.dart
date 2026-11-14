@@ -75,7 +75,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       if (!mounted) return;
 
       setState(() => _isLoading = false);
-      _showMessage('Не удалось загрузить уведомления: $error');
+      _showMessage(LunoraLocalization.text('Не удалось загрузить уведомления: $error', 'Could not load notifications: $error'));
     }
   }
 
@@ -210,7 +210,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
       await _refreshAfterAction();
     } catch (error) {
-      _showMessage('Не удалось обновить уведомление: $error');
+      _showMessage(LunoraLocalization.text('Не удалось обновить уведомление: $error', 'Could not update notification: $error'));
     } finally {
       if (mounted) setState(() => _isBusy = false);
     }
@@ -224,9 +224,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
     try {
       await _service.markAllRead();
       await _refreshAfterAction();
-      _showMessage('Все уведомления отмечены прочитанными.');
+      _showMessage(LunoraLocalization.text('Все уведомления отмечены прочитанными.', 'All notifications marked as read.'));
     } catch (error) {
-      _showMessage('Не удалось обновить уведомления: $error');
+      _showMessage(LunoraLocalization.text('Не удалось обновить уведомления: $error', 'Could not update notifications: $error'));
     } finally {
       if (mounted) setState(() => _isBusy = false);
     }
@@ -249,7 +249,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       await _service.delete(notification.id);
       await _refreshAfterAction();
     } catch (error) {
-      _showMessage('Не удалось удалить уведомление: $error');
+      _showMessage(LunoraLocalization.text('Не удалось удалить уведомление: $error', 'Could not delete notification: $error'));
     } finally {
       if (mounted) setState(() => _isBusy = false);
     }
@@ -271,9 +271,9 @@ class _NotificationsPageState extends State<NotificationsPage> {
     try {
       await _service.clearHistory();
       await _refreshAfterAction();
-      _showMessage('История уведомлений очищена.');
+      _showMessage(LunoraLocalization.text('История уведомлений очищена.', 'Notification history cleared.'));
     } catch (error) {
-      _showMessage('Не удалось очистить историю: $error');
+      _showMessage(LunoraLocalization.text('Не удалось очистить историю: $error', 'Could not clear history: $error'));
     } finally {
       if (mounted) setState(() => _isBusy = false);
     }
@@ -399,10 +399,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
     final unreadDescription = _unreadCount == 0
         ? LunoraLocalization.text('Все события на своих местах.', 'Everything is in its place.')
         : '$_unreadCount ${_unreadCount == 1
-              ? 'новое уведомление'
+              ? LunoraLocalization.text('новое уведомление', 'new notification')
               : _unreadCount < 5
-              ? 'новых уведомления'
-              : 'новых уведомлений'}';
+              ? LunoraLocalization.text('новых уведомления', 'new notifications')
+              : LunoraLocalization.text('новых уведомлений', 'new notifications')}';
     return LunoraSectionHeader(
       title: LunoraLocalization.text('Уведомления'),
       subtitle: unreadDescription,
