@@ -95,7 +95,7 @@ class _WishlistPageState extends State<WishlistPage> {
     } catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Не удалось изменить статус покупки: $error')),
+        SnackBar(content: Text(LunoraLocalization.text('Не удалось изменить статус покупки: $error'))),
       );
     }
   }
