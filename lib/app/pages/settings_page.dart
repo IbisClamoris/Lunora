@@ -355,7 +355,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Widget _themePicker() {
-    const themeData = <AppColorTheme, (String, List<Color>)>{
+    final themeData = <AppColorTheme, (String, List<Color>)>{
       AppColorTheme.botanical: (
         LunoraLocalization.text('Ботаника', 'Botanical'),
         [
