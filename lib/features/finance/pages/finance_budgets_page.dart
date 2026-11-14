@@ -490,9 +490,8 @@ class _FinanceBudgetsPageState extends State<FinanceBudgetsPage> {
       case 2:
       case 3:
       case 4:
-        return 'категориях';
       default:
-        return 'категориях';
+        return LunoraLocalization.isEnglish ? 'categories' : 'категориях';
     }
   }
 
