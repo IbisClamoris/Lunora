@@ -237,7 +237,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     final confirmed = await _showConfirmation(
       title: LunoraLocalization.text('Удалить уведомление?'),
-      message: 'Запись «${notification.title}» будет удалена из истории.',
+      message: LunoraLocalization.text('Запись «${notification.title}» будет удалена из истории.'),
       confirmLabel: 'Удалить',
     );
 
@@ -260,7 +260,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     final confirmed = await _showConfirmation(
       title: LunoraLocalization.text('Очистить историю?'),
-      message: 'Все уведомления будут удалены без возможности восстановления.',
+      message: LunoraLocalization.text('Все уведомления будут удалены без возможности восстановления.'),
       confirmLabel: 'Очистить',
     );
 
