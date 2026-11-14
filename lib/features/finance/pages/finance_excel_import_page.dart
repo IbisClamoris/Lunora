@@ -67,9 +67,9 @@ class _FinanceExcelImportPageState extends State<FinanceExcelImportPage> {
           initialDate: DateTime.now(),
           firstDate: DateTime(2000),
           lastDate: DateTime(2100),
-          helpText: 'Выберите месяц бюджета',
-          cancelText: 'Отмена',
-          confirmText: 'Выбрать',
+          helpText: LunoraLocalization.text('Выберите месяц бюджета'),
+          cancelText: LunoraLocalization.text('Отмена'),
+          confirmText: LunoraLocalization.text('Выбрать'),
         );
 
         if (budgetPeriod == null) return;
