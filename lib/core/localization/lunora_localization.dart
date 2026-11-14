@@ -17,18 +17,21 @@ abstract final class LunoraLocalization {
         RegExp(r'^(\d+) пунктов ожидают покупки$').firstMatch(russian);
     if (shoppingCount != null) {
       final count = int.parse(shoppingCount.group(1)!);
+      return '$count ${count == 1 ? 'item' : 'items'} waiting to be purchased';
     }
 
     final obligationCount =
         RegExp(r'^(\d+) активных обязательств$').firstMatch(russian);
     if (obligationCount != null) {
       final count = int.parse(obligationCount.group(1)!);
+      return '$count active ${count == 1 ? 'obligation' : 'obligations'}';
     }
 
     final photoCount =
         RegExp(r'^(\d+) фотограф(?:ия|ии|ий)$').firstMatch(russian);
     if (photoCount != null) {
       final count = int.parse(photoCount.group(1)!);
+      return '$count ${count == 1 ? 'photo' : 'photos'}';
     }
 
     final exact = _catalog[russian] ?? _catalog[russian.trim()];
@@ -37,10 +40,12 @@ abstract final class LunoraLocalization {
     if (russian.startsWith('Задача «') &&
         russian.endsWith('» наступит через 15 минут.')) {
       final name = russian.substring('Задача «'.length, russian.indexOf('»'));
+      return 'Task “$name” is due in 15 minutes.';
     }
     if (russian.startsWith('Занятие «') &&
         russian.endsWith('» начнётся через 15 минут.')) {
       final name = russian.substring('Занятие «'.length, russian.indexOf('»'));
+      return 'Class “$name” starts in 15 minutes.';
     }
     if (russian.startsWith('Срок выполнения «') &&
         russian.endsWith('» наступит через 15 минут.')) {
@@ -48,18 +53,22 @@ abstract final class LunoraLocalization {
         'Срок выполнения «'.length,
         russian.indexOf('»'),
       );
+      return '“$name” is due in 15 minutes.';
     }
     if (russian.startsWith('«') &&
         russian.endsWith('» будет удалён из твоей коллекции.')) {
       final name = russian.substring(1, russian.indexOf('»'));
+      return '“$name” will be removed from your collection.';
     }
     if (russian.startsWith('Книга «') &&
         russian.endsWith('» будет удалена из библиотеки.')) {
       final name = russian.substring('Книга «'.length, russian.indexOf('»'));
+      return 'Book “$name” will be removed from the library.';
     }
     if (russian.startsWith('Рецепт «') &&
         russian.endsWith('» будет удалён вместе со списком ингредиентов.')) {
       final name = russian.substring('Рецепт «'.length, russian.indexOf('»'));
+      return 'Recipe “$name” will be deleted together with its ingredients.';
     }
     if (russian.startsWith('Сезон ') && russian.contains(', серия ')) {
       return russian
@@ -69,17 +78,21 @@ abstract final class LunoraLocalization {
     if (russian.startsWith('Запись «') &&
         russian.contains('» будет удалена без возможности восстановления')) {
       final name = russian.substring('Запись «'.length, russian.indexOf('»'));
+      return 'Entry “$name” will be permanently deleted.';
     }
     if (russian.startsWith('Запись «') &&
         russian.endsWith('» будет удалена.')) {
       final name = russian.substring('Запись «'.length, russian.indexOf('»'));
+      return 'Entry “$name” will be deleted.';
     }
     if (russian.startsWith('«') &&
         russian.endsWith('» будет удалён из списка.')) {
       final name = russian.substring(1, russian.indexOf('»'));
+      return '“$name” will be removed from the list.';
     }
     if (russian.startsWith('«') && russian.endsWith('» будет удалена.')) {
       final name = russian.substring(1, russian.indexOf('»'));
+      return '“$name” will be deleted.';
     }
 
     for (final entry in _prefixes.entries) {
