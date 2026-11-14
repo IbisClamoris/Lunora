@@ -7,8 +7,6 @@ import '../../core/theme/lunora_theme_assets.dart';
 import '../../shared/widgets/lunora_visuals.dart';
 import '../config/menu_entries.dart';
 
-import 'package:flutter_svg/flutter_svg.dart';
-
 class LunoraSidebar extends StatelessWidget {
   const LunoraSidebar({
     super.key,
@@ -96,7 +94,22 @@ class LunoraSidebar extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: palette.border),
                     ),
-                    child: SvgPicture.asset('assets/branding/app_icon.svg'),
+                    child: AnimatedBuilder(
+                      animation: SettingsService.instance,
+                      builder: (context, _) {
+                        final settings = SettingsService.instance.settings;
+                        final themeName = LunoraThemeAssets.folder(
+                          settings.colorTheme,
+                        );
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
+                        final modeName = isDark ? 'dark' : 'light';
+                        return Image.asset(
+                          'assets/branding/theme_icons/${themeName}_${modeName}.png',
+                          fit: BoxFit.contain,
+                        );
+                      },
+                    ),
                   ),
                   if (expanded) ...[
                     const SizedBox(width: 12),
