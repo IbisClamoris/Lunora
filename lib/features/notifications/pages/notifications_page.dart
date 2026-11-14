@@ -178,20 +178,20 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
   Color _deliveryStatusColor(String status, LunoraPalette palette) {
     return switch (status) {
-      LunoraLocalization.text('Запланировано', 'Scheduled') => palette.accent,
-      LunoraLocalization.text('Ожидает доставки', 'Pending delivery') => Colors.orange.shade700,
-      LunoraLocalization.text('Доставлено', 'Delivered') => Colors.green.shade700,
-      LunoraLocalization.text('Отключено настройками', 'Disabled in settings') => palette.secondary,
+      'Запланировано' => palette.accent,
+      'Ожидает доставки' => Colors.orange.shade700,
+      'Доставлено' => Colors.green.shade700,
+      'Отключено настройками' => palette.secondary,
       _ => palette.secondary,
     };
   }
 
   IconData _deliveryStatusIcon(String status) {
     return switch (status) {
-      LunoraLocalization.text('Запланировано', 'Scheduled') => Icons.schedule,
-      LunoraLocalization.text('Ожидает доставки', 'Pending delivery') => Icons.hourglass_empty,
-      LunoraLocalization.text('Доставлено', 'Delivered') => Icons.check_circle_outline,
-      LunoraLocalization.text('Отключено настройками', 'Disabled in settings') => Icons.notifications_off_outlined,
+      'Запланировано' => Icons.schedule,
+      'Ожидает доставки' => Icons.hourglass_empty,
+      'Доставлено' => Icons.check_circle_outline,
+      'Отключено настройками' => Icons.notifications_off_outlined,
       _ => Icons.info_outline,
     };
   }
