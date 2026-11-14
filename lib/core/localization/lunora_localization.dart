@@ -205,7 +205,7 @@ abstract final class LunoraLocalization {
     'Доставлено: ': 'Delivered: ',
     'Время события: ': 'Event time: ',
   };
-  static const Map<String, String> _catalog = {
+  static final Map<String, String> _catalog = {
     'Главная': 'Home',
     'Календарь': 'Calendar',
     'Уведомления': 'Notifications',
