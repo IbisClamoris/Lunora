@@ -233,7 +233,7 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
     return Scaffold(
       backgroundColor: palette.background,
       appBar: AppBar(
-        title: Text(_isEditing ? 'Редактировать желание' : 'Новое желание'),
+        title: Text(_isEditing ? LunoraLocalization.text('Редактировать желание') : LunoraLocalization.text('Новое желание')),
         backgroundColor: palette.background,
       ),
       body: Form(
@@ -243,7 +243,7 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
           children: [
             _buildImageSection(palette),
             const SizedBox(height: 24),
-            _buildSectionTitle('Основное'),
+            _buildSectionTitle(LunoraLocalization.text('Основное')),
             const SizedBox(height: 12),
             TextFormField(
               controller: _titleController,
@@ -288,7 +288,7 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
               ),
             ),
             const SizedBox(height: 28),
-            _buildSectionTitle('Стоимость и приоритет'),
+            _buildSectionTitle(LunoraLocalization.text('Стоимость и приоритет')),
             const SizedBox(height: 12),
             Row(
               children: [
@@ -356,7 +356,7 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
               },
             ),
             const SizedBox(height: 28),
-            _buildSectionTitle('Дополнительно'),
+            _buildSectionTitle(LunoraLocalization.text('Дополнительно')),
             const SizedBox(height: 12),
             OutlinedButton.icon(
               onPressed: _selectDate,
@@ -421,7 +421,7 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
                             child: CircularProgressIndicator(strokeWidth: 2),
                           )
                         : const Icon(Icons.save_outlined),
-                    label: Text(_saving ? 'Сохранение...' : 'Сохранить'),
+                    label: Text(_saving ? LunoraLocalization.text('Сохранение...') : LunoraLocalization.text('Сохранить')),
                   ),
                 ),
               ],
@@ -438,7 +438,7 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle('Изображение'),
+        _buildSectionTitle(LunoraLocalization.text('Изображение')),
         const SizedBox(height: 12),
         Container(
           width: double.infinity,
