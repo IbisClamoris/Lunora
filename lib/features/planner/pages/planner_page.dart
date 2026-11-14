@@ -461,7 +461,7 @@ class _PlannerPageState extends State<PlannerPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle(
-          'Задачи на ${_formatDate(_selectedDate)}',
+          LunoraLocalization.text('Задачи на ${_formatDate(_selectedDate)}', 'Tasks for ${_formatDate(_selectedDate)}'),
           trailing: Text(
             '${tasks.length}',
             style: TextStyle(color: _palette.secondary),
@@ -541,7 +541,7 @@ class _PlannerPageState extends State<PlannerPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle(
-          'Цели месяца',
+          LunoraLocalization.text('Цели месяца', 'Monthly goals'),
           trailing: TextButton.icon(
             onPressed: _showGoalDialog,
             icon: const Icon(Icons.add, size: 18),
@@ -689,7 +689,7 @@ class _PlannerPageState extends State<PlannerPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle(
-          'Заметки',
+          LunoraLocalization.text('Заметки', 'Notes'),
           trailing: TextButton.icon(
             onPressed: _showNoteDialog,
             icon: const Icon(Icons.add, size: 18),
@@ -948,7 +948,7 @@ class _PlannerPageState extends State<PlannerPage> {
     return LunoraSectionHeader(
       title: LunoraLocalization.text('Мой планер'),
       subtitle: LunoraLocalization.text(
-        'Место для планов, маленьких шагов и больших задумок.',
+        LunoraLocalization.text('Место для планов, маленьких шагов и больших задумок.', 'A space for plans, small steps, and big ideas.'),
       ),
       icon: Icons.event_note_outlined,
       actions: [
