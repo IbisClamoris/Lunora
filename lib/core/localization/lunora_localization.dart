@@ -284,7 +284,7 @@ abstract final class LunoraLocalization {
     'Создать бюджет': 'Create budget',
     'Лимиты по категориям': 'Category limits',
     'На этот месяц бюджетов пока нет': 'No budgets for this month yet',
-    'Установи лимиты расходов по категориям, чтобы следить за планом.':
+    'Установи лимиты расходов по категориям, чтобы следить за планом.': 'Set spending limits by category to stay on track.',
     'Импорт': 'Import',
     'Экспорт': 'Export',
     'Импорт из Excel': 'Import from Excel',
