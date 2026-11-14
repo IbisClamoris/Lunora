@@ -32,6 +32,7 @@ class AppSettings {
   final String quietHoursEnd;
 
   final bool startWithWindows;
+  final bool checkForUpdatesAutomatically;
   final bool minimizeToTray;
 
   final bool botanicalDecorations;
@@ -54,6 +55,7 @@ class AppSettings {
     this.quietHoursStart = '23:00',
     this.quietHoursEnd = '08:00',
     this.startWithWindows = false,
+    this.checkForUpdatesAutomatically = true,
     this.minimizeToTray = true,
     this.botanicalDecorations = true,
     this.animationsEnabled = true,
@@ -76,6 +78,7 @@ class AppSettings {
     String? quietHoursStart,
     String? quietHoursEnd,
     bool? startWithWindows,
+    bool? checkForUpdatesAutomatically,
     bool? minimizeToTray,
     bool? botanicalDecorations,
     bool? animationsEnabled,
@@ -97,6 +100,7 @@ class AppSettings {
       quietHoursStart: quietHoursStart ?? this.quietHoursStart,
       quietHoursEnd: quietHoursEnd ?? this.quietHoursEnd,
       startWithWindows: startWithWindows ?? this.startWithWindows,
+      checkForUpdatesAutomatically: checkForUpdatesAutomatically ?? this.checkForUpdatesAutomatically,
       minimizeToTray: minimizeToTray ?? this.minimizeToTray,
       botanicalDecorations: botanicalDecorations ?? this.botanicalDecorations,
       animationsEnabled: animationsEnabled ?? this.animationsEnabled,

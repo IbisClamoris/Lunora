@@ -5,7 +5,7 @@
 
 Lunora brings your plans, thoughts, interests, and everyday activities together in one beautiful and organized desktop application.
 
-[**⬇ Download Lunora 1.0.1 for Windows**](https://github.com/IbisClamoris/Lunora/releases/latest)
+[**⬇ Download Lunora 1.0.2 for Windows**](https://github.com/IbisClamoris/Lunora/releases/latest)
 
 ## ✨ Features
 
@@ -31,7 +31,7 @@ Choose from several interface themes and make your personal space feel like your
 ## 🖥️ Installation
 
 1. Open the [latest stable release](https://github.com/IbisClamoris/Lunora/releases/latest).
-2. Download **Lunora-Setup-1.0.1.exe** (or the installer matching the release version).
+2. Download **Lunora-Setup-1.0.2.exe** (or the installer matching the release version).
 3. Optionally download the accompanying `.sha256` file and verify the installer checksum (see [Release verification](docs/RELEASING.md#verify-a-download)).
 4. Run the installer and follow the on-screen instructions.
 
@@ -43,7 +43,7 @@ Lunora is designed as a personal desktop workspace. Application binaries are ins
 
 ## 📦 Release information
 
-- **Current version:** `1.0.1`
+- **Current version:** `1.0.2`
 - **Release channel:** Stable
 - **Supported platform:** Windows x64
 - **Downloads:** [GitHub Releases](https://github.com/IbisClamoris/Lunora/releases)
@@ -72,7 +72,7 @@ Lunora объединяет планы, мысли, интересы и повс
 
 Планируй дни, сохраняй воспоминания, следи за финансами, собирай любимые книги и фильмы, храни полезную информацию и организуй всё, что для тебя важно.
 
-[**⬇ Скачать Lunora 1.0.1 для Windows**](https://github.com/IbisClamoris/Lunora/releases/latest)
+[**⬇ Скачать Lunora 1.0.2 для Windows**](https://github.com/IbisClamoris/Lunora/releases/latest)
 
 ## ✨ Возможности
 
@@ -98,7 +98,7 @@ Lunora объединяет планы, мысли, интересы и повс
 ## 🖥️ Установка
 
 1. Открой страницу [последнего стабильного релиза](https://github.com/IbisClamoris/Lunora/releases/latest).
-2. Скачай **Lunora-Setup-1.0.1.exe** или установщик, соответствующий версии релиза.
+2. Скачай **Lunora-Setup-1.0.2.exe** или установщик, соответствующий версии релиза.
 3. При желании скачай файл `.sha256` и проверь контрольную сумму.
 4. Запусти установщик и следуй инструкциям.
 
@@ -110,7 +110,7 @@ Lunora объединяет планы, мысли, интересы и повс
 
 ## 📦 Информация о релизе
 
-- **Текущая версия:** `1.0.1`
+- **Текущая версия:** `1.0.2`
 - **Канал выпуска:** Stable
 - **Платформа:** Windows x64
 - **Загрузки:** [GitHub Releases](https://github.com/IbisClamoris/Lunora/releases)

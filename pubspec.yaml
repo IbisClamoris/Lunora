@@ -1,7 +1,7 @@
 name: lunora
 description: "Lunora - Your personal world."
 publish_to: 'none'
-version: 1.0.1+2
+version: 1.0.2+3
 
 environment:
   sdk: ^3.13.7
@@ -30,6 +30,7 @@ dependencies:
   image: ^4.5.4
   html: ^0.15.6
   flutter_svg: ^2.3.2
+  crypto: ^3.0.6
 
 dev_dependencies:
   flutter_test:

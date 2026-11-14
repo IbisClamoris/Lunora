@@ -2,6 +2,17 @@
 
 All notable user-facing changes to Lunora are recorded here.
 
+## [1.0.2] - 2026-11-14
+
+### Added
+- Added in-app Windows update checks with explicit confirmation.
+- Added SHA-256 verification and a database backup before installing an update.
+- Added a branded Lunora Windows installer and generated application/tray branding assets.
+
+### Improved
+- Preserved the existing installation directory during updates.
+- Added bilingual update settings and an automatic update-check preference.
+
 ## [1.0.1] - 2026-11-13
 
 ### Fixed

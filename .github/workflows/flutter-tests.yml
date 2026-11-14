@@ -47,6 +47,10 @@ jobs:
           }
           Write-Host "Building Lunora $version"
 
+      - name: Generate Lunora branding assets
+        shell: pwsh
+        run: .\.github\scripts\generate-branding.ps1
+
       - name: Install dependencies
         run: flutter pub get
 
@@ -54,7 +58,7 @@ jobs:
         run: flutter test
 
       - name: Build Windows release
-        run: flutter build windows --release
+        run: flutter build windows --release --dart-define=APP_VERSION=${{ steps.app-version.outputs.version }}
 
       - name: Install Inno Setup
         run: choco install innosetup --no-progress -y

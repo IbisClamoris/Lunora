@@ -10,6 +10,7 @@ import '../../core/theme/app_theme.dart';
 import '../../core/settings/settings_service.dart';
 import '../../core/platform/windows_autostart_service.dart';
 import 'backup_management_page.dart';
+import '../../core/platform/update_service.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -41,6 +42,9 @@ class _SettingsPageState extends State<SettingsPage> {
     try {
       await _service.load();
       _volumePreview = _settings.notificationVolume.toDouble();
+      if (_settings.checkForUpdatesAutomatically && Platform.isWindows) {
+        WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdates(silent: true));
+      }
     } catch (error) {
       if (mounted) {
         _showMessage('Не удалось загрузить настройки: $error');
@@ -110,6 +114,68 @@ class _SettingsPageState extends State<SettingsPage> {
       }
     } finally {
       if (mounted) setState(() => _saving = false);
+    }
+  }
+
+  Future<void> _checkForUpdates({bool silent = false}) async {
+    try {
+      final update = await UpdateService.instance.checkForUpdate();
+      if (!mounted) return;
+      if (update == null) {
+        if (!silent) {
+          _showMessage(_settings.language == AppLanguage.english
+              ? 'You are using the latest version.'
+              : 'Установлена последняя версия Lunora.');
+        }
+        return;
+      }
+
+      final english = _settings.language == AppLanguage.english;
+      final install = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(english ? 'Lunora update available' : 'Доступно обновление Lunora'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(english
+                    ? 'Version ${update.version} is ready. Your data will be backed up before installation.'
+                    : 'Доступна версия ${update.version}. Перед установкой будет создана резервная копия данных.'),
+                if (update.notes.trim().isNotEmpty) ...[
+                  const SizedBox(height: 12),
+                  Text(english ? 'Release notes' : 'Что нового',
+                      style: const TextStyle(fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 6),
+                  Text(update.notes),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text(english ? 'Later' : 'Позже'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: Text(english ? 'Install update' : 'Установить'),
+            ),
+          ],
+        ),
+      );
+      if (install != true || !mounted) return;
+      _showMessage(english
+          ? 'Downloading and verifying the update…'
+          : 'Загружаю обновление и проверяю контрольную сумму…');
+      await UpdateService.instance.downloadVerifyBackupAndInstall(update);
+    } catch (error) {
+      if (mounted) {
+        _showMessage(_settings.language == AppLanguage.english
+            ? 'Update failed: $error'
+            : 'Не удалось обновить Lunora: $error');
+      }
     }
   }
 
@@ -855,6 +921,40 @@ class _SettingsPageState extends State<SettingsPage> {
                 'Window controls and exit are available from the Lunora icon in the Windows notification area.',
               ),
               style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+
+        _section(
+          title: _settings.language == AppLanguage.english
+              ? 'Updates'
+              : 'Обновления',
+          icon: Icons.system_update_alt_rounded,
+          children: [
+            _settingRow(
+              title: _settings.language == AppLanguage.english
+                  ? 'Check for updates when opening Settings'
+                  : 'Проверять обновления при открытии настроек',
+              description: _settings.language == AppLanguage.english
+                  ? 'Updates are never installed without your confirmation.'
+                  : 'Обновления никогда не устанавливаются без подтверждения.',
+              control: _switch(
+                value: _settings.checkForUpdatesAutomatically,
+                onChanged: (value) => _update(
+                  _settings.copyWith(checkForUpdatesAutomatically: value),
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: _saving ? null : () => _checkForUpdates(),
+                icon: const Icon(Icons.refresh_rounded),
+                label: Text(_settings.language == AppLanguage.english
+                    ? 'Check now'
+                    : 'Проверить сейчас'),
+              ),
             ),
           ],
         ),
