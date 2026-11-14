@@ -20,7 +20,7 @@ function Draw-LunoraIcon([int]$size) {
   $g.FillPath($bg,$path)
   $scale = $size/256.0
   $moonBrush = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,244,224,190))
-  $g.FillEllipse($moonBrush, [single](55*$scale),[single](42*$scale),[single](150*$scale),[single](170*$scale))
+  $g.FillEllipse($moonBrush,[single](55*$scale),[single](42*$scale),[single](150*$scale),[single](170*$scale))
   $cut = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,26,29,54))
   $g.FillEllipse($cut,[single](99*$scale),[single](25*$scale),[single](142*$scale),[single](165*$scale))
   $star = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,255,239,190))
@@ -30,6 +30,30 @@ function Draw-LunoraIcon([int]$size) {
   $g.Dispose(); $bg.Dispose(); $path.Dispose(); $moonBrush.Dispose(); $cut.Dispose(); $star.Dispose()
   return $bmp
 }
+
+function Draw-LunoraWizardArt([int]$width,[int]$height) {
+  $bmp = New-Object System.Drawing.Bitmap($width,$height,[System.Drawing.Imaging.PixelFormat]::Format24bppRgb)
+  $g = [System.Drawing.Graphics]::FromImage($bmp)
+  $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+  $rect = New-Object System.Drawing.Rectangle(0,0,$width,$height)
+  $bg = New-Object System.Drawing.Drawing2D.LinearGradientBrush($rect,[System.Drawing.Color]::FromArgb(255,35,27,64),[System.Drawing.Color]::FromArgb(255,12,19,43),35)
+  $g.FillRectangle($bg,$rect)
+  $rand = New-Object System.Random(17)
+  for($i=0;$i -lt 34;$i++){
+    $x=$rand.Next(8,$width-8); $y=$rand.Next(8,$height-8); $r=if($i%7 -eq 0){2.4}else{1.1}
+    $alpha=if($i%3 -eq 0){190}else{95}
+    $b=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb($alpha,244,224,190))
+    $g.FillEllipse($b,[single]($x-$r),[single]($y-$r),[single]($r*2),[single]($r*2)); $b.Dispose()
+  }
+  $cx=$width/2.0; $cy=$height*.39; $s=[Math]::Min($width,$height)*.53
+  $moon=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,244,224,190))
+  $g.FillEllipse($moon,[single]($cx-$s*.42),[single]($cy-$s*.48),[single]($s*.84),[single]($s*.96))
+  $cut=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,24,24,52))
+  $g.FillEllipse($cut,[single]($cx-$s*.03),[single]($cy-$s*.60),[single]($s*.78),[single]($s*.90))
+  $moon.Dispose(); $cut.Dispose(); $bg.Dispose(); $g.Dispose()
+  return $bmp
+}
+
 $large = Draw-LunoraIcon 256
 $pngStream = New-Object System.IO.MemoryStream
 $large.Save($pngStream,[System.Drawing.Imaging.ImageFormat]::Png)
@@ -42,8 +66,12 @@ $writer.Write([UInt16]1); $writer.Write([UInt16]32)
 $writer.Write([UInt32]$pngBytes.Length); $writer.Write([UInt32]22)
 $writer.Write($pngBytes)
 $writer.Dispose(); $iconStream.Dispose(); $pngStream.Dispose()
-$large.Save((Join-Path $brandingDir 'wizard_image.bmp'),[System.Drawing.Imaging.ImageFormat]::Bmp)
+$large.Save((Join-Path $brandingDir 'wizard_small.bmp'),[System.Drawing.Imaging.ImageFormat]::Bmp)
 $large.Dispose()
+
+$wizard = Draw-LunoraWizardArt 164 314
+$wizard.Save((Join-Path $brandingDir 'wizard_image.bmp'),[System.Drawing.Imaging.ImageFormat]::Bmp)
+$wizard.Dispose()
 $small = Draw-LunoraIcon 64
 $small.Save((Join-Path $brandingDir 'tray_icon.png'),[System.Drawing.Imaging.ImageFormat]::Png)
 $small.Dispose()
