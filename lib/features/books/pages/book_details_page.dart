@@ -38,7 +38,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось обновить книгу: $e');
+        _showMessage(LunoraLocalization.text('Не удалось обновить книгу: $e', 'Could not update book: $e'));
       }
     } finally {
       if (mounted) {
@@ -65,7 +65,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
           title: Text(LunoraLocalization.text('Удалить книгу?')),
           content: Text(
             LunoraLocalization.text(
-              'Книга «${_book.title}» будет удалена из библиотеки.',
+              LunoraLocalization.text('Книга «${_book.title}» будет удалена из библиотеки.', 'Book “${_book.title}” will be removed from the library.'),
             ),
           ),
           actions: [
@@ -95,7 +95,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
       Navigator.of(context).pop(true);
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось удалить книгу: $e');
+        _showMessage(LunoraLocalization.text('Не удалось удалить книгу: $e', 'Could not delete book: $e'));
       }
     }
   }
@@ -159,7 +159,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось обновить прогресс: $e');
+        _showMessage(LunoraLocalization.text('Не удалось обновить прогресс: $e', 'Could not update progress: $e'));
       }
     }
   }
@@ -173,7 +173,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось изменить избранное: $e');
+        _showMessage(LunoraLocalization.text('Не удалось изменить избранное: $e', 'Could not update favourites: $e'));
       }
     }
   }
@@ -187,13 +187,13 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
   String _statusLabel(String status) {
     switch (status) {
       case 'reading':
-        return 'Читаю';
+        return LunoraLocalization.text('Читаю', 'Reading');
       case 'completed':
-        return 'Прочитано';
+        return LunoraLocalization.text('Прочитано', 'Read');
       case 'planned':
-        return 'В планах';
+        return LunoraLocalization.text('В планах', 'Planned');
       default:
-        return 'Неизвестно';
+        return LunoraLocalization.text('Неизвестно', 'Unknown');
     }
   }
 
@@ -287,7 +287,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
 
                     if (_book.review.isNotEmpty) ...[
                       _sectionTitle(
-                        'Мои впечатления',
+                        LunoraLocalization.text('Мои впечатления', 'My thoughts'),
                         Icons.rate_review_outlined,
                       ),
                       const SizedBox(height: 12),
@@ -494,8 +494,8 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
               Expanded(
                 child: Text(
                   _book.pageCount != null
-                      ? '${_book.currentPage} из ${_book.pageCount} страниц'
-                      : '${_book.currentPage} страниц прочитано',
+                      ? LunoraLocalization.text('${_book.currentPage} из ${_book.pageCount} страниц', '${_book.currentPage} of ${_book.pageCount} pages')
+                      : LunoraLocalization.text('${_book.currentPage} страниц прочитано', '${_book.currentPage} pages read'),
                   style: TextStyle(
                     color: colors.onSurfaceVariant,
                     fontSize: 12,
@@ -518,34 +518,34 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
     final items = <(String, String, IconData)>[
       if (_book.seriesName.trim().isNotEmpty)
         (
-          'Серия',
+          LunoraLocalization.text('Серия', 'Series'),
           _book.seriesNumber == null
               ? _book.seriesName
               : '${_book.seriesName} · № ${_book.seriesNumber}',
           Icons.auto_stories_outlined,
         ),
       (
-        'Жанр',
-        _book.genre.isEmpty ? 'Не указан' : _book.genre,
+        LunoraLocalization.text('Жанр', 'Genre'),
+        _book.genre.isEmpty ? LunoraLocalization.text('Не указан', 'Not specified') : _book.genre,
         Icons.category_outlined,
       ),
       (
-        'Начало чтения',
+        LunoraLocalization.text('Начало чтения', 'Started reading'),
         _formatDate(_book.startedAt),
         Icons.calendar_today_outlined,
       ),
       (
-        'Завершение чтения',
+        LunoraLocalization.text('Завершение чтения', 'Finished reading'),
         _formatDate(_book.finishedAt),
         Icons.event_available_outlined,
       ),
       (
-        'Всего страниц',
-        _book.pageCount?.toString() ?? 'Не указано',
+        LunoraLocalization.text('Всего страниц', 'Total pages'),
+        _book.pageCount?.toString() ?? LunoraLocalization.text('Не указано', 'Not specified'),
         Icons.menu_book_outlined,
       ),
       (
-        'Прочитано страниц',
+        LunoraLocalization.text('Прочитано страниц', 'Pages read'),
         _book.currentPage.toString(),
         Icons.bookmark_outline_rounded,
       ),

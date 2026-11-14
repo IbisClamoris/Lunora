@@ -91,14 +91,14 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
       final path = result.first.path;
 
       if (path == null || path.isEmpty) {
-        _showMessage('Не удалось получить путь к файлу.');
+        _showMessage(LunoraLocalization.text('Не удалось получить путь к файлу.', 'Could not get the file path.'));
         return;
       }
 
       await _loadExcelFile(File(path));
     } catch (error) {
       if (!mounted) return;
-      _showMessage('Ошибка выбора файла: $error');
+      _showMessage(LunoraLocalization.text('Ошибка выбора файла: $error', 'File selection error: $error'));
     }
   }
 
@@ -163,24 +163,24 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
     final errors = <String>[];
 
     if (sheet.rows.isEmpty) {
-      errors.add('Лист не содержит данных.');
+      errors.add(LunoraLocalization.text('Лист не содержит данных.', 'The sheet contains no data.'));
       return errors;
     }
 
     if (sheet.rows.length < 2) {
-      errors.add('В листе отсутствуют строки с данными.');
+      errors.add(LunoraLocalization.text('В листе отсутствуют строки с данными.', 'The sheet has no data rows.'));
     }
 
     final headers = sheet.headers;
 
     if (headers.isEmpty) {
-      errors.add('Не удалось определить заголовки колонок.');
+      errors.add(LunoraLocalization.text('Не удалось определить заголовки колонок.', 'Could not detect column headers.'));
       return errors;
     }
 
     for (var index = 0; index < headers.length; index++) {
       if (headers[index].trim().isEmpty) {
-        errors.add('Не заполнен заголовок колонки ${index + 1}.');
+        errors.add(LunoraLocalization.text('Не заполнен заголовок колонки ${index + 1}.', 'Column ${index + 1} has no header.'));
       }
     }
 
@@ -192,7 +192,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
       if (normalized.isEmpty) continue;
 
       if (!normalizedHeaders.add(normalized)) {
-        errors.add('Обнаружен повторяющийся заголовок "$header".');
+        errors.add(LunoraLocalization.text('Обнаружен повторяющийся заголовок "$header".', 'Duplicate header detected: "$header".'));
       }
     }
 
@@ -327,7 +327,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
             size: 34,
           ),
           title: Text(
-            result.success ? 'Импорт завершён' : 'Импорт не выполнен',
+            result.success ? LunoraLocalization.text('Импорт завершён', 'Import complete') : LunoraLocalization.text('Импорт не выполнен', 'Import failed'),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
@@ -337,7 +337,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
               const SizedBox(height: 12),
               Text(
                 LunoraLocalization.text(
-                  'Импортировано записей: ${result.importedCount}',
+                  LunoraLocalization.text('Импортировано записей: ${result.importedCount}', 'Entries imported: ${result.importedCount}'),
                 ),
               ),
               if (result.errors.isNotEmpty) ...[
@@ -477,8 +477,8 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
               spacing: 24,
               runSpacing: 12,
               children: [
-                _infoItem('Листов', document.sheetCount.toString()),
-                _infoItem('Всего строк', document.totalRowCount.toString()),
+                _infoItem(LunoraLocalization.text('Листов', 'Sheets'), document.sheetCount.toString()),
+                _infoItem(LunoraLocalization.text('Всего строк', 'Total rows'), document.totalRowCount.toString()),
               ],
             ),
           ],
@@ -569,7 +569,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
                   Expanded(
                     child: Text(
                       LunoraLocalization.text(
-                        'Ошибок в заголовках не найдено.',
+                        LunoraLocalization.text('Ошибок в заголовках не найдено.', 'No header errors found.'),
                       ),
                     ),
                   ),
@@ -593,11 +593,11 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
                 ),
               ),
             const Divider(height: 24),
-            _validationInfo('Строк с данными', dataRows),
+            _validationInfo(LunoraLocalization.text('Строк с данными', 'Rows with data'), dataRows),
             const SizedBox(height: 8),
-            _validationInfo('Пустых строк, будет пропущено', emptyRows),
+            _validationInfo(LunoraLocalization.text('Пустых строк, будет пропущено', 'Empty rows to be skipped'), emptyRows),
             const SizedBox(height: 8),
-            _validationInfo('Повторяющихся строк', duplicateRows),
+            _validationInfo(LunoraLocalization.text('Повторяющихся строк', 'Duplicate rows'), duplicateRows),
           ],
         ),
       ),
@@ -628,8 +628,8 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
         icon: Icons.info_outline,
         title: LunoraLocalization.text('Сопоставление пока недоступно'),
         description:
-            'Для этого раздела ещё не настроены поля данных. '
-            'Сейчас можно проверить структуру файла и просмотреть его содержимое.',
+            LunoraLocalization.text('Для этого раздела ещё не настроены поля данных. ', 'Data fields have not yet been configured for this section. ') +
+            LunoraLocalization.text('Сейчас можно проверить структуру файла и просмотреть его содержимое.', 'For now, you can validate the file structure and preview its contents.'),
       );
     }
 
@@ -646,7 +646,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
             const SizedBox(height: 6),
             Text(
               LunoraLocalization.text(
-                'Укажи, каким полям Lunora соответствуют колонки файла.',
+                LunoraLocalization.text('Укажи, каким полям Lunora соответствуют колонки файла.', 'Map the file columns to the corresponding Lunora fields.'),
               ),
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -669,7 +669,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      header.isEmpty ? 'Колонка ${index + 1}' : header,
+                      header.isEmpty ? LunoraLocalization.text('Колонка ${index + 1}', 'Column ${index + 1}') : header,
                       style: const TextStyle(fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 6),
@@ -704,7 +704,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
               const SizedBox(height: 4),
               Text(
                 LunoraLocalization.text(
-                  'Обязательные поля: ${widget.requiredFields.join(', ')}',
+                  LunoraLocalization.text('Обязательные поля: ${widget.requiredFields.join(', ')}', 'Required fields: ${widget.requiredFields.join(', ')}'),
                 ),
                 style: TextStyle(
                   fontSize: 12,
@@ -785,7 +785,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
             const SizedBox(height: 6),
             Text(
               LunoraLocalization.text(
-                'Показаны первые ${dataRows.length} строк данных.',
+                LunoraLocalization.text('Показаны первые ${dataRows.length} строк данных.', 'Showing the first ${dataRows.length} data rows.'),
               ),
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -800,7 +800,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
 
                   return DataColumn(
                     label: Text(
-                      header.isEmpty ? 'Колонка ${index + 1}' : header,
+                      header.isEmpty ? LunoraLocalization.text('Колонка ${index + 1}', 'Column ${index + 1}') : header,
                     ),
                   );
                 }),
@@ -820,7 +820,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
                 padding: const EdgeInsets.only(top: 12),
                 child: Text(
                   LunoraLocalization.text(
-                    'Остальные строки не показаны в предпросмотре.',
+                    LunoraLocalization.text('Остальные строки не показаны в предпросмотре.', 'The remaining rows are not shown in the preview.'),
                   ),
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -842,8 +842,8 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
         icon: Icons.lock_outline,
         title: LunoraLocalization.text('Запись пока не подключена'),
         description:
-            'Сначала нужно создать модель данных и безопасный обработчик '
-            'импорта для этого раздела. Просмотр файла не изменяет базу данных.',
+            LunoraLocalization.text('Сначала нужно создать модель данных и безопасный обработчик ', 'A data model and a safe import handler must be created first ') +
+            LunoraLocalization.text('импорта для этого раздела. Просмотр файла не изменяет базу данных.', 'for this section. Previewing the file does not change the database.'),
       );
     }
 
@@ -865,7 +865,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
             const SizedBox(height: 8),
             Text(
               LunoraLocalization.text(
-                'Строк для передачи: ${_countDataRows(sheet)}',
+                LunoraLocalization.text('Строк для передачи: ${_countDataRows(sheet)}', 'Rows to import: ${_countDataRows(sheet)}'),
               ),
             ),
             if (missingFields.isNotEmpty) ...[
@@ -888,7 +888,7 @@ class _ImportPreviewPageState extends State<ImportPreviewPage> {
                       )
                     : const Icon(Icons.file_download_done_outlined),
                 label: Text(
-                  _isImporting ? 'Выполняется импорт...' : 'Импортировать',
+                  _isImporting ? LunoraLocalization.text('Выполняется импорт...', 'Importing...') : LunoraLocalization.text('Импортировать', 'Import'),
                 ),
               ),
             ),

@@ -91,20 +91,11 @@ class _FinanceBudgetsPageState extends State<FinanceBudgetsPage> {
   }
 
   String _monthName(DateTime date) {
-    const months = [
-      'Январь',
-      'Февраль',
-      'Март',
-      'Апрель',
-      'Май',
-      'Июнь',
-      'Июль',
-      'Август',
-      'Сентябрь',
-      'Октябрь',
-      'Ноябрь',
-      'Декабрь',
-    ];
+    final months = LunoraLocalization.isEnglish
+        ? const ['January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December']
+        : const ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+            'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 
     return '${months[date.month - 1]} ${date.year}';
   }
@@ -490,18 +481,17 @@ class _FinanceBudgetsPageState extends State<FinanceBudgetsPage> {
     final lastTwo = count % 100;
 
     if (lastTwo >= 11 && lastTwo <= 14) {
-      return 'категориях';
+      return LunoraLocalization.isEnglish ? 'categories' : 'категориях';
     }
 
     switch (count % 10) {
       case 1:
-        return 'категории';
+        return LunoraLocalization.isEnglish ? 'category' : 'категории';
       case 2:
       case 3:
       case 4:
-        return 'категориях';
       default:
-        return 'категориях';
+        return LunoraLocalization.isEnglish ? 'categories' : 'категориях';
     }
   }
 

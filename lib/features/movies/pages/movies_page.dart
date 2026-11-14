@@ -261,7 +261,7 @@ class _MoviesPageState extends State<MoviesPage> {
     return LunoraSectionHeader(
       title: LunoraLocalization.text('Мир кино'),
       subtitle: LunoraLocalization.text(
-        'Фильмы, сериалы и истории, к которым хочется возвращаться.',
+        LunoraLocalization.text('Фильмы, сериалы и истории, к которым хочется возвращаться.', 'Movies, series, and stories worth returning to.'),
       ),
       icon: Icons.movie_filter_rounded,
       actions: [
@@ -484,7 +484,7 @@ class _MoviesPageState extends State<MoviesPage> {
                         borderRadius: BorderRadius.circular(7),
                       ),
                       child: Text(
-                        movie.isSeries ? 'СЕРИАЛ' : 'ФИЛЬМ',
+                        movie.isSeries ? LunoraLocalization.text('СЕРИАЛ', 'TV SERIES') : LunoraLocalization.text('ФИЛЬМ', 'MOVIE'),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 9,
@@ -697,17 +697,17 @@ class _MoviesPageState extends State<MoviesPage> {
   String _statusLabel(String status) {
     switch (status) {
       case 'watching':
-        return 'Смотрю';
+        return LunoraLocalization.text('Смотрю', 'Watching');
       case 'completed':
-        return 'Просмотрено';
+        return LunoraLocalization.text('Просмотрено', 'Watched');
       case 'planned':
-        return 'В планах';
+        return LunoraLocalization.text('В планах', 'Planned');
       case 'on_hold':
-        return 'Отложено';
+        return LunoraLocalization.text('Отложено', 'On hold');
       case 'dropped':
-        return 'Брошено';
+        return LunoraLocalization.text('Брошено', 'Dropped');
       default:
-        return 'Неизвестно';
+        return LunoraLocalization.text('Неизвестно', 'Unknown');
     }
   }
 
@@ -730,8 +730,8 @@ class _MoviesPageState extends State<MoviesPage> {
             const SizedBox(height: 18),
             Text(
               libraryIsEmpty
-                  ? 'Твоя коллекция пока пуста'
-                  : 'Ничего не найдено',
+                  ? LunoraLocalization.text('Твоя коллекция пока пуста')
+                   : LunoraLocalization.text('Ничего не найдено'),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.titleLarge
                   ?.copyWith(fontWeight: FontWeight.w600),
@@ -739,8 +739,8 @@ class _MoviesPageState extends State<MoviesPage> {
             const SizedBox(height: 8),
             Text(
               libraryIsEmpty
-                  ? 'Добавь первый фильм или сериал, чтобы начать собирать свою коллекцию.'
-                  : 'Попробуй изменить поисковый запрос или выбранный фильтр.',
+                  ? LunoraLocalization.text('Добавь первый фильм или сериал, чтобы начать собирать свою коллекцию.')
+                  : LunoraLocalization.text('Попробуй изменить поисковый запрос или выбранный фильтр.'),
               textAlign: TextAlign.center,
               style: TextStyle(color: colors.onSurfaceVariant, height: 1.5),
             ),

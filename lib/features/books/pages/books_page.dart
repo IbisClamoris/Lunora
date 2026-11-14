@@ -163,13 +163,13 @@ class _BooksPageState extends State<BooksPage> {
   String _statusLabel(String status) {
     switch (status) {
       case 'reading':
-        return 'Читаю';
+        return LunoraLocalization.text('Читаю', 'Reading');
       case 'completed':
-        return 'Прочитано';
+        return LunoraLocalization.text('Прочитано', 'Read');
       case 'planned':
-        return 'В планах';
+        return LunoraLocalization.text('В планах', 'Planned');
       default:
-        return 'Неизвестно';
+        return LunoraLocalization.text('Неизвестно', 'Unknown');
     }
   }
 
@@ -262,7 +262,7 @@ class _BooksPageState extends State<BooksPage> {
     return LunoraSectionHeader(
       title: LunoraLocalization.text('Книжный мир'),
       subtitle: LunoraLocalization.text(
-        'Твоя личная библиотека и история чтения',
+        LunoraLocalization.text('Твоя личная библиотека и история чтения', 'Your personal library and reading history'),
       ),
       icon: Icons.auto_stories_rounded,
       actions: [
@@ -307,25 +307,25 @@ class _BooksPageState extends State<BooksPage> {
 
         final items = [
           _StatisticData(
-            'Всего книг',
+            LunoraLocalization.text('Всего книг', 'Total books'),
             total,
             Icons.menu_book_rounded,
             palette.accent,
           ),
           _StatisticData(
-            'Читаю сейчас',
+            LunoraLocalization.text('Читаю сейчас', 'Currently reading'),
             reading,
             Icons.auto_stories_rounded,
             const Color(0xFF8A9F85),
           ),
           _StatisticData(
-            'Прочитано',
+            LunoraLocalization.text('Прочитано', 'Read'),
             completed,
             Icons.check_circle_outline_rounded,
             const Color(0xFFB39BC8),
           ),
           _StatisticData(
-            'В планах',
+            LunoraLocalization.text('В планах', 'Planned'),
             planned,
             Icons.bookmark_border_rounded,
             const Color(0xFFC69B9B),
@@ -469,8 +469,8 @@ class _BooksPageState extends State<BooksPage> {
                     const SizedBox(height: 6),
                     Text(
                       book.pageCount != null
-                          ? '${book.currentPage} из ${book.pageCount} страниц'
-                          : '${book.currentPage} страниц',
+                          ? LunoraLocalization.text('${book.currentPage} из ${book.pageCount} страниц', '${book.currentPage} of ${book.pageCount} pages')
+                          : LunoraLocalization.text('${book.currentPage} страниц', '${book.currentPage} pages'),
                       style: TextStyle(color: palette.secondary, fontSize: 11),
                     ),
                   ],
@@ -495,7 +495,7 @@ class _BooksPageState extends State<BooksPage> {
   Widget _buildLibraryHeader(LunoraPalette palette) {
     return _sectionTitle(
       palette,
-      'Моя библиотека',
+      LunoraLocalization.text('Моя библиотека', 'My library'),
       Icons.library_books_rounded,
     );
   }
@@ -654,8 +654,8 @@ class _BooksPageState extends State<BooksPage> {
                         IconButton(
                           visualDensity: VisualDensity.compact,
                           tooltip: book.isFavorite
-                              ? 'Убрать из избранного'
-                              : 'В избранное',
+                              ? LunoraLocalization.text('Убрать из избранного', 'Remove from favourites')
+                              : LunoraLocalization.text('В избранное', 'Add to favourites'),
                           onPressed: () async {
                             await _repository.toggleFavorite(book.id);
                             if (mounted) {
@@ -828,14 +828,14 @@ class _BooksPageState extends State<BooksPage> {
     String description;
 
     if (isSearching) {
-      title = 'Ничего не найдено';
-      description = 'Попробуй изменить поисковый запрос';
+      title = LunoraLocalization.text('Ничего не найдено');
+      description = LunoraLocalization.text('Попробуй изменить поисковый запрос');
     } else if (isFiltered) {
-      title = 'Здесь пока пусто';
-      description = 'В этой категории пока нет книг';
+      title = LunoraLocalization.text('Здесь пока пусто');
+      description = LunoraLocalization.text('В этой категории пока нет книг');
     } else {
-      title = 'Твоя библиотека пока пуста';
-      description = 'Здесь будут храниться книги, которые ты читаешь';
+      title = LunoraLocalization.text('Твоя библиотека пока пуста');
+      description = LunoraLocalization.text('Здесь будут храниться книги, которые ты читаешь');
     }
 
     return Container(

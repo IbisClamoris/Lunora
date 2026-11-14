@@ -163,7 +163,7 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
           imagePath: imagePath,
           clearImagePath: imagePath == null,
           category: _categoryController.text.trim().isEmpty
-              ? 'Без категории'
+              ? LunoraLocalization.text('Без категории', 'Uncategorized')
               : _categoryController.text.trim(),
           tags: tags,
           price: price,
@@ -185,7 +185,7 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
           description: _descriptionController.text.trim(),
           imagePath: imagePath,
           category: _categoryController.text.trim().isEmpty
-              ? 'Без категории'
+              ? LunoraLocalization.text('Без категории', 'Uncategorized')
               : _categoryController.text.trim(),
           tags: tags,
           price: price,
@@ -250,12 +250,12 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
               decoration: InputDecoration(
                 labelText: LunoraLocalization.text('Название *'),
                 hintText: LunoraLocalization.text(
-                  'Что хочется добавить в свою жизнь?',
+                  LunoraLocalization.text('Что хочется добавить в свою жизнь?', 'What would you like to add to your life?'),
                 ),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Введите название';
+                  return LunoraLocalization.text('Введите название', 'Enter a name');
                 }
                 return null;
               },
@@ -275,7 +275,7 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
               decoration: InputDecoration(
                 labelText: LunoraLocalization.text('Категория'),
                 hintText: LunoraLocalization.text(
-                  'Например, Техника, Книги, Дом',
+                  LunoraLocalization.text('Например, Техника, Книги, Дом', 'For example, Tech, Books, Home'),
                 ),
               ),
             ),
@@ -309,7 +309,7 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
                       final parsed = double.tryParse(text.replaceAll(',', '.'));
 
                       if (parsed == null || parsed < 0) {
-                        return 'Некорректная цена';
+                        return LunoraLocalization.text('Некорректная цена', 'Invalid price');
                       }
 
                       return null;
@@ -363,8 +363,8 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
               icon: const Icon(Icons.calendar_month_outlined),
               label: Text(
                 _desiredDate == null
-                    ? 'Желаемая дата'
-                    : 'Желаемая дата: ${_formatDate(_desiredDate!)}',
+                    ? LunoraLocalization.text('Желаемая дата', 'Desired date')
+                    : LunoraLocalization.text('Желаемая дата: ${_formatDate(_desiredDate!)}', 'Desired date: ${_formatDate(_desiredDate!)}'),
               ),
             ),
             if (_desiredDate != null)
@@ -385,7 +385,7 @@ class _WishlistEditorPageState extends State<WishlistEditorPage> {
               keyboardType: TextInputType.url,
               decoration: InputDecoration(
                 labelText: LunoraLocalization.text(
-                  'Ссылка на товар или источник',
+                  LunoraLocalization.text('Ссылка на товар или источник', 'Product or source link'),
                 ),
                 hintText: 'https://...',
               ),

@@ -131,7 +131,7 @@ class _BackupManagementPageState extends State<BackupManagementPage> {
         content: Text(
           LunoraLocalization.isEnglish
               ? 'The file "${backup.fileName}ill be permanently deleted.'
-              : 'Файл "${backup.fileName}" будет удалён без возможности восстановления.',
+              : LunoraLocalization.text('Файл "${backup.fileName}" будет удалён без возможности восстановления.', 'File "${backup.fileName}" will be permanently deleted.'),
         ),
         actions: [
           TextButton(
@@ -284,7 +284,7 @@ class _BackupManagementPageState extends State<BackupManagementPage> {
               const SizedBox(height: 6),
               Text(
                 LunoraLocalization.text(
-                  'Создай первую копию, чтобы защитить свои данные.',
+                  LunoraLocalization.text('Создай первую копию, чтобы защитить свои данные.', 'Create your first backup to protect your data.'),
                 ),
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodySmall,

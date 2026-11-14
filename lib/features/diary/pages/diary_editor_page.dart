@@ -480,7 +480,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                _isEditing ? 'МОИ ВОСПОМИНАНИЯ' : 'МОЙ ДНЕВНИК',
+                                _isEditing ? LunoraLocalization.text('МОИ ВОСПОМИНАНИЯ', 'MY MEMORIES') : LunoraLocalization.text('МОЙ ДНЕВНИК', 'MY DIARY'),
                                 style: TextStyle(
                                   color: palette.accent,
                                   fontSize: 10,
@@ -491,8 +491,8 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                               const SizedBox(height: 4),
                               Text(
                                 _isEditing
-                                    ? 'Редактирование записи'
-                                    : 'Новая запись',
+                                    ? LunoraLocalization.text('Редактирование записи', 'Edit entry')
+                                    : LunoraLocalization.text('Новая запись', 'New entry'),
                                 style: Theme.of(context).textTheme.titleLarge
                                     ?.copyWith(
                                       fontWeight: FontWeight.w700,
@@ -564,7 +564,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                         ),
                         ...moods.map(
                           (mood) =>
-                              DropdownMenuItem(value: mood, child: Text(mood)),
+                              DropdownMenuItem(value: mood, child: Text(LunoraLocalization.text(mood))),
                         ),
                       ],
                       onChanged: (value) {
@@ -586,7 +586,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                           .map(
                             (category) => DropdownMenuItem(
                               value: category,
-                              child: Text(category),
+                              child: Text(LunoraLocalization.text(category)),
                             ),
                           )
                           .toList(),
@@ -627,9 +627,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                             controller: _tagController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              hintText: LunoraLocalization.text(
-                                'Например: лето, семья, поездка',
-                              ),
+                              hintText: LunoraLocalization.text('Например: лето, семья, поездка', 'For example: summer, family, trip'),
                             ),
                             onSubmitted: (_) => _addTag(),
                           ),
@@ -663,7 +661,7 @@ class _DiaryEditorPageState extends State<DiaryEditorPage> {
                       controller: _titleController,
                       decoration: InputDecoration(
                         hintText: LunoraLocalization.text(
-                          'О чём сегодняшний день?',
+                          LunoraLocalization.text('О чём сегодняшний день?', 'What was today about?'),
                         ),
                         border: OutlineInputBorder(),
                       ),

@@ -12,12 +12,31 @@ abstract final class LunoraLocalization {
       return _englishToRussian[russian] ?? russian;
     }
     if (english != null) return english;
-    final photoCount = RegExp(r'^(\d+) фотографий$').firstMatch(russian);
-    if (photoCount != null) {
-      return '${photoCount.group(1)} photos';
+
+    final shoppingCount =
+        RegExp(r'^(\d+) пунктов ожидают покупки$').firstMatch(russian);
+    if (shoppingCount != null) {
+      final count = int.parse(shoppingCount.group(1)!);
+      return '$count ${count == 1 ? 'item' : 'items'} waiting to be purchased';
     }
+
+    final obligationCount =
+        RegExp(r'^(\d+) активных обязательств$').firstMatch(russian);
+    if (obligationCount != null) {
+      final count = int.parse(obligationCount.group(1)!);
+      return '$count active ${count == 1 ? 'obligation' : 'obligations'}';
+    }
+
+    final photoCount =
+        RegExp(r'^(\d+) фотограф(?:ия|ии|ий)$').firstMatch(russian);
+    if (photoCount != null) {
+      final count = int.parse(photoCount.group(1)!);
+      return '$count ${count == 1 ? 'photo' : 'photos'}';
+    }
+
     final exact = _catalog[russian] ?? _catalog[russian.trim()];
     if (exact != null) return exact;
+
     if (russian.startsWith('Задача «') &&
         russian.endsWith('» наступит через 15 минут.')) {
       final name = russian.substring('Задача «'.length, russian.indexOf('»'));
@@ -75,6 +94,7 @@ abstract final class LunoraLocalization {
       final name = russian.substring(1, russian.indexOf('»'));
       return '“$name” will be deleted.';
     }
+
     for (final entry in _prefixes.entries) {
       if (russian.startsWith(entry.key)) {
         return '${entry.value}${russian.substring(entry.key.length)}';
@@ -185,7 +205,7 @@ abstract final class LunoraLocalization {
     'Доставлено: ': 'Delivered: ',
     'Время события: ': 'Event time: ',
   };
-  static const Map<String, String> _catalog = {
+  static final Map<String, String> _catalog = {
     'Главная': 'Home',
     'Календарь': 'Calendar',
     'Уведомления': 'Notifications',
@@ -423,7 +443,6 @@ abstract final class LunoraLocalization {
     'Снять выбор': 'Clear selection',
     'Итог экспорта': 'Export summary',
     'Дополнительная информация': 'Additional information',
-    'Громкость: ': 'Volume: ',
     'Управление резервными копиями базы данных Lunora.': 'Manage Lunora database backups.',
     'Системные функции будут подключены отдельно. Сейчас эти параметры сохраняются в настройках.': 'System features will be connected separately. These options are currently saved in settings.',
     'Внешний вид': 'Appearance',
@@ -457,9 +476,6 @@ abstract final class LunoraLocalization {
     'Сохранить изменения': 'Save changes',
     'Не удалось загрузить список': 'Could not load the list',
     'Не удалось загрузить данные': 'Could not load data',
-    'Не удалось сохранить': 'Could not save',
-    'Не удалось удалить': 'Could not delete',
-    'Не удалось импортировать': 'Could not import',
     'Ошибка импорта': 'Import error',
     'Ошибка': 'Error',
     'Успешно': 'Successful',
@@ -664,7 +680,6 @@ abstract final class LunoraLocalization {
     'Все уведомления будут удалены без возможности восстановления.': 'All notifications will be permanently deleted.',
     'Непрочитанные': 'Unread',
     'Обновить список': 'Refresh list',
-    'Не удалось выполнить импорт.': 'Could not complete the import.',
     'Лист Excel': 'Excel sheet',
     'Сопоставление пока недоступно': 'Mapping is not available yet',
     'Запись пока не подключена': 'This record type is not connected yet',
@@ -1159,7 +1174,6 @@ abstract final class LunoraLocalization {
     'У погашенной задолженности остаток должен быть равен нулю.': 'A paid-off debt must have a zero balance.',
     'При нулевом остатке задолженность должна иметь статус «Погашен».': 'A debt with a zero balance must have the status “Paid off”.',
     'Сначала создай активный счёт.': 'Create an active account first.',
-    'Остаток долга: ': 'Remaining debt: ',
     'Удалить платёж?': 'Delete payment?',
     'Остаток задолженности будет восстановлен.': 'The outstanding balance will be restored.',
     'Платёж удалён.': 'Payment deleted.',
@@ -1208,5 +1222,85 @@ abstract final class LunoraLocalization {
     'Твои записи будут храниться здесь.': 'Your entries will be kept here.',
     'Создай первую заметку': 'Create your first note',
 
+    'пунктов ожидают покупки': 'items waiting to be purchased',
+    'активных обязательств': 'active obligations',
+    'Попробуй изменить поисковый запрос.': 'Try changing your search query.',
+    'категории': 'category',
+    'категориях': 'categories',
+    'МОЙ ДНЕВНИК': 'MY DIARY',
+    'МОИ ВОСПОМИНАНИЯ': 'MY MEMORIES',
+    'Например, Основные формулы физики': 'For example, Basic physics formulas',
+    'Твоя коллекция пока пуста': 'Your collection is empty for now',
+    'Добавь первый фильм или сериал, чтобы начать собирать свою коллекцию.': 'Add your first movie or series to start building your collection.',
+    'Попробуй изменить поисковый запрос или выбранный фильтр.': 'Try changing your search query or selected filter.',
+    'Попробуй изменить поисковый запрос или фильтры.': 'Try changing your search query or filters.',
+    'Редактировать учебный период': 'Edit study period',
+    'Новый учебный период': 'New study period',
+    'Название периода *': 'Period name *',
+    'Например, зимняя сессия': 'For example, winter semester',
+    'Даты можно оставить пустыми и заполнить позже.': 'Dates can be left blank and filled in later.',
+    'Дата окончания не может быть раньше даты начала.': 'The end date cannot be earlier than the start date.',
+    'Сначала добавь хотя бы один учебный предмет.': 'Add at least one subject first.',
+    'Сначала выбери дату занятия.': 'Choose a class date first.',
+    'Редактировать событие': 'Edit event',
+    'Новое учебное событие': 'New study event',
+    'Не указано': 'Not specified',
+    'Не указан': 'Not specified',
+    'Связанные с ним учебные события могут потерять связь с предметом.': 'Study events linked to this subject may become unlinked.',
+    'Проверь связанные с ним учебные события перед удалением.': 'Check the study events linked to this period before deleting it.',
+    'Это действие нельзя отменить.': 'This action cannot be undone.',
+    'Семестр': 'Semester',
+    'Экзаменационная сессия': 'Exam session',
+    'Практика': 'Internship',
+    'Другое': 'Other',
+    'Лекция': 'Lecture',
+    'Онлайн-лекция': 'Online lecture',
+    'Тест': 'Test',
+    'Письменная работа': 'Written assignment',
+    'Экзамен': 'Exam',
+    'Зачёт': 'Credit',
+    'Курсовая работа': 'Coursework',
+    'Дипломная работа': 'Thesis',
+    'Очно': 'In person',
+    'Онлайн': 'Online',
+    'Запланировано': 'Scheduled',
+    'В процессе': 'In progress',
+    'Выполнено': 'Completed',
+    'Отменено': 'Cancelled',
+    'Не указана': 'Not specified',
+    'Учебные предметы': 'Study subjects',
+    'Добавить предмет': 'Add subject',
+    'Учебные периоды': 'Study periods',
+    'Добавить период': 'Add period',
+    'Учебные события': 'Study events',
+    'Добавить событие': 'Add event',
+    'Предметы, открытия и маленькие шаги к большим целям.': 'Subjects, discoveries, and small steps towards big goals.',
+    'Добавь первый предмет, чтобы начать вести учебный план.': 'Add your first subject to start building your study plan.',
+    'Преподаватель не указан': 'No instructor specified',
+    'Здесь будут семестры, сессии и практика.': 'Semesters, exam sessions, and internships will appear here.',
+    'Даты не указаны': 'Dates not specified',
+    'Название, описание, заметки или предмет': 'Title, description, notes, or subject',
+    'Ничего не найдено': 'Nothing found',
+    'Учебных событий пока нет': 'No study events yet',
+    'Измени условия поиска или сбрось фильтры.': 'Change your search or clear the filters.',
+    'Добавляй лекции, тесты, письменные работы и экзамены.': 'Add lectures, tests, written assignments, and exams.',
+    'Радость': 'Joy',
+    'Спокойствие': 'Calm',
+    'Вдохновение': 'Inspiration',
+    'Благодарность': 'Gratitude',
+    'Усталость': 'Tiredness',
+    'Грусть': 'Sadness',
+    'Тревога': 'Anxiety',
+    'Злость': 'Anger',
+    'Ностальгия': 'Nostalgia',
+    'Смешанные чувства': 'Mixed feelings',
+    'Семья': 'Family',
+    'Дом': 'Home',
+    'Друзья': 'Friends',
+    'Работа': 'Work',
+    'Путешествия': 'Travel',
+    'Достижения': 'Achievements',
+    'Впечатления': 'Experiences',
+    'Мысли': 'Thoughts',
   };
 }

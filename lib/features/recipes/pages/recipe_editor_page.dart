@@ -133,7 +133,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
           SnackBar(
             content: Text(
               LunoraLocalization.text(
-                'Не удалось загрузить ингредиенты: $error',
+                LunoraLocalization.text('Не удалось загрузить ингредиенты: $error', 'Could not load ingredients: $error'),
               ),
             ),
           ),
@@ -267,7 +267,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
         instructions: _instructionsController.text.trim(),
         coverPath: _coverPath,
         category: _categoryController.text.trim().isEmpty
-            ? 'Без категории'
+            ? LunoraLocalization.text('Без категории', 'Uncategorized')
             : _categoryController.text.trim(),
         tags: tags,
         servings: int.tryParse(_servingsController.text) ?? 2,
@@ -411,7 +411,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
               LunoraLocalization.text(
-                'Добавь продукты, необходимые для блюда.',
+                LunoraLocalization.text('Добавь продукты, необходимые для блюда.', 'Add the ingredients needed for this dish.'),
                 'Add the ingredients needed for this dish.',
               ),
             ),
@@ -530,8 +530,8 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
         ),
         Text(
           _rating == null
-              ? 'Оценка не поставлена'
-              : 'Оценка: ${_rating!.toStringAsFixed(0)} из 5',
+              ? LunoraLocalization.text('Оценка не поставлена', 'Not rated')
+              : LunoraLocalization.text('Оценка: ${_rating!.toStringAsFixed(0)} из 5', 'Rating: ${_rating!.toStringAsFixed(0)} out of 5'),
           style: Theme.of(context).textTheme.bodySmall,
         ),
       ],
@@ -561,10 +561,10 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
                   _buildTextField(
                     controller: _titleController,
                     label: LunoraLocalization.text('Название рецепта'),
-                    hint: 'Например, домашняя паста',
+                    hint: LunoraLocalization.text('Например, домашняя паста', 'For example, homemade pasta'),
                     validator: (value) {
                       if (value == null || value.trim().isEmpty) {
-                        return 'Введи название рецепта';
+                        return LunoraLocalization.text('Введи название рецепта', 'Enter a recipe name');
                       }
                       return null;
                     },
@@ -573,7 +573,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
                   _buildTextField(
                     controller: _descriptionController,
                     label: LunoraLocalization.text('Краткое описание'),
-                    hint: 'Что это за блюдо?',
+                    hint: LunoraLocalization.text('Что это за блюдо?', 'What is this dish?'),
                     maxLines: 2,
                   ),
                   _buildCoverSection(),
@@ -581,7 +581,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
                   _buildTextField(
                     controller: _categoryController,
                     label: LunoraLocalization.text('Категория'),
-                    hint: 'Завтраки, обеды, десерты...',
+                    hint: LunoraLocalization.text('Завтраки, обеды, десерты...', 'Breakfast, lunch, desserts...'),
                   ),
                   const SizedBox(height: 14),
                   Row(
@@ -594,7 +594,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
                           validator: (value) {
                             final servings = int.tryParse(value ?? '');
                             if (servings == null || servings < 1) {
-                              return 'Минимум 1';
+                              return LunoraLocalization.text('Минимум 1', 'At least 1');
                             }
                             return null;
                           },
@@ -621,14 +621,14 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
                   _buildTextField(
                     controller: _instructionsController,
                     label: LunoraLocalization.text('Шаги приготовления'),
-                    hint: 'Опиши процесс приготовления...',
+                    hint: LunoraLocalization.text('Опиши процесс приготовления...', 'Describe the cooking process...'),
                     maxLines: 8,
                   ),
                   _buildSectionTitle(LunoraLocalization.text('Дополнительно'), Icons.bookmark_outline),
                   _buildTextField(
                     controller: _tagsController,
                     label: LunoraLocalization.text('Теги'),
-                    hint: 'быстро, семейное, на каждый день',
+                    hint: LunoraLocalization.text('быстро, семейное, на каждый день', 'quick, family, everyday'),
                   ),
                   const SizedBox(height: 14),
                   _buildTextField(
@@ -654,7 +654,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
                           )
                         : const Icon(Icons.save_outlined),
                     label: Text(
-                      _isSaving ? 'Сохранение...' : 'Сохранить рецепт',
+                      _isSaving ? LunoraLocalization.text('Сохранение...', 'Saving...') : LunoraLocalization.text('Сохранить рецепт', 'Save recipe'),
                     ),
                   ),
                 ],

@@ -106,7 +106,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Future<void> _initializeCalendar() async {
     try {
-      await initializeDateFormatting('ru', null);
+      await initializeDateFormatting(LunoraLocalization.languageCode, null);
 
       if (!mounted) return;
 
@@ -116,7 +116,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
       setState(() {
         _isLoading = false;
-        _error = 'Не удалось инициализировать календарь: $e';
+        _error = LunoraLocalization.text('Не удалось инициализировать календарь: $e', 'Could not initialize calendar: $e');
       });
     }
   }
@@ -153,7 +153,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
       setState(() {
         _isLoading = false;
-        _error = 'Не удалось загрузить данные календаря: $e';
+        _error = LunoraLocalization.text('Не удалось загрузить данные календаря: $e', 'Could not load calendar data: $e');
       });
     }
   }
@@ -301,38 +301,38 @@ class _CalendarPageState extends State<CalendarPage> {
   String _studyDescription(StudyItem item) {
     switch (item.type) {
       case StudyItemType.lecture:
-        return 'Лекция';
+        return LunoraLocalization.text('Лекция', 'Lecture');
       case StudyItemType.onlineLecture:
-        return 'Онлайн-лекция';
+        return LunoraLocalization.text('Онлайн-лекция', 'Online lecture');
       case StudyItemType.test:
-        return 'Тест';
+        return LunoraLocalization.text('Тест', 'Test');
       case StudyItemType.writtenAssignment:
-        return 'Письменное задание';
+        return LunoraLocalization.text('Письменное задание', 'Written assignment');
       case StudyItemType.exam:
-        return 'Экзамен';
+        return LunoraLocalization.text('Экзамен', 'Exam');
       case StudyItemType.credit:
-        return 'Зачёт';
+        return LunoraLocalization.text('Зачёт', 'Credit');
       case StudyItemType.practice:
-        return 'Практика';
+        return LunoraLocalization.text('Практика', 'Internship');
       case StudyItemType.coursework:
-        return 'Курсовая работа';
+        return LunoraLocalization.text('Курсовая работа', 'Coursework');
       case StudyItemType.diploma:
-        return 'Дипломная работа';
+        return LunoraLocalization.text('Дипломная работа', 'Thesis');
       case StudyItemType.other:
-        return 'Учебное событие';
+        return LunoraLocalization.text('Учебное событие', 'Study event');
     }
   }
 
   String _periodDescription(StudyPeriod period) {
     switch (period.type) {
       case StudyPeriodType.semester:
-        return 'Учебный семестр';
+        return LunoraLocalization.text('Учебный семестр', 'Study semester');
       case StudyPeriodType.examSession:
-        return 'Экзаменационная сессия';
+        return LunoraLocalization.text('Экзаменационная сессия', 'Exam session');
       case StudyPeriodType.practice:
-        return 'Практика';
+        return LunoraLocalization.text('Практика', 'Internship');
       case StudyPeriodType.other:
-        return 'Учебный период';
+        return LunoraLocalization.text('Учебный период', 'Study period');
     }
   }
 
@@ -442,7 +442,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
       await _loadData();
     } catch (e) {
-      _showMessage('Не удалось сохранить задачу: $e');
+      _showMessage(LunoraLocalization.text('Не удалось сохранить задачу: $e', 'Could not save task: $e'));
     }
   }
 
@@ -520,25 +520,25 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   String _monthTitle(DateTime date) {
-    final value = DateFormat('LLLL yyyy', 'ru').format(date);
+    final value = DateFormat('LLLL yyyy', LunoraLocalization.languageCode).format(date);
     return value[0].toUpperCase() + value.substring(1);
   }
 
   String _selectedDateTitle(DateTime date) {
-    final value = DateFormat('d MMMM yyyy', 'ru').format(date);
+    final value = DateFormat('d MMMM yyyy', LunoraLocalization.languageCode).format(date);
     return value[0].toUpperCase() + value.substring(1);
   }
 
   String _taskStatusLabel(TaskStatus status) {
     switch (status) {
       case TaskStatus.planned:
-        return 'Запланирована';
+        return LunoraLocalization.text('Запланирована');
       case TaskStatus.inProgress:
-        return 'В процессе';
+        return LunoraLocalization.text('В процессе');
       case TaskStatus.completed:
-        return 'Выполнена';
+        return LunoraLocalization.text('Выполнена');
       case TaskStatus.cancelled:
-        return 'Отменена';
+        return LunoraLocalization.text('Отменена');
     }
   }
 
@@ -689,19 +689,19 @@ class _CalendarPageState extends State<CalendarPage> {
       runSpacing: 8,
       children: [
         _filterChip(
-          'Задачи и планер',
+          LunoraLocalization.text('Задачи и планер', 'Tasks and planner'),
           _CalendarFilter.tasks,
           const Color(0xFF91A98D),
           Icons.check_circle_outline,
         ),
         _filterChip(
-          'Учёба',
+          LunoraLocalization.text('Учёба', 'Study'),
           _CalendarFilter.study,
           const Color(0xFF9C91B8),
           Icons.menu_book_outlined,
         ),
         _filterChip(
-          'Финансы',
+          LunoraLocalization.text('Финансы', 'Finances'),
           _CalendarFilter.finance,
           const Color(0xFFC69A86),
           Icons.account_balance_wallet_outlined,
@@ -766,7 +766,7 @@ class _CalendarPageState extends State<CalendarPage> {
           _decorativeDivider('lunora-divider-03.svg', height: 13),
           const SizedBox(height: 7),
           Row(
-            children: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+            children: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((day) => LunoraLocalization.text(day)).toList()
                 .map(
                   (day) => Expanded(
                     child: Center(
@@ -906,9 +906,9 @@ class _CalendarPageState extends State<CalendarPage> {
     final mod100 = count % 100;
     if (mod10 == 1 && mod100 != 11) return 'запись';
     if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
-      return 'записи';
+      return LunoraLocalization.text('записи', 'entries');
     }
-    return 'записей';
+    return LunoraLocalization.text('записей', 'entries');
   }
 
   Widget _buildDayPanel() {
@@ -966,7 +966,7 @@ class _CalendarPageState extends State<CalendarPage> {
             const SizedBox(height: 8),
             Text(
               LunoraLocalization.text(
-                'На этот день пока ничего не запланировано',
+                LunoraLocalization.text('На этот день пока ничего не запланировано', 'Nothing planned for this day yet'),
               ),
             ),
             const SizedBox(height: 14),
@@ -1032,7 +1032,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             _smallLabel(_taskStatusLabel(task.status)),
                           if (entry.reminders.isNotEmpty)
                             _smallLabel(
-                              'Напоминаний: ${entry.reminders.length}',
+                              LunoraLocalization.text('Напоминаний: ${entry.reminders.length}', 'Reminders: ${entry.reminders.length}'),
                             ),
                         ],
                       ),
@@ -1111,7 +1111,7 @@ class _CalendarPageState extends State<CalendarPage> {
         _studyDescription(item),
         if (item.description.isNotEmpty) item.description,
         if (item.notes.isNotEmpty) item.notes,
-        if (item.grade.isNotEmpty) 'Оценка: ${item.grade}',
+        if (item.grade.isNotEmpty) LunoraLocalization.text('Оценка: ${item.grade}', 'Grade: ${item.grade}'),
       ].join('\n\n');
     } else if (entry.studyPeriod != null) {
       final period = entry.studyPeriod!;
@@ -1120,17 +1120,17 @@ class _CalendarPageState extends State<CalendarPage> {
         _periodDescription(period),
         if (period.description.isNotEmpty) period.description,
         if (period.startsAt != null)
-          'Начало: ${DateFormat('dd.MM.yyyy').format(period.startsAt!)}',
+          LunoraLocalization.text('Начало: ${DateFormat('dd.MM.yyyy').format(period.startsAt!)}', 'Start: ${DateFormat('dd.MM.yyyy').format(period.startsAt!)}'),
         if (period.endsAt != null)
-          'Окончание: ${DateFormat('dd.MM.yyyy').format(period.endsAt!)}',
+          LunoraLocalization.text('Окончание: ${DateFormat('dd.MM.yyyy').format(period.endsAt!)}', 'End: ${DateFormat('dd.MM.yyyy').format(period.endsAt!)}'),
       ].join('\n\n');
     } else if (entry.debt != null) {
       final debt = entry.debt!;
 
       description = [
-        'Кредитор: ${debt.creditor}',
-        'Дата платежа: ${DateFormat('dd.MM.yyyy').format(debt.nextPaymentDate!)}',
-        'Ежемесячный платёж: ${(debt.monthlyPaymentMinor / 100).toStringAsFixed(2)}',
+        LunoraLocalization.text('Кредитор: ${debt.creditor}', 'Creditor: ${debt.creditor}'),
+        LunoraLocalization.text('Дата платежа: ${DateFormat('dd.MM.yyyy').format(debt.nextPaymentDate!)}', 'Payment date: ${DateFormat('dd.MM.yyyy').format(debt.nextPaymentDate!)}'),
+        LunoraLocalization.text('Ежемесячный платёж: ${(debt.monthlyPaymentMinor / 100).toStringAsFixed(2)}', 'Monthly payment: ${(debt.monthlyPaymentMinor / 100).toStringAsFixed(2)}'),
       ].join('\n');
     }
 
@@ -1143,7 +1143,7 @@ class _CalendarPageState extends State<CalendarPage> {
         content: SingleChildScrollView(
           child: Text(
             description.isEmpty
-                ? 'Дополнительной информации нет.'
+                ? LunoraLocalization.text('Дополнительной информации нет.', 'No additional information.')
                 : description,
           ),
         ),
@@ -1391,7 +1391,7 @@ class _TaskEditorDialogState extends State<_TaskEditorDialog> {
                       icon: const Icon(Icons.calendar_month_outlined),
                       label: Text(
                         _date == null
-                            ? 'Без даты'
+                            ? LunoraLocalization.text('Без даты', 'No date')
                             : DateFormat('dd.MM.yyyy').format(_date!),
                       ),
                     ),

@@ -725,7 +725,7 @@ class _LifeInProgressPanel extends StatelessWidget {
                           'diary',
                         ),
                         title: entry.title.isEmpty
-                            ? 'Запись без названия'
+                            ? LunoraLocalization.text('Запись без названия')
                             : entry.title,
                         subtitle: _shortDate(entry.entryDate),
                         onTap: () => onOpenDiaryEntry(entry),
@@ -756,8 +756,8 @@ class _LifeInProgressPanel extends StatelessWidget {
                 ),
                 title: LunoraLocalization.text('Покупки'),
                 subtitle: shoppingItems.isEmpty
-                    ? 'Список пуст'
-                    : '${shoppingItems.length} пунктов ожидают покупки',
+                    ? LunoraLocalization.text('Список пуст')
+                    : LunoraLocalization.text('${shoppingItems.length} пунктов ожидают покупки'),
                 onTap: onOpenShopping,
               ),
 
@@ -767,8 +767,8 @@ class _LifeInProgressPanel extends StatelessWidget {
                 icon: Icons.account_balance_wallet_outlined,
                 title: LunoraLocalization.text('Активные кредиты'),
                 subtitle: activeDebts.isEmpty
-                    ? 'Нет активных задолженностей'
-                    : '${activeDebts.length} активных обязательств',
+                    ? LunoraLocalization.text('Нет активных задолженностей')
+                    : LunoraLocalization.text('${activeDebts.length} активных обязательств'),
                 onTap: onOpenDebts,
               ),
             ],
