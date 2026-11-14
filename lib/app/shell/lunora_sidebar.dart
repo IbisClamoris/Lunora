@@ -96,7 +96,30 @@ class LunoraSidebar extends StatelessWidget {
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: palette.border),
                     ),
-                    child: SvgPicture.asset('assets/branding/app_icon.svg'),
+                    child: AnimatedBuilder(
+                      animation: SettingsService.instance,
+                      builder: (context, _) {
+                        final settings = SettingsService.instance.settings;
+                        final themeName =
+                            LunoraThemeAssets.folder(settings.colorTheme);
+                        final modeName =
+                            Theme.of(context).brightness == Brightness.dark
+                                ? 'dark'
+                                : 'light';
+                        final assetPath =
+                            'assets/branding/theme_icons/${themeName}_${modeName}.png';
+
+                        return Image.asset(
+                          assetPath,
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) =>
+                              SvgPicture.asset(
+                            'assets/branding/app_icon.svg',
+                            fit: BoxFit.contain,
+                          ),
+                        );
+                      },
+                    ),
                   ),
                   if (expanded) ...[
                     const SizedBox(width: 12),
