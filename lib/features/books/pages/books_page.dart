@@ -690,7 +690,7 @@ class _BooksPageState extends State<BooksPage> {
                     PopupMenuButton<String>(
                       tooltip: LunoraLocalization.text('Быстро изменить статус'),
                       onSelected: (value) => _changeBookStatus(book, value),
-                      itemBuilder: (context) => const [
+                      itemBuilder: (context) => [
                         PopupMenuItem(
                           value: 'planned',
                           child: Text(LunoraLocalization.text('В планах')),
