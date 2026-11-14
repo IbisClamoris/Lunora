@@ -106,7 +106,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
   Future<void> _initializeCalendar() async {
     try {
-      await initializeDateFormatting('ru', null);
+      await initializeDateFormatting(LunoraLocalization.languageCode, null);
 
       if (!mounted) return;
 
@@ -520,25 +520,25 @@ class _CalendarPageState extends State<CalendarPage> {
   }
 
   String _monthTitle(DateTime date) {
-    final value = DateFormat('LLLL yyyy', 'ru').format(date);
+    final value = DateFormat('LLLL yyyy', LunoraLocalization.languageCode).format(date);
     return value[0].toUpperCase() + value.substring(1);
   }
 
   String _selectedDateTitle(DateTime date) {
-    final value = DateFormat('d MMMM yyyy', 'ru').format(date);
+    final value = DateFormat('d MMMM yyyy', LunoraLocalization.languageCode).format(date);
     return value[0].toUpperCase() + value.substring(1);
   }
 
   String _taskStatusLabel(TaskStatus status) {
     switch (status) {
       case TaskStatus.planned:
-        return 'Запланирована';
+        return LunoraLocalization.text('Запланирована');
       case TaskStatus.inProgress:
-        return 'В процессе';
+        return LunoraLocalization.text('В процессе');
       case TaskStatus.completed:
-        return 'Выполнена';
+        return LunoraLocalization.text('Выполнена');
       case TaskStatus.cancelled:
-        return 'Отменена';
+        return LunoraLocalization.text('Отменена');
     }
   }
 
