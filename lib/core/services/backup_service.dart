@@ -80,7 +80,7 @@ class BackupService {
             'Резервная копия создана',
             'Backup created',
           ),
-          message: 'Файл $fileName успешно сохранён.',
+          message: '${LunoraLocalization.text('Резервная копия сохранена: ')}$fileName',
           metadata: {
             'fileName': fileName,
             'filePath': copiedFile.path,
