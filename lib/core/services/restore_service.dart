@@ -116,7 +116,7 @@ class RestoreService {
         type: NotificationType.success,
         eventType: 'backup_restored',
         title: LunoraLocalization.text('Данные восстановлены', 'Data restored'),
-        message: 'Резервная копия ${backup.fileName} успешно восстановлена.',
+        message: '${LunoraLocalization.text('Резервная копия восстановлена: ')}${backup.fileName}',
         metadata: {
           'fileName': backup.fileName,
           'filePath': backup.filePath,
