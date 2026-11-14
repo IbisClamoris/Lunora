@@ -1,8 +1,7 @@
 name: lunora
 description: "Lunora - Your personal world."
 publish_to: 'none'
-version: 1.0.2+3
-
+version: 1.0.3+4
 environment:
   sdk: ^3.13.7
 
