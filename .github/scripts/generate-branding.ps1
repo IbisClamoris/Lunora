@@ -31,7 +31,17 @@ function Draw-LunoraIcon([int]$size) {
   return $bmp
 }
 $large = Draw-LunoraIcon 256
-$large.Save((Join-Path $resourceDir 'app_icon.ico'),[System.Drawing.Imaging.ImageFormat]::Icon)
+$pngStream = New-Object System.IO.MemoryStream
+$large.Save($pngStream,[System.Drawing.Imaging.ImageFormat]::Png)
+$pngBytes = $pngStream.ToArray()
+$iconStream = [System.IO.File]::Create((Join-Path $resourceDir 'app_icon.ico'))
+$writer = New-Object System.IO.BinaryWriter($iconStream)
+$writer.Write([UInt16]0); $writer.Write([UInt16]1); $writer.Write([UInt16]1)
+$writer.Write([byte]0); $writer.Write([byte]0); $writer.Write([byte]0); $writer.Write([byte]0)
+$writer.Write([UInt16]1); $writer.Write([UInt16]32)
+$writer.Write([UInt32]$pngBytes.Length); $writer.Write([UInt32]22)
+$writer.Write($pngBytes)
+$writer.Dispose(); $iconStream.Dispose(); $pngStream.Dispose()
 $large.Dispose()
 $small = Draw-LunoraIcon 64
 $small.Save((Join-Path $brandingDir 'tray_icon.png'),[System.Drawing.Imaging.ImageFormat]::Png)
