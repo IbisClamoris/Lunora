@@ -116,7 +116,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
       setState(() {
         _isLoading = false;
-        _error = 'Не удалось инициализировать календарь: $e';
+        _error = LunoraLocalization.text('Не удалось инициализировать календарь: $e', 'Could not initialize calendar: $e');
       });
     }
   }
@@ -153,7 +153,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
       setState(() {
         _isLoading = false;
-        _error = 'Не удалось загрузить данные календаря: $e';
+        _error = LunoraLocalization.text('Не удалось загрузить данные календаря: $e', 'Could not load calendar data: $e');
       });
     }
   }
@@ -442,7 +442,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
       await _loadData();
     } catch (e) {
-      _showMessage('Не удалось сохранить задачу: $e');
+      _showMessage(LunoraLocalization.text('Не удалось сохранить задачу: $e', 'Could not save task: $e'));
     }
   }
 
@@ -532,13 +532,13 @@ class _CalendarPageState extends State<CalendarPage> {
   String _taskStatusLabel(TaskStatus status) {
     switch (status) {
       case TaskStatus.planned:
-        return 'Запланирована';
+        return LunoraLocalization.text('Запланирована', 'Scheduled');
       case TaskStatus.inProgress:
-        return 'В процессе';
+        return LunoraLocalization.text('В процессе', 'In progress');
       case TaskStatus.completed:
-        return 'Выполнена';
+        return LunoraLocalization.text('Выполнена', 'Completed');
       case TaskStatus.cancelled:
-        return 'Отменена';
+        return LunoraLocalization.text('Отменена', 'Cancelled');
     }
   }
 
@@ -689,19 +689,19 @@ class _CalendarPageState extends State<CalendarPage> {
       runSpacing: 8,
       children: [
         _filterChip(
-          'Задачи и планер',
+          LunoraLocalization.text('Задачи и планер', 'Tasks & planner'),
           _CalendarFilter.tasks,
           const Color(0xFF91A98D),
           Icons.check_circle_outline,
         ),
         _filterChip(
-          'Учёба',
+          LunoraLocalization.text('Учёба', 'Study'),
           _CalendarFilter.study,
           const Color(0xFF9C91B8),
           Icons.menu_book_outlined,
         ),
         _filterChip(
-          'Финансы',
+          LunoraLocalization.text('Финансы', 'Finances'),
           _CalendarFilter.finance,
           const Color(0xFFC69A86),
           Icons.account_balance_wallet_outlined,
@@ -1032,7 +1032,7 @@ class _CalendarPageState extends State<CalendarPage> {
                             _smallLabel(_taskStatusLabel(task.status)),
                           if (entry.reminders.isNotEmpty)
                             _smallLabel(
-                              'Напоминаний: ${entry.reminders.length}',
+                              LunoraLocalization.text('Напоминаний: ${entry.reminders.length}', 'Reminders: ${entry.reminders.length}'),
                             ),
                         ],
                       ),
@@ -1111,7 +1111,7 @@ class _CalendarPageState extends State<CalendarPage> {
         _studyDescription(item),
         if (item.description.isNotEmpty) item.description,
         if (item.notes.isNotEmpty) item.notes,
-        if (item.grade.isNotEmpty) 'Оценка: ${item.grade}',
+        if (item.grade.isNotEmpty) LunoraLocalization.text('Оценка: ${item.grade}', 'Grade: ${item.grade}'),
       ].join('\n\n');
     } else if (entry.studyPeriod != null) {
       final period = entry.studyPeriod!;
@@ -1120,17 +1120,17 @@ class _CalendarPageState extends State<CalendarPage> {
         _periodDescription(period),
         if (period.description.isNotEmpty) period.description,
         if (period.startsAt != null)
-          'Начало: ${DateFormat('dd.MM.yyyy').format(period.startsAt!)}',
+          LunoraLocalization.text('Начало: ${DateFormat('dd.MM.yyyy').format(period.startsAt!)}', 'Start: ${DateFormat('dd.MM.yyyy').format(period.startsAt!)}'),
         if (period.endsAt != null)
-          'Окончание: ${DateFormat('dd.MM.yyyy').format(period.endsAt!)}',
+          LunoraLocalization.text('Окончание: ${DateFormat('dd.MM.yyyy').format(period.endsAt!)}', 'End: ${DateFormat('dd.MM.yyyy').format(period.endsAt!)}'),
       ].join('\n\n');
     } else if (entry.debt != null) {
       final debt = entry.debt!;
 
       description = [
-        'Кредитор: ${debt.creditor}',
-        'Дата платежа: ${DateFormat('dd.MM.yyyy').format(debt.nextPaymentDate!)}',
-        'Ежемесячный платёж: ${(debt.monthlyPaymentMinor / 100).toStringAsFixed(2)}',
+        LunoraLocalization.text('Кредитор: ${debt.creditor}', 'Creditor: ${debt.creditor}'),
+        LunoraLocalization.text('Дата платежа: ${DateFormat('dd.MM.yyyy').format(debt.nextPaymentDate!)}', 'Payment date: ${DateFormat('dd.MM.yyyy').format(debt.nextPaymentDate!)}'),
+        LunoraLocalization.text('Ежемесячный платёж: ${(debt.monthlyPaymentMinor / 100).toStringAsFixed(2)}', 'Monthly payment: ${(debt.monthlyPaymentMinor / 100).toStringAsFixed(2)}'),
       ].join('\n');
     }
 
@@ -1143,7 +1143,7 @@ class _CalendarPageState extends State<CalendarPage> {
         content: SingleChildScrollView(
           child: Text(
             description.isEmpty
-                ? 'Дополнительной информации нет.'
+                ? LunoraLocalization.text('Дополнительной информации нет.', 'No additional information.')
                 : description,
           ),
         ),
@@ -1391,7 +1391,7 @@ class _TaskEditorDialogState extends State<_TaskEditorDialog> {
                       icon: const Icon(Icons.calendar_month_outlined),
                       label: Text(
                         _date == null
-                            ? 'Без даты'
+                            ? LunoraLocalization.text('Без даты', 'No date')
                             : DateFormat('dd.MM.yyyy').format(_date!),
                       ),
                     ),
@@ -1417,7 +1417,7 @@ class _TaskEditorDialogState extends State<_TaskEditorDialog> {
                       onPressed: _date == null ? null : _selectTime,
                       icon: const Icon(Icons.access_time),
                       label: Text(
-                        _time == null ? 'Без времени' : _time!.format(context),
+                        _time == null ? LunoraLocalization.text('Без времени', 'No time') : _time!.format(context),
                       ),
                     ),
                   ),
