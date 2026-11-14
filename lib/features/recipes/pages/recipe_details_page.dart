@@ -66,7 +66,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         _isLoading = false;
       });
 
-      _showMessage('Не удалось загрузить рецепт: $e');
+      _showMessage(LunoraLocalization.text('Не удалось загрузить рецепт: $e', 'Could not load recipe: $e'));
     }
   }
 
@@ -101,7 +101,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         );
       });
     } catch (e) {
-      _showMessage('Не удалось изменить избранное: $e');
+      _showMessage(LunoraLocalization.text('Не удалось изменить избранное: $e', 'Could not update favourites: $e'));
     }
   }
 
@@ -120,10 +120,10 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
 
       if (!mounted) return;
 
-      _showMessage('Ингредиенты добавлены в список покупок.');
+      _showMessage(LunoraLocalization.text('Ингредиенты добавлены в список покупок.', 'Ingredients added to the shopping list.'));
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось добавить ингредиенты: $e');
+        _showMessage(LunoraLocalization.text('Не удалось добавить ингредиенты: $e', 'Could not add ingredients: $e'));
       }
     } finally {
       if (mounted) {
@@ -183,7 +183,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         _isDeleting = false;
       });
 
-      _showMessage('Не удалось удалить рецепт: $e');
+      _showMessage(LunoraLocalization.text('Не удалось удалить рецепт: $e', 'Could not delete recipe: $e'));
     }
   }
 
@@ -197,7 +197,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
     if (uri == null ||
         (uri.scheme != 'http' && uri.scheme != 'https') ||
         uri.host.isEmpty) {
-      _showMessage('Некорректная ссылка на источник');
+      _showMessage(LunoraLocalization.text('Некорректная ссылка на источник', 'Invalid source link'));
       return;
     }
 
@@ -205,11 +205,11 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
       final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
 
       if (!opened && mounted) {
-        _showMessage('Не удалось открыть ссылку');
+        _showMessage(LunoraLocalization.text('Не удалось открыть ссылку', 'Could not open link'));
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Ошибка при открытии ссылки: $e');
+        _showMessage(LunoraLocalization.text('Ошибка при открытии ссылки: $e', 'Error opening link: $e'));
       }
     }
   }
