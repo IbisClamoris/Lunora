@@ -30,8 +30,8 @@ class _WishlistPageState extends State<WishlistPage> {
   bool _showPurchased = false;
 
   String _searchQuery = '';
-  String _selectedCategory = LunoraLocalization.text('Все категории', 'All categories');
-  String _selectedPriority = LunoraLocalization.text('Все приоритеты', 'All priorities');
+  String _selectedCategory = 'Все категории';
+  String _selectedPriority = 'Все приоритеты';
 
   @override
   void initState() {
@@ -104,12 +104,12 @@ class _WishlistPageState extends State<WishlistPage> {
     return _entries.where((entry) {
       if (entry.isPurchased != _showPurchased) return false;
 
-      if (_selectedCategory != LunoraLocalization.text('Все категории', 'All categories') &&
+      if (_selectedCategory != 'Все категории' &&
           entry.category != _selectedCategory) {
         return false;
       }
 
-      if (_selectedPriority != LunoraLocalization.text('Все приоритеты', 'All priorities') &&
+      if (_selectedPriority != 'Все приоритеты' &&
           entry.priority != _selectedPriority) {
         return false;
       }
@@ -332,7 +332,7 @@ class _WishlistPageState extends State<WishlistPage> {
         _buildDropdown(
           value: _selectedCategory,
           items: [
-            LunoraLocalization.text('Все категории', 'All categories'),
+            'Все категории',
             ..._categories.where((item) => item != 'Все категории'),
           ],
           onChanged: (value) {
@@ -344,9 +344,9 @@ class _WishlistPageState extends State<WishlistPage> {
         ),
         _buildDropdown(
           value: _selectedPriority,
-          items: const [LunoraLocalization.text('Все приоритеты', 'All priorities'), 'high', 'normal', 'low'],
+          items: const ['Все приоритеты', 'high', 'normal', 'low'],
           labels: const {
-            LunoraLocalization.text('Все приоритеты', 'All priorities'): LunoraLocalization.text('Все приоритеты', 'All priorities'),
+            'Все приоритеты': LunoraLocalization.text('Все приоритеты', 'All priorities'),
             'high': LunoraLocalization.text('Высокий приоритет', 'High priority'),
             'normal': LunoraLocalization.text('Обычный приоритет', 'Normal priority'),
             'low': LunoraLocalization.text('Низкий приоритет', 'Low priority'),
