@@ -307,7 +307,7 @@ abstract final class LunoraLocalization {
     'Журнал импорта и экспорта данных Lunora': 'Lunora import and export log',
     'Пока здесь пусто': 'Nothing here yet',
     'Сбросить настройки?': 'Reset settings?',
-    'Все настройки Lunora вернутся к значениям по умолчанию.':
+    'Все настройки Lunora вернутся к значениям по умолчанию.': 'All Lunora settings will be restored to their default values.',
     'Русский': 'Russian',
     'Английский': 'English',
     'ТВОИ ПРОСТРАНСТВА': 'YOUR SPACES',
