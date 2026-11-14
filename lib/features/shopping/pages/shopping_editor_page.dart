@@ -162,7 +162,7 @@ class _ShoppingEditorPageState extends State<ShoppingEditorPage> {
                   textCapitalization: TextCapitalization.sentences,
                   validator: (value) {
                     if (value == null || value.trim().isEmpty) {
-                      return 'Введите название товара';
+                      return LunoraLocalization.text('Введите название товара', 'Enter an item name');
                     }
 
                     return null;
@@ -174,7 +174,7 @@ class _ShoppingEditorPageState extends State<ShoppingEditorPage> {
                   decoration: InputDecoration(
                     labelText: LunoraLocalization.text('Категория'),
                     hintText: LunoraLocalization.text(
-                      'Например, Молочные продукты',
+                      LunoraLocalization.text('Например, Молочные продукты', 'For example, Dairy products'),
                     ),
                     prefixIcon: Icon(Icons.category_outlined),
                   ),
@@ -208,7 +208,7 @@ class _ShoppingEditorPageState extends State<ShoppingEditorPage> {
                           );
 
                           if (parsed == null || parsed <= 0) {
-                            return 'Введите число больше нуля';
+                            return LunoraLocalization.text('Введите число больше нуля', 'Enter a number greater than zero');
                           }
 
                           return null;
@@ -222,7 +222,7 @@ class _ShoppingEditorPageState extends State<ShoppingEditorPage> {
                         controller: _unitController,
                         decoration: InputDecoration(
                           labelText: LunoraLocalization.text(
-                            'Единица измерения',
+                            LunoraLocalization.text('Единица измерения', 'Unit of measurement'),
                           ),
                           hintText: LunoraLocalization.text('шт., кг, л...'),
                           prefixIcon: Icon(Icons.scale_outlined),
@@ -240,7 +240,7 @@ class _ShoppingEditorPageState extends State<ShoppingEditorPage> {
                   decoration: InputDecoration(
                     labelText: LunoraLocalization.text('Заметки'),
                     hintText: LunoraLocalization.text(
-                      'Дополнительная информация о товаре',
+                      LunoraLocalization.text('Дополнительная информация о товаре', 'Additional item information'),
                     ),
                     prefixIcon: Icon(Icons.notes_outlined),
                     alignLabelWithHint: true,
