@@ -766,7 +766,7 @@ class _CalendarPageState extends State<CalendarPage> {
           _decorativeDivider('lunora-divider-03.svg', height: 13),
           const SizedBox(height: 7),
           Row(
-            children: LunoraLocalization.isEnglish ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] : ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+            children: (LunoraLocalization.isEnglish ? ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'] : ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'])
                 .map(
                   (day) => Expanded(
                     child: Center(
