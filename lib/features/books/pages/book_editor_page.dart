@@ -297,7 +297,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? 'Редактирование книги' : 'Новая книга'),
+        title: Text(_isEditing ? LunoraLocalization.text('Редактирование книги') : LunoraLocalization.text('Новая книга')),
         actions: [
           IconButton(
             tooltip: LunoraLocalization.text('Сохранить'),
@@ -319,7 +319,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
                   _buildCover(colors),
                   const SizedBox(height: 28),
 
-                  _sectionTitle('Основная информация'),
+                  _sectionTitle(LunoraLocalization.text('Основная информация')),
                   const SizedBox(height: 16),
 
                   _buildTextField(
@@ -372,7 +372,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
                   ),
 
                   const SizedBox(height: 28),
-                  _sectionTitle('Чтение'),
+                  _sectionTitle(LunoraLocalization.text('Чтение')),
                   const SizedBox(height: 16),
 
                   DropdownButtonFormField<String>(
@@ -454,7 +454,7 @@ class _BookEditorPageState extends State<BookEditorPage> {
                   ),
 
                   const SizedBox(height: 28),
-                  _sectionTitle('Оценка и впечатления'),
+                  _sectionTitle(LunoraLocalization.text('Оценка и впечатления')),
                   const SizedBox(height: 12),
 
                   DropdownButtonFormField<double?>(
