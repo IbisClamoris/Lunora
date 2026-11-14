@@ -93,7 +93,7 @@ class UpdateService {
     await _download(update.installerUrl, installer);
     await _download(update.checksumUrl, checksumFile);
 
-    final expected = (await checksumFile.readAsString()).trim().split(RegExp(r'\\s+')).first.toLowerCase();
+    final expected = (await checksumFile.readAsString()).trim().split(RegExp(r'\s+')).first.toLowerCase();
     if (!RegExp(r'^[a-f0-9]{64}$').hasMatch(expected)) {
       throw const FormatException('The release checksum file is invalid.');
     }
