@@ -565,7 +565,7 @@ class _MoviesPageState extends State<MoviesPage> {
                           tooltip: LunoraLocalization.text('Быстро изменить статус'),
                           onSelected: (value) =>
                               _changeMovieStatus(movie, value),
-                          itemBuilder: (context) => const [
+                          itemBuilder: (context) => [
                             PopupMenuItem(
                               value: 'planned',
                               child: Text(LunoraLocalization.text('В планах')),
