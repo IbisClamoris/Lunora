@@ -31,7 +31,7 @@ class _FinanceExcelImportPageState extends State<FinanceExcelImportPage> {
       final files = await FilePicker.pickFiles(
         type: FileType.custom,
         allowedExtensions: ['xlsx', 'xlsm'],
-        dialogTitle: 'Выберите финансовую книгу Excel',
+        dialogTitle: LunoraLocalization.text('Выберите финансовую книгу Excel'),
       );
 
       if (files.isEmpty) return;
