@@ -442,7 +442,7 @@ class _CalendarPageState extends State<CalendarPage> {
 
       await _loadData();
     } catch (e) {
-      _showMessage('Не удалось сохранить задачу: $e');
+      _showMessage(LunoraLocalization.text('Не удалось сохранить задачу: $e', 'Could not save task: $e'));
     }
   }
 
@@ -766,7 +766,7 @@ class _CalendarPageState extends State<CalendarPage> {
           _decorativeDivider('lunora-divider-03.svg', height: 13),
           const SizedBox(height: 7),
           Row(
-            children: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс']
+            children: ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'].map((day) => LunoraLocalization.text(day)).toList()
                 .map(
                   (day) => Expanded(
                     child: Center(
@@ -906,9 +906,9 @@ class _CalendarPageState extends State<CalendarPage> {
     final mod100 = count % 100;
     if (mod10 == 1 && mod100 != 11) return 'запись';
     if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
-      return 'записи';
+      return LunoraLocalization.text('записи', 'entries');
     }
-    return 'записей';
+    return LunoraLocalization.text('записей', 'entries');
   }
 
   Widget _buildDayPanel() {
@@ -1120,16 +1120,16 @@ class _CalendarPageState extends State<CalendarPage> {
         _periodDescription(period),
         if (period.description.isNotEmpty) period.description,
         if (period.startsAt != null)
-          'Начало: ${DateFormat('dd.MM.yyyy').format(period.startsAt!)}',
+          LunoraLocalization.text('Начало: ${DateFormat('dd.MM.yyyy').format(period.startsAt!)}', 'Start: ${DateFormat('dd.MM.yyyy').format(period.startsAt!)}'),
         if (period.endsAt != null)
-          'Окончание: ${DateFormat('dd.MM.yyyy').format(period.endsAt!)}',
+          LunoraLocalization.text('Окончание: ${DateFormat('dd.MM.yyyy').format(period.endsAt!)}', 'End: ${DateFormat('dd.MM.yyyy').format(period.endsAt!)}'),
       ].join('\n\n');
     } else if (entry.debt != null) {
       final debt = entry.debt!;
 
       description = [
         LunoraLocalization.text('Кредитор: ${debt.creditor}', 'Creditor: ${debt.creditor}'),
-        'Дата платежа: ${DateFormat('dd.MM.yyyy').format(debt.nextPaymentDate!)}',
+        LunoraLocalization.text('Дата платежа: ${DateFormat('dd.MM.yyyy').format(debt.nextPaymentDate!)}', 'Payment date: ${DateFormat('dd.MM.yyyy').format(debt.nextPaymentDate!)}'),
         LunoraLocalization.text('Ежемесячный платёж: ${(debt.monthlyPaymentMinor / 100).toStringAsFixed(2)}', 'Monthly payment: ${(debt.monthlyPaymentMinor / 100).toStringAsFixed(2)}'),
       ].join('\n');
     }
