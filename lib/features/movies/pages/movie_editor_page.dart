@@ -276,14 +276,14 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
 
       if (seasons != null && currentSeason > seasons) {
         _showMessage(
-          'Текущий сезон не может превышать общее количество сезонов.',
+          LunoraLocalization.text('Текущий сезон не может превышать общее количество сезонов.', 'The current season cannot exceed the total number of seasons.'),
         );
         return;
       }
 
       if (episodes != null && currentEpisode > episodes) {
         _showMessage(
-          'Текущая серия не может превышать общее количество серий.',
+          LunoraLocalization.text('Текущая серия не может превышать общее количество серий.', 'The current episode cannot exceed the total number of episodes.'),
         );
         return;
       }
@@ -458,7 +458,7 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
                   _buildTextField(
                     controller: _genresController,
                     label: LunoraLocalization.text('Жанры'),
-                    hint: 'Фэнтези, драма, приключения',
+                    hint: LunoraLocalization.text('Фэнтези, драма, приключения', 'Fantasy, drama, adventure'),
                   ),
                   const SizedBox(height: 14),
 
@@ -472,12 +472,12 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
                   _buildTextField(
                     controller: _tagsController,
                     label: LunoraLocalization.text('Теги'),
-                    hint: 'Любимое, пересмотреть, классика',
+                    hint: LunoraLocalization.text('Любимое, пересмотреть, классика', 'Favourite, rewatch, classics'),
                   ),
 
                   const SizedBox(height: 28),
                   _sectionTitle(
-                    _isSeries ? 'Просмотр сериала' : 'Просмотр фильма',
+                    _isSeries ? LunoraLocalization.text('Просмотр сериала', 'Watching a series') : LunoraLocalization.text('Просмотр фильма', 'Watching a movie'),
                   ),
                   const SizedBox(height: 16),
 
@@ -619,7 +619,7 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
                             )
                           : const Icon(Icons.check),
                       label: Text(
-                        _isEditing ? 'Сохранить изменения' : 'Добавить запись',
+                        _isEditing ? LunoraLocalization.text('Сохранить изменения', 'Save changes') : LunoraLocalization.text('Добавить запись', 'Add entry'),
                       ),
                     ),
                   ),
@@ -749,7 +749,7 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
       validator: required
           ? (value) {
               if (value == null || value.trim().isEmpty) {
-                return 'Заполни это поле';
+                return LunoraLocalization.text('Заполни это поле', 'Fill in this field');
               }
 
               return null;
@@ -760,7 +760,7 @@ class _MovieEditorPageState extends State<MovieEditorPage> {
 
   Widget _buildDateTile() {
     final formattedDate = _watchedAt == null
-        ? 'Не указана'
+        ? LunoraLocalization.text('Не указана', 'Not specified')
         : '${_watchedAt!.day.toString().padLeft(2, '0')}.'
               '${_watchedAt!.month.toString().padLeft(2, '0')}.'
               '${_watchedAt!.year}';
