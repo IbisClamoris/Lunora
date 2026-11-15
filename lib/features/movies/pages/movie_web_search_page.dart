@@ -42,9 +42,11 @@ class _MovieWebSearchPageState extends State<MovieWebSearchPage> {
           _error = _searchMode == 'person'
               ? LunoraLocalization.text(
                   'По этому актёру или режиссёру сериалы не найдены.',
+                  'No series were found for this actor or director.',
                 )
               : LunoraLocalization.text(
                   'Фильмы, сериалы или аниме не найдены. Попробуй другое название.',
+                  'No movies, series, or anime were found. Try another title.',
                 );
         }
       });
@@ -115,6 +117,7 @@ class _MovieWebSearchPageState extends State<MovieWebSearchPage> {
                   child: Text(
                     LunoraLocalization.text(
                       'Подключены открытые каталоги TVmaze, AniList и Wikidata. Регистрация и API-ключ не нужны.',
+                      'Connected to the open TVmaze, AniList, and Wikidata catalogs. No registration or API key required.',
                     ),
                     style: TextStyle(fontSize: 12),
                   ),
@@ -134,6 +137,7 @@ class _MovieWebSearchPageState extends State<MovieWebSearchPage> {
                     child: Text(
                       LunoraLocalization.text(
                         'Введи название фильма, сериала, аниме или имя актёра',
+                        'Enter a movie, series, or anime title, or an actor’s name',
                       ),
                     ),
                   )
@@ -147,7 +151,7 @@ class _MovieWebSearchPageState extends State<MovieWebSearchPage> {
                         if (item.releaseYear != null)
                           item.releaseYear.toString(),
                         if (item.runtimeMinutes != null)
-                          '${item.runtimeMinutes} мин.',
+                          '${item.runtimeMinutes} ${LunoraLocalization.isEnglish ? 'min.' : 'мин.'}',
                         if (item.genres.isNotEmpty) item.genres.join(', '),
                       ].join(' • ');
                       return Card(
