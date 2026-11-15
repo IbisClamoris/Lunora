@@ -135,7 +135,7 @@ class _ExportPageState extends State<ExportPage> {
     } catch (error) {
       if (!mounted) return;
 
-      _showMessage('Не удалось выполнить экспорт: $error');
+      _showMessage(LunoraLocalization.text('Не удалось выполнить экспорт: $error', 'Export failed: $error'));
     } finally {
       if (mounted) {
         setState(() {
