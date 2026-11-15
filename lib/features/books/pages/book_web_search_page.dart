@@ -45,11 +45,11 @@ class _BookWebSearchPageState extends State<BookWebSearchPage> {
       setState(() {
         _results = results;
         if (results.isEmpty) {
-          _error = 'Не удалось извлечь результаты. Возможно, Яндекс показал проверку или изменил разметку.';
+          _error = LunoraLocalization.text('Не удалось извлечь результаты. Возможно, Яндекс показал проверку или изменил разметку.', 'Could not extract results. Yandex may have shown a verification page or changed its layout.');
         }
       });
     } catch (error) {
-      if (mounted) setState(() => _error = 'Ошибка поиска: $error');
+      if (mounted) setState(() => _error = LunoraLocalization.text('Ошибка поиска: $error', 'Search error: $error'));
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -90,7 +90,7 @@ class _BookWebSearchPageState extends State<BookWebSearchPage> {
           seriesName: metadata?.seriesName ?? '',
           seriesNumber: metadata?.seriesNumber,
           sourceName:
-              metadata?.sourceName ?? (Uri.tryParse(hit.url)?.host ?? 'Яндекс'),
+              metadata?.sourceName ?? (Uri.tryParse(hit.url)?.host ?? LunoraLocalization.text('Яндекс', 'Yandex')),
           createdAt: now,
           updatedAt: now,
         ),
@@ -103,8 +103,8 @@ class _BookWebSearchPageState extends State<BookWebSearchPage> {
         SnackBar(
           content: Text(
             enriched
-                ? '«$title» добавлена. Данные каталога и обложка загружены.'
-                : '«$title» добавлена. Дополнительные данные в каталоге не найдены.',
+                ? LunoraLocalization.text('«$title» добавлена. Данные каталога и обложка загружены.', '“$title” was added. Catalog details and cover were loaded.')
+                : LunoraLocalization.text('«$title» добавлена. Дополнительные данные в каталоге не найдены.', '“$title” was added. No additional catalog details were found.'),
           ),
         ),
       );
@@ -140,7 +140,7 @@ class _BookWebSearchPageState extends State<BookWebSearchPage> {
                     onSubmitted: (_) => _runSearch(),
                     decoration: InputDecoration(
                       hintText: LunoraLocalization.text(
-                        'Название книги или автор',
+                        LunoraLocalization.text('Название книги или автор', 'Book title or author'),
                       ),
                       prefixIcon: Icon(Icons.search),
                       border: OutlineInputBorder(),
@@ -166,7 +166,7 @@ class _BookWebSearchPageState extends State<BookWebSearchPage> {
                 ? Center(
                     child: Text(
                       LunoraLocalization.text(
-                        'Введи название книги или автора',
+                        LunoraLocalization.text('Введи название книги или автора', 'Enter a book title or author'),
                       ),
                     ),
                   )
@@ -208,7 +208,7 @@ class _BookWebSearchPageState extends State<BookWebSearchPage> {
                                 )
                               : IconButton(
                                   tooltip: LunoraLocalization.text(
-                                    'Добавить в библиотеку',
+                                    LunoraLocalization.text('Добавить в библиотеку', 'Add to library'),
                                   ),
                                   onPressed: adding
                                       ? null
