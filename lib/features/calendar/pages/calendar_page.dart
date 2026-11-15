@@ -56,7 +56,7 @@ class _CalendarEntry {
   final List<NotificationItem> reminders;
 
   String get timeLabel {
-    if (time == null) return 'Весь день';
+    if (time == null) return LunoraLocalization.text('Весь день', 'All day');
 
     final hour = time! ~/ 60;
     final minute = time! % 60;
@@ -904,11 +904,10 @@ class _CalendarPageState extends State<CalendarPage> {
   String _entryCountLabel(int count) {
     final mod10 = count % 10;
     final mod100 = count % 100;
+    if (LunoraLocalization.isEnglish) return count == 1 ? 'entry' : 'entries';
     if (mod10 == 1 && mod100 != 11) return 'запись';
-    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
-      return LunoraLocalization.text('записи', 'entries');
-    }
-    return LunoraLocalization.text('записей', 'entries');
+    if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) return 'записи';
+    return 'записей';
   }
 
   Widget _buildDayPanel() {
@@ -1417,7 +1416,7 @@ class _TaskEditorDialogState extends State<_TaskEditorDialog> {
                       onPressed: _date == null ? null : _selectTime,
                       icon: const Icon(Icons.access_time),
                       label: Text(
-                        _time == null ? 'Без времени' : _time!.format(context),
+                        _time == null ? LunoraLocalization.text('Без времени', 'No time') : _time!.format(context),
                       ),
                     ),
                   ),
