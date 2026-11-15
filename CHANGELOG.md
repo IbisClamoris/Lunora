@@ -2,6 +2,16 @@
 
 All notable user-facing changes to Lunora are recorded here.
 
+## [1.0.4] - 2026-11-15
+
+### Improved
+- Completed English localization across the application, including core screens, dialogs, forms, filters, search, empty states, and feedback messages.
+- Improved consistency of bilingual labels and dynamic text throughout the interface.
+
+### Fixed
+- Fixed remaining Russian text appearing when English is selected.
+- Corrected localized labels and plural forms in planner, calendar, books, recipes, wishlist, finance, backup management, and web search screens.
+
 ## [1.0.2] - 2026-11-14
 
 ### Added
