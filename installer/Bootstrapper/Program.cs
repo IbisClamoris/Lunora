@@ -37,7 +37,7 @@ internal sealed class InstallerForm : Form
     private bool installing;
     private bool completed;
     private string? installedVersion;
-    private const string UninstallKeyName = @"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{D0A9E57C-7E7D-4D71-9E1B-8F4A2C91B6D3}_is1";
+    private const string UninstallKeyName = @"Software\Microsoft\Windows\CurrentVersion\Uninstall\{D0A9E57C-7E7D-4D71-9E1B-8F4A2C91B6D3}_is1";
 
     public InstallerForm()
     {
