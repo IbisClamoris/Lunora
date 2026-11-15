@@ -71,7 +71,7 @@ jobs:
           $iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
           if (-not (Test-Path $iscc)) { throw "Inno Setup compiler not found: $iscc" }
           $version = "${{ steps.app-version.outputs.version }}"
-          & $iscc "/DAppVersion=$version" "/F Lunora-Payload" installer/Lunora.iss
+          & $iscc "/DAppVersion=$version" "/FLunora-Payload" installer/Lunora.iss
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Generate SHA-256 checksum
