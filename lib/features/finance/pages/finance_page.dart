@@ -200,12 +200,12 @@ class _FinancePageState extends State<FinancePage>
 
   Future<void> _runAction(
     Future<void> Function() action, {
-    String successMessage = 'Изменения сохранены.',
+    String? successMessage,
   }) async {
     try {
       await action();
       await _loadData();
-      await _showMessage(successMessage);
+      await _showMessage(successMessage ?? LunoraLocalization.text('Изменения сохранены.', 'Changes saved.'));
     } catch (error) {
       await _showError(error);
     }
