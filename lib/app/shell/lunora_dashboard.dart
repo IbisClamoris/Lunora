@@ -1130,7 +1130,7 @@ class _DailyThought extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              '${LunoraLocalization.text('Не обязательно успеть всё. ')}Пусть сегодня найдётся место и для себя.',
+              LunoraLocalization.text('Не обязательно успеть всё. Пусть сегодня найдётся место и для себя.', 'You do not have to do everything. Leave a little room for yourself today.'),
               style: TextStyle(color: textColor, height: 1.4),
             ),
           ),
