@@ -183,7 +183,7 @@ class _RecipesPageState extends State<RecipesPage> {
           final palette = Theme.of(context).extension<LunoraPalette>()!;
           return ChoiceChip(
             label: Text(
-              category == 'Все' ? LunoraLocalization.text('Все', 'All') : category,
+              LunoraLocalization.text(category, category == 'Все' ? 'All' : category),
             ),
             selected: selected,
             showCheckmark: true,
