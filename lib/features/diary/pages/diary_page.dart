@@ -200,7 +200,7 @@ class _DiaryPageState extends State<DiaryPage> {
         title: Text(LunoraLocalization.text('Удалить запись?')),
         content: Text(
           LunoraLocalization.text(
-            'Эта запись будет удалена без возможности восстановления.',
+            LunoraLocalization.text('Эта запись будет удалена без возможности восстановления.', 'This entry will be permanently deleted.'),
           ),
         ),
         actions: [
@@ -275,7 +275,7 @@ class _DiaryPageState extends State<DiaryPage> {
   }
 
   String _entryTypeLabel(String type) {
-    return type == 'memory' ? 'Воспоминание' : 'Дневниковая запись';
+    return type == 'memory' ? LunoraLocalization.text('Воспоминание') : LunoraLocalization.text('Дневниковая запись');
   }
 
   String _contentPreview(String content) {
@@ -306,7 +306,7 @@ class _DiaryPageState extends State<DiaryPage> {
       return buffer.toString().trim();
     } catch (error) {
       debugPrint('Ошибка чтения фрагмента записи: $error');
-      return 'Не удалось отобразить текст записи.';
+      return LunoraLocalization.text('Не удалось отобразить текст записи.', 'Could not display the entry text.');
     }
   }
 
@@ -432,7 +432,7 @@ class _DiaryPageState extends State<DiaryPage> {
               LunoraSectionHeader(
                 title: LunoraLocalization.text('Дневник'),
                 subtitle: LunoraLocalization.text(
-                  'Мысли, события, чувства и важные моменты.',
+                  LunoraLocalization.text('Мысли, события, чувства и важные моменты.', 'Thoughts, events, feelings, and important moments.'),
                 ),
                 icon: Icons.menu_book_rounded,
                 actions: [
@@ -470,7 +470,7 @@ class _DiaryPageState extends State<DiaryPage> {
                         onChanged: _onSearchChanged,
                         decoration: InputDecoration(
                           hintText: LunoraLocalization.text(
-                            'Поиск по записям...',
+                            LunoraLocalization.text('Поиск по записям...', 'Search entries...'),
                           ),
                           prefixIcon: const Icon(Icons.search),
                           suffixIcon: _searchQuery.isNotEmpty
@@ -542,20 +542,20 @@ class _DiaryPageState extends State<DiaryPage> {
       String description;
 
       if (_searchQuery.isNotEmpty) {
-        title = 'Ничего не найдено';
-        description = 'Попробуй изменить поисковый запрос.';
+        title = LunoraLocalization.text('Ничего не найдено');
+        description = LunoraLocalization.text('Попробуй изменить поисковый запрос.');
       } else if (_showFavoritesOnly) {
-        title = 'Пока нет любимых моментов';
-        description = 'Отмечай сердечком важные для себя записи.';
+        title = LunoraLocalization.text('Пока нет любимых моментов');
+        description = LunoraLocalization.text('Отмечай сердечком важные для себя записи.');
       } else if (_selectedMood != _allMoods) {
-        title = 'Записей с таким настроением нет';
-        description = 'Выбери другое настроение или сбрось фильтр.';
+        title = LunoraLocalization.text('Записей с таким настроением нет');
+        description = LunoraLocalization.text('Выбери другое настроение или сбрось фильтр.');
       } else if (_selectedCategory != _allCategories) {
-        title = 'В этой категории пока пусто';
-        description = 'Выбери другую категорию или покажи все записи.';
+        title = LunoraLocalization.text('В этой категории пока пусто');
+        description = LunoraLocalization.text('Выбери другую категорию или покажи все записи.');
       } else {
-        title = 'Пока здесь тихо';
-        description = 'Твои записи будут храниться здесь.';
+        title = LunoraLocalization.text('Пока здесь тихо');
+        description = LunoraLocalization.text('Твои записи будут храниться здесь.');
       }
 
       return Center(
@@ -610,7 +610,7 @@ class _DiaryPageState extends State<DiaryPage> {
                     children: [
                       Expanded(
                         child: Text(
-                          entry.title.isEmpty ? 'Без названия' : entry.title,
+                          entry.title.isEmpty ? LunoraLocalization.text('Без названия', 'Untitled') : entry.title,
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ),

@@ -82,7 +82,7 @@ class _DataHistoryPageState extends State<DataHistoryPage>
 
   String _formatDate(DateTime date) {
     if (date.millisecondsSinceEpoch == 0) {
-      return 'Дата неизвестна';
+      return LunoraLocalization.text('Дата неизвестна', 'Unknown date');
     }
 
     return DateFormat('dd.MM.yyyy · HH:mm').format(date);
@@ -98,18 +98,18 @@ class _DataHistoryPageState extends State<DataHistoryPage>
 
   String _statusText(HistoryEntry entry) {
     if (entry.isSuccessful) {
-      return 'Успешно';
+      return LunoraLocalization.text('Успешно', 'Successful');
     }
 
     switch (entry.status.toLowerCase().trim()) {
       case 'failed':
       case 'error':
       case 'ошибка':
-        return 'Ошибка';
+        return LunoraLocalization.text('Ошибка', 'Error');
 
       case 'pending':
       case 'processing':
-        return 'В процессе';
+        return LunoraLocalization.text('В процессе', 'In progress');
 
       default:
         return entry.status;
@@ -139,13 +139,13 @@ class _DataHistoryPageState extends State<DataHistoryPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  _detailRow('Файл', entry.fileName),
-                  _detailRow('Тип операции', isImport ? 'Импорт' : 'Экспорт'),
-                  _detailRow('Раздел', entry.sourceModule ?? 'Не указан'),
-                  _detailRow('Дата', _formatDate(entry.date)),
+                  _detailRow(LunoraLocalization.text('Файл', 'File'), entry.fileName),
+                  _detailRow(LunoraLocalization.text('Тип операции', 'Operation type'), isImport ? LunoraLocalization.text('Импорт', 'Import') : 'Экспорт'),
+                  _detailRow(LunoraLocalization.text('Раздел', 'Section'), entry.sourceModule ?? 'Не указан'),
+                  _detailRow(LunoraLocalization.text('Дата', 'Date'), _formatDate(entry.date)),
                   if (isImport)
                     _detailRow(
-                      'Импортировано записей',
+                      LunoraLocalization.text('Импортировано записей', 'Records imported'),
                       '${entry.recordCount ?? 0}',
                     ),
                   _detailRow(LunoraLocalization.text('Статус'), _statusText(entry)),
@@ -158,7 +158,7 @@ class _DataHistoryPageState extends State<DataHistoryPage>
                   SelectableText(
                     entry.details?.trim().isNotEmpty == true
                         ? entry.details!
-                        : 'Дополнительная информация отсутствует.',
+                        : LunoraLocalization.text('Дополнительная информация отсутствует.', 'No additional information.'),
                   ),
                 ],
               ),
@@ -294,7 +294,7 @@ class _DataHistoryPageState extends State<DataHistoryPage>
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    entry.sourceModule ?? 'Раздел не указан',
+                    entry.sourceModule ?? LunoraLocalization.text('Раздел не указан', 'Section not specified'),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -327,7 +327,7 @@ class _DataHistoryPageState extends State<DataHistoryPage>
                       if (entry.type == HistoryType.import)
                         Text(
                           LunoraLocalization.text(
-                            '${entry.recordCount ?? 0} записей',
+                            LunoraLocalization.text('${entry.recordCount ?? 0} записей', '${entry.recordCount ?? 0} records'),
                           ),
                           style: Theme.of(context).textTheme.bodySmall,
                         ),
@@ -368,7 +368,7 @@ class _DataHistoryPageState extends State<DataHistoryPage>
             const SizedBox(height: 6),
             Text(
               LunoraLocalization.text(
-                'История операций появится после первого импорта или экспорта.',
+                LunoraLocalization.text('История операций появится после первого импорта или экспорта.', 'Activity history will appear after your first import or export.'),
               ),
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodySmall,
@@ -395,7 +395,7 @@ class _DataHistoryPageState extends State<DataHistoryPage>
               const SizedBox(height: 12),
               Text(
                 LunoraLocalization.text(
-                  'Не удалось загрузить историю операций.',
+                  LunoraLocalization.text('Не удалось загрузить историю операций.', 'Could not load activity history.'),
                 ),
                 textAlign: TextAlign.center,
               ),

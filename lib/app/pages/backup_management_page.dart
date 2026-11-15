@@ -43,7 +43,7 @@ class _BackupManagementPageState extends State<BackupManagementPage> {
         });
       }
     } catch (error) {
-      _showMessage('Не удалось загрузить копии: $error');
+      _showMessage(LunoraLocalization.text('Не удалось загрузить копии: $error', 'Could not load backups: $error'));
     } finally {
       if (mounted) {
         setState(() {
@@ -63,10 +63,10 @@ class _BackupManagementPageState extends State<BackupManagementPage> {
       await _loadBackups();
 
       if (mounted) {
-        _showMessage('Резервная копия создана: ${backup.fileName}');
+        _showMessage(LunoraLocalization.text('Резервная копия создана: ${backup.fileName}', 'Backup created: ${backup.fileName}'));
       }
     } catch (error) {
-      _showMessage('Ошибка создания копии: $error');
+      _showMessage(LunoraLocalization.text('Ошибка создания копии: $error', 'Could not create backup: $error'));
     } finally {
       if (mounted) {
         setState(() {
@@ -109,11 +109,11 @@ class _BackupManagementPageState extends State<BackupManagementPage> {
       await _restoreService.restoreBackup(backup);
 
       if (mounted) {
-        _showMessage('База данных успешно восстановлена.');
+        _showMessage(LunoraLocalization.text('База данных успешно восстановлена.', 'Database restored successfully.'));
         await _loadBackups();
       }
     } catch (error) {
-      _showMessage('Ошибка восстановления: $error');
+      _showMessage(LunoraLocalization.text('Ошибка восстановления: $error', 'Restore failed: $error'));
     } finally {
       if (mounted) {
         setState(() {
@@ -129,9 +129,7 @@ class _BackupManagementPageState extends State<BackupManagementPage> {
       builder: (context) => AlertDialog(
         title: Text(LunoraLocalization.text('Удалить резервную копию?')),
         content: Text(
-          LunoraLocalization.isEnglish
-              ? 'The file "${backup.fileName}ill be permanently deleted.'
-              : 'Файл "${backup.fileName}" будет удалён без возможности восстановления.',
+          LunoraLocalization.text('Файл "${backup.fileName}" будет удалён без возможности восстановления.', 'File "${backup.fileName}" will be permanently deleted.'),
         ),
         actions: [
           TextButton(
@@ -157,10 +155,10 @@ class _BackupManagementPageState extends State<BackupManagementPage> {
       await _loadBackups();
 
       if (mounted) {
-        _showMessage('Резервная копия удалена.');
+        _showMessage(LunoraLocalization.text('Резервная копия удалена.', 'Backup deleted.'));
       }
     } catch (error) {
-      _showMessage('Не удалось удалить копию: $error');
+      _showMessage(LunoraLocalization.text('Не удалось удалить копию: $error', 'Could not delete backup: $error'));
     } finally {
       if (mounted) {
         setState(() {
@@ -284,7 +282,7 @@ class _BackupManagementPageState extends State<BackupManagementPage> {
               const SizedBox(height: 6),
               Text(
                 LunoraLocalization.text(
-                  'Создай первую копию, чтобы защитить свои данные.',
+                  LunoraLocalization.text('Создай первую копию, чтобы защитить свои данные.', 'Create your first backup to protect your data.'),
                 ),
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.bodySmall,

@@ -38,7 +38,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось обновить запись: $e');
+        _showMessage(LunoraLocalization.text('Не удалось обновить запись: $e', 'Could not update entry: $e'));
       }
     } finally {
       if (mounted) {
@@ -65,7 +65,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
           title: Text(LunoraLocalization.text('Удалить запись?')),
           content: Text(
             LunoraLocalization.text(
-              '«${_movie.title}» будет удалён из твоей коллекции.',
+              LunoraLocalization.text('«${_movie.title}» будет удалён из твоей коллекции.', '“${_movie.title}” will be removed from your collection.'),
             ),
           ),
           actions: [
@@ -95,7 +95,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
       Navigator.of(context).pop(true);
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось удалить запись: $e');
+        _showMessage(LunoraLocalization.text('Не удалось удалить запись: $e', 'Could not delete entry: $e'));
       }
     }
   }
@@ -191,7 +191,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось обновить прогресс: $e');
+        _showMessage(LunoraLocalization.text('Не удалось обновить прогресс: $e', 'Could not update progress: $e'));
       }
     }
   }
@@ -205,17 +205,17 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   String _statusLabel(String status) {
     switch (status) {
       case 'watching':
-        return 'Смотрю';
+        return LunoraLocalization.text('Смотрю', 'Watching');
       case 'completed':
-        return 'Просмотрено';
+        return LunoraLocalization.text('Просмотрено', 'Watched');
       case 'planned':
-        return 'В планах';
+        return LunoraLocalization.text('В планах', 'Planned');
       case 'on_hold':
-        return 'Отложено';
+        return LunoraLocalization.text('Отложено', 'On hold');
       case 'dropped':
-        return 'Брошено';
+        return LunoraLocalization.text('Брошено', 'Dropped');
       default:
-        return 'Неизвестно';
+        return LunoraLocalization.text('Неизвестно', 'Unknown');
     }
   }
 
@@ -237,7 +237,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   }
 
   String _formatDate(DateTime? date) {
-    if (date == null) return 'Не указана';
+    if (date == null) return LunoraLocalization.text('Не указана', 'Not specified');
 
     return '${date.day.toString().padLeft(2, '0')}.'
         '${date.month.toString().padLeft(2, '0')}.'
@@ -310,7 +310,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
 
                     if (_movie.review.isNotEmpty) ...[
                       _sectionTitle(
-                        'Мои впечатления',
+                        LunoraLocalization.text('Мои впечатления', 'My thoughts'),
                         Icons.rate_review_outlined,
                       ),
                       const SizedBox(height: 12),
@@ -415,7 +415,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  _movie.isSeries ? 'Сериал' : 'Фильм',
+                  _movie.isSeries ? LunoraLocalization.text('Сериал', 'TV series') : LunoraLocalization.text('Фильм', 'Movie'),
                   style: TextStyle(color: colors.onSurfaceVariant),
                 ),
                 if (_movie.rating != null) ...[
@@ -508,7 +508,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
           const SizedBox(height: 12),
           Text(
             LunoraLocalization.text(
-              'Сезон ${_movie.currentSeason}, серия ${_movie.currentEpisode}',
+              LunoraLocalization.text('Сезон ${_movie.currentSeason}, серия ${_movie.currentEpisode}', 'Season ${_movie.currentSeason}, episode ${_movie.currentEpisode}'),
             ),
             style: TextStyle(
               color: colors.primary,
@@ -521,9 +521,9 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
             Text(
               [
                 if (_movie.seasonsCount != null)
-                  '${_movie.seasonsCount} сезонов',
+                  LunoraLocalization.text('${_movie.seasonsCount} сезонов', '${_movie.seasonsCount} seasons'),
                 if (_movie.episodesCount != null)
-                  '${_movie.episodesCount} серий',
+                  LunoraLocalization.text('${_movie.episodesCount} серий', '${_movie.episodesCount} episodes'),
               ].join(' · '),
               style: TextStyle(color: colors.onSurfaceVariant, fontSize: 12),
             ),
@@ -536,33 +536,33 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
   Widget _buildInformation(ColorScheme colors) {
     final items = <(String, String, IconData)>[
       (
-        'Год выпуска',
-        _movie.releaseYear?.toString() ?? 'Не указан',
+        LunoraLocalization.text('Год выпуска', 'Release year'),
+        _movie.releaseYear?.toString() ?? LunoraLocalization.text('Не указан', 'Not specified'),
         Icons.calendar_today_outlined,
       ),
-      ('Тип', _movie.isSeries ? 'Сериал' : 'Фильм', Icons.movie_outlined),
+      ('Тип', _movie.isSeries ? LunoraLocalization.text('Сериал', 'TV series') : LunoraLocalization.text('Фильм', 'Movie'), Icons.movie_outlined),
       if (_movie.isMovie)
         (
-          'Длительность',
+          LunoraLocalization.text('Длительность', 'Duration'),
           _movie.runtimeMinutes != null
-              ? '${_movie.runtimeMinutes} минут'
-              : 'Не указана',
+              ? LunoraLocalization.text('${_movie.runtimeMinutes} минут', '${_movie.runtimeMinutes} minutes')
+              : LunoraLocalization.text('Не указана', 'Not specified'),
           Icons.schedule_outlined,
         ),
       if (_movie.isSeries) ...[
         (
-          'Количество сезонов',
-          _movie.seasonsCount?.toString() ?? 'Не указано',
+          LunoraLocalization.text('Количество сезонов', 'Number of seasons'),
+          _movie.seasonsCount?.toString() ?? LunoraLocalization.text('Не указано', 'Not specified'),
           Icons.video_library_outlined,
         ),
         (
-          'Количество серий',
-          _movie.episodesCount?.toString() ?? 'Не указано',
+          LunoraLocalization.text('Количество серий', 'Number of episodes'),
+          _movie.episodesCount?.toString() ?? LunoraLocalization.text('Не указано', 'Not specified'),
           Icons.playlist_play_rounded,
         ),
       ],
       (
-        'Дата просмотра',
+        LunoraLocalization.text('Дата просмотра', 'Watch date'),
         _formatDate(_movie.watchedAt),
         Icons.event_available_outlined,
       ),

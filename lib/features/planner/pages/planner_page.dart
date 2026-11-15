@@ -31,30 +31,15 @@ class PlannerPage extends StatefulWidget {
 }
 
 class _PlannerPageState extends State<PlannerPage> {
-  static const List<String> _months = [
-    'Январь',
-    'Февраль',
-    'Март',
-    'Апрель',
-    'Май',
-    'Июнь',
-    'Июль',
-    'Август',
-    'Сентябрь',
-    'Октябрь',
-    'Ноябрь',
-    'Декабрь',
-  ];
+  List<String> get _months => LunoraLocalization.isEnglish
+      ? const ['January', 'February', 'March', 'April', 'May', 'June',
+          'July', 'August', 'September', 'October', 'November', 'December']
+      : const ['Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+          'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
 
-  static const List<String> _weekdays = [
-    'Пн',
-    'Вт',
-    'Ср',
-    'Чт',
-    'Пт',
-    'Сб',
-    'Вс',
-  ];
+  List<String> get _weekdays => LunoraLocalization.isEnglish
+      ? const ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      : const ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
 
   final PlannerRepository _plannerRepository = PlannerRepository.instance;
   final TaskRepository _taskRepository = TaskRepository.instance;
@@ -187,7 +172,7 @@ class _PlannerPageState extends State<PlannerPage> {
   }
 
   String _formatTime(int? minutes) {
-    if (minutes == null) return 'Весь день';
+    if (minutes == null) return LunoraLocalization.text('Весь день', 'All day');
 
     final hour = minutes ~/ 60;
     final minute = minutes % 60;
@@ -476,7 +461,7 @@ class _PlannerPageState extends State<PlannerPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle(
-          'Задачи на ${_formatDate(_selectedDate)}',
+          LunoraLocalization.text('Задачи на ${_formatDate(_selectedDate)}', 'Tasks for ${_formatDate(_selectedDate)}'),
           trailing: Text(
             '${tasks.length}',
             style: TextStyle(color: _palette.secondary),
@@ -556,7 +541,7 @@ class _PlannerPageState extends State<PlannerPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle(
-          'Цели месяца',
+          LunoraLocalization.text('Цели месяца', 'Monthly goals'),
           trailing: TextButton.icon(
             onPressed: _showGoalDialog,
             icon: const Icon(Icons.add, size: 18),
@@ -646,13 +631,13 @@ class _PlannerPageState extends State<PlannerPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(goal == null ? LunoraLocalization.text('Новая цель') : LunoraLocalization.text('Редактирование цели')),
+          title: Text(goal == null ? LunoraLocalization.text('Новая цель', 'New goal') : LunoraLocalization.text('Редактирование цели', 'Edit goal')),
           content: TextField(
             controller: controller,
             autofocus: true,
             maxLength: 150,
             decoration: InputDecoration(
-              labelText: LunoraLocalization.text('Название цели'),
+              labelText: LunoraLocalization.text('Название цели', 'Goal title'),
               border: OutlineInputBorder(),
             ),
             onSubmitted: (_) {
@@ -662,11 +647,11 @@ class _PlannerPageState extends State<PlannerPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(LunoraLocalization.text('Отмена')),
+              child: Text(LunoraLocalization.text('Отмена', 'Cancel')),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, controller.text),
-              child: Text(LunoraLocalization.text('Сохранить')),
+              child: Text(LunoraLocalization.text('Сохранить', 'Save')),
             ),
           ],
         );
@@ -704,7 +689,7 @@ class _PlannerPageState extends State<PlannerPage> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _sectionTitle(
-          'Заметки',
+          LunoraLocalization.text('Заметки', 'Notes'),
           trailing: TextButton.icon(
             onPressed: _showNoteDialog,
             icon: const Icon(Icons.add, size: 18),
@@ -713,7 +698,7 @@ class _PlannerPageState extends State<PlannerPage> {
         ),
         const SizedBox(height: 8),
         if (_notes.isEmpty)
-          _emptyCard(LunoraLocalization.text('Здесь будут твои личные заметки планера.'))
+          _emptyCard(LunoraLocalization.text('Здесь будут твои личные заметки планера.', 'Your personal planner notes will appear here.'))
         else
           ..._notes.map(_buildNoteCard),
       ],
@@ -963,7 +948,7 @@ class _PlannerPageState extends State<PlannerPage> {
     return LunoraSectionHeader(
       title: LunoraLocalization.text('Мой планер'),
       subtitle: LunoraLocalization.text(
-        'Место для планов, маленьких шагов и больших задумок.',
+        LunoraLocalization.text('Место для планов, маленьких шагов и больших задумок.', 'A space for plans, small steps, and big ideas.'),
       ),
       icon: Icons.event_note_outlined,
       actions: [

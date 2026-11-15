@@ -171,7 +171,7 @@ class _DiaryGalleryPageState extends State<DiaryGalleryPage> {
           title: Text(LunoraLocalization.text('Удалить фотографию?')),
           content: Text(
             LunoraLocalization.text(
-              'Фотография будет удалена из записи и из хранилища Lunora. Это действие нельзя отменить.',
+              LunoraLocalization.text('Фотография будет удалена из записи и из хранилища Lunora. Это действие нельзя отменить.', 'The photo will be removed from the entry and Lunora storage. This action cannot be undone.'),
             ),
           ),
           actions: [
@@ -297,7 +297,7 @@ class _DiaryGalleryPageState extends State<DiaryGalleryPage> {
           LunoraSectionHeader(
             title: LunoraLocalization.text('Галерея дневника'),
             subtitle: LunoraLocalization.text(
-              'Фотографии, иллюстрации и памятные моменты.',
+              LunoraLocalization.text('Фотографии, иллюстрации и памятные моменты.', 'Photos, illustrations, and memorable moments.'),
             ),
             icon: Icons.photo_library_outlined,
             actions: [
@@ -397,7 +397,7 @@ class _DiaryGalleryPageState extends State<DiaryGalleryPage> {
   Widget _buildPhotoCard(_DiaryPhoto photo) {
     final palette = Theme.of(context).extension<LunoraPalette>()!;
     final title = photo.entry.title.trim().isEmpty
-        ? 'Без названия'
+        ? LunoraLocalization.text('Без названия', 'Untitled')
         : photo.entry.title;
 
     return Material(
@@ -491,7 +491,7 @@ class _DiaryGalleryPageState extends State<DiaryGalleryPage> {
                             color: Colors.white,
                           ),
                           tooltip: LunoraLocalization.text(
-                            'Удалить фотографию',
+                            LunoraLocalization.text('Удалить фотографию', 'Delete photo'),
                           ),
                           iconSize: 18,
                           constraints: const BoxConstraints(

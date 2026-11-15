@@ -104,7 +104,7 @@ class _KnowledgeDetailPageState extends State<KnowledgeDetailPage> {
           ),
           content: Text(
             LunoraLocalization.text(
-              'Запись «${entry.title}» будет удалена без возможности восстановления.',
+              LunoraLocalization.text('Запись «${entry.title}» будет удалена без возможности восстановления.', 'Entry “${entry.title}” will be permanently deleted.'),
             ),
             style: TextStyle(color: palette.secondary),
           ),
@@ -159,12 +159,12 @@ class _KnowledgeDetailPageState extends State<KnowledgeDetailPage> {
         _metadataChip(
           palette,
           Icons.calendar_today_outlined,
-          'Добавлено ${_formatDate(entry.createdAt)}',
+          LunoraLocalization.text('Добавлено ${_formatDate(entry.createdAt)}', 'Added ${_formatDate(entry.createdAt)}'),
         ),
         _metadataChip(
           palette,
           Icons.update_outlined,
-          'Обновлено ${_formatDate(entry.updatedAt)}',
+          LunoraLocalization.text('Обновлено ${_formatDate(entry.updatedAt)}', 'Updated ${_formatDate(entry.updatedAt)}'),
         ),
       ],
     );
@@ -199,7 +199,7 @@ class _KnowledgeDetailPageState extends State<KnowledgeDetailPage> {
       ),
       child: SelectableText(
         entry.content.trim().isEmpty
-            ? 'Содержимое записи пока не добавлено.'
+            ? LunoraLocalization.text('Содержимое записи пока не добавлено.', 'No content has been added to this entry yet.')
             : entry.content,
         style: TextStyle(
           color: entry.content.trim().isEmpty
@@ -278,7 +278,7 @@ class _KnowledgeDetailPageState extends State<KnowledgeDetailPage> {
                 SnackBar(
                   content: Text(
                     LunoraLocalization.text(
-                      'Открытие ссылок будет добавлено на следующем этапе.',
+                      LunoraLocalization.text('Открытие ссылок будет добавлено на следующем этапе.', 'Opening links will be added in a future update.'),
                     ),
                   ),
                 ),
@@ -306,8 +306,8 @@ class _KnowledgeDetailPageState extends State<KnowledgeDetailPage> {
           if (_entry != null) ...[
             IconButton(
               tooltip: _entry!.isFavorite
-                  ? 'Убрать из избранного'
-                  : 'В избранное',
+                  ? LunoraLocalization.text('Убрать из избранного', 'Remove from favourites')
+                  : LunoraLocalization.text('В избранное', 'Add to favourites'),
               onPressed: _toggleFavorite,
               icon: Icon(
                 _entry!.isFavorite

@@ -312,7 +312,7 @@ class _DashboardHeader extends StatelessWidget {
                 const SizedBox(height: 7),
                 Text(
                   LunoraLocalization.text(
-                    'Твой день в Lunora',
+                    LunoraLocalization.text('Твой день в Lunora', 'Your day in Lunora'),
                     'Your day in Lunora',
                   ),
                   style: TextStyle(
@@ -395,7 +395,7 @@ class _DailyOverview extends StatelessWidget {
           ),
           _StatData(
             title: LunoraLocalization.text(
-              'Выполнено сегодня',
+              LunoraLocalization.text('Выполнено сегодня', 'Completed today'),
               'Completed today',
             ),
             value: '$completedCount',
@@ -408,7 +408,7 @@ class _DailyOverview extends StatelessWidget {
           ),
           _StatData(
             title: LunoraLocalization.text(
-              'В списке покупок',
+              LunoraLocalization.text('В списке покупок', 'On your shopping list'),
               'On shopping list',
             ),
             value: '$shoppingCount',
@@ -543,17 +543,17 @@ class _TodayPanel extends StatelessWidget {
           if (overdue.isNotEmpty) ...[
             _InlineNotice(
               icon: Icons.warning_amber_rounded,
-              text: 'Просрочено: ${overdue.length}',
+              text: LunoraLocalization.text('Просрочено: ${overdue.length}'),
               color: p.rose,
             ),
             const SizedBox(height: 10),
           ],
           if (tasks.isEmpty)
-            const _EmptyHint(
+            _EmptyHint(
               icon: Icons.event_available_outlined,
-              text:
-                  'На сегодня пока ничего не запланировано. '
-                  'Можно выдохнуть или добавить новое дело.',
+              text: LunoraLocalization.text(
+                'На сегодня пока ничего не запланировано. Можно выдохнуть или добавить новое дело.',
+              ),
             )
           else
             ...tasks.take(6).map((task) => _TaskRow(task: task)),
@@ -562,7 +562,7 @@ class _TodayPanel extends StatelessWidget {
               padding: const EdgeInsets.only(top: 8),
               child: Text(
                 LunoraLocalization.text(
-                  'И ещё ${tasks.length - 6} дел в календаре',
+                  LunoraLocalization.text('И ещё ${tasks.length - 6} дел в календаре'),
                 ),
                 style: TextStyle(color: p.secondary, fontSize: 12),
               ),
@@ -583,7 +583,7 @@ class _TaskRow extends StatelessWidget {
     final p = Theme.of(context).extension<LunoraPalette>()!;
 
     final time = task.dueTimeMinutes == null
-        ? 'Весь день'
+        ? LunoraLocalization.text('Весь день', 'All day')
         : '${(task.dueTimeMinutes! ~/ 60).toString().padLeft(2, '0')}:'
               '${(task.dueTimeMinutes! % 60).toString().padLeft(2, '0')}';
 
@@ -662,7 +662,7 @@ class _LifeInProgressPanel extends StatelessWidget {
         _Panel(
           title: LunoraLocalization.text('Сейчас в процессе', "In progress"),
           subtitle: LunoraLocalization.text(
-            'То, к чему можно вернуться',
+            LunoraLocalization.text('То, к чему можно вернуться', 'Things to return to'),
             "Things to return to",
           ),
           child: Column(
@@ -677,7 +677,7 @@ class _LifeInProgressPanel extends StatelessWidget {
                   ),
                   title: LunoraLocalization.text('Нет книги в процессе чтения'),
                   subtitle: LunoraLocalization.text(
-                    'Книжный мир ждёт продолжения',
+                    LunoraLocalization.text('Книжный мир ждёт продолжения', 'Your bookshelf is waiting for the next chapter'),
                   ),
                   onTap: () => onNavigate(10),
                 )
@@ -693,7 +693,7 @@ class _LifeInProgressPanel extends StatelessWidget {
                         ),
                         title: book.title,
                         subtitle: book.pageCount == null
-                            ? 'Читаю сейчас'
+                            ? LunoraLocalization.text('Читаю сейчас', 'Currently reading')
                             : '${book.currentPage} из ${book.pageCount} страниц',
                         onTap: () => onNavigate(10),
                       ),
@@ -725,7 +725,7 @@ class _LifeInProgressPanel extends StatelessWidget {
                           'diary',
                         ),
                         title: entry.title.isEmpty
-                            ? 'Запись без названия'
+                            ? LunoraLocalization.text('Запись без названия')
                             : entry.title,
                         subtitle: _shortDate(entry.entryDate),
                         onTap: () => onOpenDiaryEntry(entry),
@@ -739,11 +739,11 @@ class _LifeInProgressPanel extends StatelessWidget {
 
         _Panel(
           title: LunoraLocalization.text(
-            'Небольшие напоминания',
+            LunoraLocalization.text('Небольшие напоминания', 'Small reminders'),
             "Small reminders",
           ),
           subtitle: LunoraLocalization.text(
-            'Сводка по другим делам',
+            LunoraLocalization.text('Сводка по другим делам', 'A summary of other things'),
             "A summary of other things",
           ),
           child: Column(
@@ -756,8 +756,8 @@ class _LifeInProgressPanel extends StatelessWidget {
                 ),
                 title: LunoraLocalization.text('Покупки'),
                 subtitle: shoppingItems.isEmpty
-                    ? 'Список пуст'
-                    : '${shoppingItems.length} пунктов ожидают покупки',
+                    ? LunoraLocalization.text('Список пуст')
+                    : LunoraLocalization.text('${shoppingItems.length} пунктов ожидают покупки'),
                 onTap: onOpenShopping,
               ),
 
@@ -767,8 +767,8 @@ class _LifeInProgressPanel extends StatelessWidget {
                 icon: Icons.account_balance_wallet_outlined,
                 title: LunoraLocalization.text('Активные кредиты'),
                 subtitle: activeDebts.isEmpty
-                    ? 'Нет активных задолженностей'
-                    : '${activeDebts.length} активных обязательств',
+                    ? LunoraLocalization.text('Нет активных задолженностей')
+                    : LunoraLocalization.text('${activeDebts.length} активных обязательств'),
                 onTap: onOpenDebts,
               ),
             ],
@@ -889,7 +889,7 @@ class _QuickActions extends StatelessWidget {
     return _Panel(
       title: LunoraLocalization.text('Быстрые действия'),
       subtitle: LunoraLocalization.text(
-        'Перейти сразу к тому, что хочешь добавить',
+        LunoraLocalization.text('Перейти сразу к тому, что хочешь добавить', 'Jump straight to what you want to add'),
       ),
       child: Wrap(
         spacing: 10,
@@ -1130,7 +1130,7 @@ class _DailyThought extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(
             child: Text(
-              '${LunoraLocalization.text('Не обязательно успеть всё. ')}Пусть сегодня найдётся место и для себя.',
+              LunoraLocalization.text('Не обязательно успеть всё. Пусть сегодня найдётся место и для себя.', 'You do not have to do everything. Leave a little room for yourself today.'),
               style: TextStyle(color: textColor, height: 1.4),
             ),
           ),
@@ -1156,7 +1156,7 @@ class _ErrorPanel extends StatelessWidget {
 
     return _Panel(
       title: LunoraLocalization.text('Не удалось загрузить сводку'),
-      subtitle: LunoraLocalization.text('Данные разделов пока недоступны'),
+      subtitle: LunoraLocalization.text(LunoraLocalization.text('Данные разделов пока недоступны', 'Section data is currently unavailable')),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

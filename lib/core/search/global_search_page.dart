@@ -91,35 +91,35 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
   String _sectionName(LunoraSection section) {
     switch (section) {
       case LunoraSection.home:
-        return 'Главная';
+        return LunoraLocalization.text('Главная', 'Home');
       case LunoraSection.calendar:
-        return 'Календарь';
+        return LunoraLocalization.text('Календарь', 'Calendar');
       case LunoraSection.notifications:
-        return 'Уведомления';
+        return LunoraLocalization.text('Уведомления', 'Notifications');
       case LunoraSection.shoppingList:
-        return 'Список покупок';
+        return LunoraLocalization.text('Список покупок', 'Shopping list');
       case LunoraSection.planner:
-        return 'Мой планер';
+        return LunoraLocalization.text('Мой планер', 'My planner');
       case LunoraSection.studyPlanner:
-        return 'Учебный планер';
+        return LunoraLocalization.text('Учебный планер', 'Study planner');
       case LunoraSection.finances:
-        return 'Мои финансы';
+        return LunoraLocalization.text('Мои финансы', 'Finances');
       case LunoraSection.knowledgeBase:
-        return 'База знаний';
+        return LunoraLocalization.text('База знаний', 'Knowledge base');
       case LunoraSection.diary:
-        return 'Дневник';
+        return LunoraLocalization.text('Дневник', 'Diary');
       case LunoraSection.diaryGallery:
-        return 'Галерея дневника';
+        return LunoraLocalization.text('Галерея дневника', 'Diary gallery');
       case LunoraSection.books:
-        return 'Книжный мир';
+        return LunoraLocalization.text('Книжный мир', 'Books');
       case LunoraSection.movies:
-        return 'Мир кино и сериалов';
+        return LunoraLocalization.text('Мир кино и сериалов', 'Movies & series');
       case LunoraSection.recipes:
-        return 'Книга рецептов';
+        return LunoraLocalization.text('Книга рецептов', 'Recipe book');
       case LunoraSection.wishlist:
-        return 'Вишлист';
+        return LunoraLocalization.text('Вишлист', 'Wishlist');
       case LunoraSection.settings:
-        return 'Настройки';
+        return LunoraLocalization.text('Настройки', 'Settings');
     }
   }
 
@@ -207,11 +207,11 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
               else if (_error != null)
                 _buildMessage(
                   palette,
-                  'Не удалось выполнить поиск.',
+                  LunoraLocalization.text('Не удалось выполнить поиск.', 'Could not perform the search.'),
                   Icons.error_outline,
                 )
               else if (_results.isEmpty)
-                _buildMessage(palette, 'Ничего не найдено.', Icons.search_off)
+                _buildMessage(palette, LunoraLocalization.text('Ничего не найдено.', 'Nothing found.'), Icons.search_off)
               else
                 ..._groupedResults.entries.map(
                   (entry) => _buildSection(palette, entry.key, entry.value),

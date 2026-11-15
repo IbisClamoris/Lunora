@@ -86,11 +86,11 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
   String _priorityLabel() {
     switch (_entry.priority) {
       case 'high':
-        return 'Высокий';
+        return LunoraLocalization.text('Высокий', 'High');
       case 'low':
-        return 'Низкий';
+        return LunoraLocalization.text('Низкий', 'Low');
       default:
-        return 'Обычный';
+        return LunoraLocalization.text('Обычный', 'Normal');
     }
   }
 
@@ -130,7 +130,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
       title: _titleController.text.trim(),
       description: _descriptionController.text.trim(),
       category: _categoryController.text.trim().isEmpty
-          ? 'Без категории'
+          ? LunoraLocalization.text('Без категории', 'Uncategorized')
           : _categoryController.text.trim(),
       tags: tags,
       price: price,
@@ -252,7 +252,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
             SnackBar(
               content: Text(
                 LunoraLocalization.text(
-                  'Это желание уже есть в списке покупок',
+                  LunoraLocalization.text('Это желание уже есть в списке покупок', 'This wish is already on the shopping list'),
                 ),
               ),
             ),
@@ -265,9 +265,9 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
         if (_entry.description.trim().isNotEmpty) _entry.description.trim(),
         if (_entry.notes.trim().isNotEmpty) _entry.notes.trim(),
         if (_entry.price != null)
-          'Стоимость: ${_entry.price} ${_entry.currency}',
+          LunoraLocalization.text('Стоимость: ${_entry.price} ${_entry.currency}', 'Cost: ${_entry.price} ${_entry.currency}'),
         if (_entry.sourceUrl?.trim().isNotEmpty == true)
-          'Источник: ${_entry.sourceUrl!.trim()}',
+          LunoraLocalization.text('Источник: ${_entry.sourceUrl!.trim()}', 'Source: ${_entry.sourceUrl!.trim()}'),
       ].join('\n');
 
       await shoppingRepository.addNew(
@@ -333,7 +333,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
           title: Text(LunoraLocalization.text('Удалить желание?')),
           content: Text(
             LunoraLocalization.text(
-              'Запись будет удалена из Вишлиста. Это действие нельзя отменить.',
+              LunoraLocalization.text('Запись будет удалена из Вишлиста. Это действие нельзя отменить.', 'This entry will be removed from your wishlist. This action cannot be undone.'),
             ),
           ),
           actions: [
@@ -467,7 +467,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
                     controller: _tagsController,
                     label: LunoraLocalization.text('Теги'),
                     palette: palette,
-                    hint: 'Через запятую',
+                    hint: LunoraLocalization.text('Через запятую', 'Comma-separated'),
                   ),
                   const SizedBox(height: 20),
                   _buildTextField(
@@ -526,8 +526,8 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
                           : const Icon(Icons.add_shopping_cart),
                       label: Text(
                         _isAddingToShoppingList
-                            ? 'Добавление...'
-                            : 'Добавить в список покупок',
+                            ? LunoraLocalization.text('Добавление...', 'Adding...')
+                            : LunoraLocalization.text('Добавить в список покупок', 'Add to shopping list'),
                       ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: palette.accent,
@@ -547,8 +547,8 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
                       ),
                       label: Text(
                         _entry.isPurchased
-                            ? 'Вернуть в желания'
-                            : 'Отметить как купленное',
+                            ? LunoraLocalization.text('Вернуть в желания', 'Move back to wishlist')
+                            : LunoraLocalization.text('Отметить как купленное', 'Mark as purchased'),
                       ),
                       style: OutlinedButton.styleFrom(
                         foregroundColor: palette.accent,
@@ -608,7 +608,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
           children: [
             _chip(_entry.category, palette.accent),
             _chip(_priorityLabel(), _priorityColor(palette)),
-            if (_entry.isPurchased) _chip('Куплено', const Color(0xFF91A99A)),
+            if (_entry.isPurchased) _chip(LunoraLocalization.text('Куплено', 'Purchased'), const Color(0xFF91A99A)),
           ],
         ),
         const SizedBox(height: 14),
@@ -619,7 +619,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
           fontSize: 22,
           validator: (value) {
             if (value == null || value.trim().isEmpty) {
-              return 'Укажи название желания';
+              return LunoraLocalization.text('Укажи название желания', 'Enter a wish name');
             }
             return null;
           },
@@ -648,7 +648,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
             initialValue: _priority,
-            decoration: _inputDecoration('Приоритет', palette),
+            decoration: _inputDecoration(LunoraLocalization.text('Приоритет', 'Priority'), palette),
             items: [
               DropdownMenuItem(
                 value: 'high',
@@ -683,7 +683,7 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
             controller: _currencyController,
             label: LunoraLocalization.text('Валюта'),
             palette: palette,
-            hint: 'Например, EUR, USD, RUB',
+            hint: LunoraLocalization.text('Например, EUR, USD, RUB', 'For example, EUR, USD, RUB'),
           ),
         ],
       ),
@@ -821,9 +821,9 @@ class _WishlistDetailsPageState extends State<WishlistDetailsPage> {
         children: [
           _sectionTitle(LunoraLocalization.text('История'), palette),
           const SizedBox(height: 12),
-          _dateRow('Добавлено', _formatDate(_entry.createdAt), palette),
+          _dateRow(LunoraLocalization.text('Добавлено', 'Added'), _formatDate(_entry.createdAt), palette),
           const SizedBox(height: 8),
-          _dateRow('Приобретено', _formatDate(_entry.purchasedAt), palette),
+          _dateRow(LunoraLocalization.text('Приобретено', 'Purchased'), _formatDate(_entry.purchasedAt), palette),
         ],
       ),
     );

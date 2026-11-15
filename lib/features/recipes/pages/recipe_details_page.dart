@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:lunora/core/localization/lunora_localization.dart';
 
 import 'package:flutter/material.dart';
 
@@ -65,7 +66,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         _isLoading = false;
       });
 
-      _showMessage('Не удалось загрузить рецепт: $e');
+      _showMessage(LunoraLocalization.text('Не удалось загрузить рецепт: $e', 'Could not load recipe: $e'));
     }
   }
 
@@ -100,7 +101,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         );
       });
     } catch (e) {
-      _showMessage('Не удалось изменить избранное: $e');
+      _showMessage(LunoraLocalization.text('Не удалось изменить избранное: $e', 'Could not update favourites: $e'));
     }
   }
 
@@ -119,10 +120,10 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
 
       if (!mounted) return;
 
-      _showMessage('Ингредиенты добавлены в список покупок.');
+      _showMessage(LunoraLocalization.text('Ингредиенты добавлены в список покупок.', 'Ingredients added to the shopping list.'));
     } catch (e) {
       if (mounted) {
-        _showMessage('Не удалось добавить ингредиенты: $e');
+        _showMessage(LunoraLocalization.text('Не удалось добавить ингредиенты: $e', 'Could not add ingredients: $e'));
       }
     } finally {
       if (mounted) {
@@ -143,7 +144,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
           ),
           content: Text(
             LunoraLocalization.text(
-              'Рецепт «${_recipe.title}» будет удалён вместе со списком ингредиентов.',
+              LunoraLocalization.text('Рецепт «${_recipe.title}» будет удалён вместе со списком ингредиентов.', 'Recipe “${_recipe.title}” will be deleted together with its ingredients.'),
             ),
           ),
           actions: [
@@ -182,7 +183,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         _isDeleting = false;
       });
 
-      _showMessage('Не удалось удалить рецепт: $e');
+      _showMessage(LunoraLocalization.text('Не удалось удалить рецепт: $e', 'Could not delete recipe: $e'));
     }
   }
 
@@ -196,7 +197,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
     if (uri == null ||
         (uri.scheme != 'http' && uri.scheme != 'https') ||
         uri.host.isEmpty) {
-      _showMessage('Некорректная ссылка на источник');
+      _showMessage(LunoraLocalization.text('Некорректная ссылка на источник', 'Invalid source link'));
       return;
     }
 
@@ -204,11 +205,11 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
       final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
 
       if (!opened && mounted) {
-        _showMessage('Не удалось открыть ссылку');
+        _showMessage(LunoraLocalization.text('Не удалось открыть ссылку', 'Could not open link'));
       }
     } catch (e) {
       if (mounted) {
-        _showMessage('Ошибка при открытии ссылки: $e');
+        _showMessage(LunoraLocalization.text('Ошибка при открытии ссылки: $e', 'Error opening link: $e'));
       }
     }
   }
@@ -228,14 +229,14 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
     final remainingMinutes = minutes % 60;
 
     if (hours == 0) {
-      return '$remainingMinutes мин.';
+      return LunoraLocalization.text('$remainingMinutes мин.', '$remainingMinutes min');
     }
 
     if (remainingMinutes == 0) {
-      return '$hours ч.';
+      return LunoraLocalization.text('$hours ч.', '$hours hr');
     }
 
-    return '$hours ч. $remainingMinutes мин.';
+    return LunoraLocalization.text('$hours ч. $remainingMinutes мин.', '$hours hr $remainingMinutes min');
   }
 
   String _formatQuantity(double? quantity) {
@@ -324,20 +325,20 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
             : constraints.maxWidth;
 
         final cards = [
-          _buildInfoCard(Icons.people_outline, 'Порции', '${_recipe.servings}'),
+          _buildInfoCard(Icons.people_outline, LunoraLocalization.text('Порции', 'Servings'), '${_recipe.servings}'),
           _buildInfoCard(
             Icons.timer_outlined,
-            'Подготовка',
+            LunoraLocalization.text('Подготовка', 'Preparation'),
             _formatDuration(_recipe.prepTimeMinutes),
           ),
           _buildInfoCard(
             Icons.soup_kitchen_outlined,
-            'Приготовление',
+            LunoraLocalization.text('Приготовление', 'Cooking'),
             _formatDuration(_recipe.cookTimeMinutes),
           ),
           _buildInfoCard(
             Icons.restaurant_menu,
-            'Ингредиенты',
+            LunoraLocalization.text('Ингредиенты', 'Ingredients'),
             '${_ingredients.length}',
           ),
         ];
@@ -453,8 +454,8 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                 : const Icon(Icons.add_shopping_cart),
             label: Text(
               _isAddingIngredients
-                  ? 'Добавление...'
-                  : 'Добавить ингредиенты в список покупок',
+                  ? LunoraLocalization.text('Добавление...', 'Adding...')
+                  : LunoraLocalization.text('Добавить ингредиенты в список покупок', 'Add ingredients to shopping list'),
             ),
           ),
         ),
@@ -564,8 +565,8 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
         actions: [
           IconButton(
             tooltip: _recipe.isFavorite
-                ? 'Убрать из избранного'
-                : 'В избранное',
+                ? LunoraLocalization.text('Убрать из избранного', 'Remove from favourites')
+                : LunoraLocalization.text('В избранное', 'Add to favourites'),
             onPressed: _toggleFavorite,
             icon: Icon(
               _recipe.isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -672,7 +673,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                       const SizedBox(height: 28),
 
                       _buildSectionTitle(
-                        'Ингредиенты',
+                        LunoraLocalization.text('Ингредиенты', 'Ingredients'),
                         icon: Icons.shopping_basket_outlined,
                       ),
                       _buildIngredients(),
@@ -680,7 +681,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                       if (_recipe.instructions.trim().isNotEmpty) ...[
                         const SizedBox(height: 28),
                         _buildSectionTitle(
-                          'Приготовление',
+                          LunoraLocalization.text('Приготовление', 'Cooking'),
                           icon: Icons.menu_book_outlined,
                         ),
                         Container(
@@ -703,7 +704,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
                       if (_recipe.review.trim().isNotEmpty) ...[
                         const SizedBox(height: 28),
                         _buildSectionTitle(
-                          'Мои заметки',
+                          LunoraLocalization.text('Мои заметки', 'My notes'),
                           icon: Icons.edit_note,
                         ),
                         Container(

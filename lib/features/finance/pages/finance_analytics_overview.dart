@@ -220,7 +220,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
       if (_transactionCurrency(transaction) != currency) continue;
 
       final category = _category(transaction.categoryId);
-      final name = category?.name ?? 'Без категории';
+      final name = category?.name ?? LunoraLocalization.text('Без категории', 'Uncategorized');
 
       result[name] = (result[name] ?? 0) + transaction.amountMinor;
     }
@@ -437,8 +437,8 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
       ..sort();
 
     if (currencies.isEmpty) {
-      return const _AnalyticsEmpty(
-        text: 'За этот месяц пока нет доходов и расходов.',
+      return _AnalyticsEmpty(
+        text: LunoraLocalization.text('За этот месяц пока нет доходов и расходов.', 'There is no income or expense data for this month yet.'),
       );
     }
 
@@ -463,7 +463,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
                   ),
                   Text(
                     LunoraLocalization.text(
-                      'Итого: ${_money(difference, currency)}',
+                      LunoraLocalization.text('Итого: ${_money(difference, currency)}', 'Total: ${_money(difference, currency)}'),
                     ),
                     style: TextStyle(
                       fontSize: 12,
@@ -517,8 +517,8 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
           ..sort();
 
     if (currencies.isEmpty) {
-      return const _AnalyticsEmpty(
-        text: 'Расходов за выбранный месяц пока нет.',
+      return _AnalyticsEmpty(
+        text: LunoraLocalization.text('Расходов за выбранный месяц пока нет.', 'No expenses for the selected month yet.'),
       );
     }
 
@@ -622,8 +622,8 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
     final history = _historyByCurrency();
 
     if (history.isEmpty) {
-      return const _AnalyticsEmpty(
-        text: 'Для графика пока недостаточно операций.',
+      return _AnalyticsEmpty(
+        text: LunoraLocalization.text('Для графика пока недостаточно операций.', 'Not enough transactions to display the chart.'),
       );
     }
 
@@ -775,8 +775,8 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
         .toList();
 
     if (activeAccounts.isEmpty) {
-      return const _AnalyticsEmpty(
-        text: 'Добавь счёт, чтобы видеть здесь баланс.',
+      return _AnalyticsEmpty(
+        text: LunoraLocalization.text('Добавь счёт, чтобы видеть здесь баланс.', 'Add an account to see your balance here.'),
       );
     }
 
@@ -888,10 +888,10 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
 
   String _accountTypeName(FinanceAccountType type) {
     return switch (type) {
-      FinanceAccountType.card => 'Банковская карта',
-      FinanceAccountType.bankAccount => 'Банковский счёт',
-      FinanceAccountType.cash => 'Наличные',
-      FinanceAccountType.other => 'Другой счёт',
+      FinanceAccountType.card => LunoraLocalization.text('Банковская карта', 'Bank card'),
+      FinanceAccountType.bankAccount => LunoraLocalization.text('Банковский счёт', 'Bank account'),
+      FinanceAccountType.cash => LunoraLocalization.text('Наличные', 'Cash'),
+      FinanceAccountType.other => LunoraLocalization.text('Другой счёт', 'Other account'),
     };
   }
 
@@ -927,9 +927,9 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
         ),
         const SizedBox(height: 9),
         if (activeDebts.isEmpty)
-          const _AnalyticsEmpty(text: 'Активных задолженностей нет.')
+          _AnalyticsEmpty(text: LunoraLocalization.text('Активных задолженностей нет.', 'No active debts.'))
         else if (upcoming.isEmpty)
-          const _AnalyticsEmpty(text: 'Ближайшие даты платежей не указаны.')
+          _AnalyticsEmpty(text: LunoraLocalization.text('Ближайшие даты платежей не указаны.', 'Upcoming payment dates are not specified.'))
         else
           _card(
             child: Column(
@@ -956,7 +956,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
                   ),
                   subtitle: Text(
                     LunoraLocalization.text(
-                      'Платёж ${_date(debt.nextPaymentDate!)}',
+                      LunoraLocalization.text('Платёж ${_date(debt.nextPaymentDate!)}', 'Payment ${_date(debt.nextPaymentDate!)}'),
                     ),
                     style: const TextStyle(fontSize: 10),
                   ),
@@ -1030,10 +1030,10 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
               const SizedBox(height: _sectionSpacing),
               _twoColumnSections(
                 width: constraints.maxWidth,
-                leftTitle: 'Расходы по категориям',
+                leftTitle: LunoraLocalization.text('Расходы по категориям', 'Expenses by category'),
                 leftSubtitle: LunoraLocalization.text('Распределение расходов за выбранный месяц'),
                 leftChild: _buildCategoryBreakdown(),
-                rightTitle: 'Динамика за 6 месяцев',
+                rightTitle: LunoraLocalization.text('Динамика за 6 месяцев', 'Six-month trend'),
                 rightSubtitle: LunoraLocalization.text('Зелёный — доходы, красный — расходы'),
                 rightChild: _buildHistoryChart(),
               ),
@@ -1041,9 +1041,9 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
               if (wide)
                 _twoColumnSections(
                   width: constraints.maxWidth,
-                  leftTitle: 'Баланс счетов',
+                  leftTitle: LunoraLocalization.text('Баланс счетов', 'Account balances'),
                   leftChild: _buildAccountBalances(),
-                  rightTitle: 'Кредиты и рассрочки',
+                  rightTitle: LunoraLocalization.text('Кредиты и рассрочки', 'Loans and instalments'),
                   rightChild: _buildDebtSummary(),
                 )
               else ...[
@@ -1103,7 +1103,7 @@ class _FinanceAnalyticsOverviewState extends State<FinanceAnalyticsOverview> {
 }
 
 class _AnalyticsEmpty extends StatelessWidget {
-  const _AnalyticsEmpty({required this.text});
+  _AnalyticsEmpty({required this.text});
 
   final String text;
 
