@@ -631,13 +631,13 @@ class _PlannerPageState extends State<PlannerPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text(goal == null ? LunoraLocalization.text('Новая цель') : LunoraLocalization.text('Редактирование цели')),
+          title: Text(goal == null ? LunoraLocalization.text('Новая цель', 'New goal') : LunoraLocalization.text('Редактирование цели', 'Edit goal')),
           content: TextField(
             controller: controller,
             autofocus: true,
             maxLength: 150,
             decoration: InputDecoration(
-              labelText: LunoraLocalization.text('Название цели'),
+              labelText: LunoraLocalization.text('Название цели', 'Goal title'),
               border: OutlineInputBorder(),
             ),
             onSubmitted: (_) {
@@ -647,11 +647,11 @@ class _PlannerPageState extends State<PlannerPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: Text(LunoraLocalization.text('Отмена')),
+              child: Text(LunoraLocalization.text('Отмена', 'Cancel')),
             ),
             FilledButton(
               onPressed: () => Navigator.pop(context, controller.text),
-              child: Text(LunoraLocalization.text('Сохранить')),
+              child: Text(LunoraLocalization.text('Сохранить', 'Save')),
             ),
           ],
         );
@@ -698,7 +698,7 @@ class _PlannerPageState extends State<PlannerPage> {
         ),
         const SizedBox(height: 8),
         if (_notes.isEmpty)
-          _emptyCard(LunoraLocalization.text('Здесь будут твои личные заметки планера.'))
+          _emptyCard(LunoraLocalization.text('Здесь будут твои личные заметки планера.', 'Your personal planner notes will appear here.'))
         else
           ..._notes.map(_buildNoteCard),
       ],
