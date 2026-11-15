@@ -544,11 +544,11 @@ class _BooksPageState extends State<BooksPage> {
 
   Widget _buildFilters(LunoraPalette palette) {
     final filters = [
-      ('all', 'Все'),
-      ('reading', 'Читаю'),
-      ('completed', 'Прочитано'),
-      ('planned', 'В планах'),
-      ('favorites', 'Избранное'),
+      ('all', LunoraLocalization.text('Все', 'All')), 
+      ('reading', LunoraLocalization.text('Читаю', 'Reading')), 
+      ('completed', LunoraLocalization.text('Прочитано', 'Read')), 
+      ('planned', LunoraLocalization.text('В планах', 'Planned')), 
+      ('favorites', LunoraLocalization.text('Избранное', 'Favorites')), 
     ];
 
     return SingleChildScrollView(
