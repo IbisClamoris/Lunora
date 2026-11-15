@@ -78,7 +78,7 @@ function Draw-LunoraWizardArt([int]$width,[int]$height) {
   $g.DrawString('YOUR PERSONAL WORLD',$tagFont,$tagBrush,(New-Object System.Drawing.RectangleF(0,197,$width,18)),$format)
   $linePen=New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(125,222,195,160),1)
   $g.DrawLine($linePen,49,229,115,229)
-  $g.DrawString('A little universe, just for you',$tagFont,$tagBrush,(New-Object System.Drawing.RectangleF(6,239,$width-12,30)),$format)
+  $g.DrawString('A little universe, just for you',$tagFont,$tagBrush,(New-Object System.Drawing.RectangleF(6,239,([single]($width - 12)),30)),$format)
 
   $moon.Dispose(); $cut.Dispose(); $star.Dispose(); $titleFont.Dispose(); $tagFont.Dispose()
   $titleBrush.Dispose(); $tagBrush.Dispose(); $format.Dispose(); $linePen.Dispose(); $bg.Dispose(); $g.Dispose()
