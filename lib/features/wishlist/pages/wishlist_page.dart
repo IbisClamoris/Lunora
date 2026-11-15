@@ -168,7 +168,7 @@ class _WishlistPageState extends State<WishlistPage> {
   }
 
   String _formatPrice(WishlistEntry entry) {
-    if (entry.price == null) return 'Цена не указана';
+    if (entry.price == null) return LunoraLocalization.text('Цена не указана', 'Price not specified');
 
     final price = entry.price!.toStringAsFixed(2);
     final formattedPrice = price.endsWith('.00')
@@ -335,6 +335,7 @@ class _WishlistPageState extends State<WishlistPage> {
             'Все категории',
             ..._categories.where((item) => item != 'Все категории'),
           ],
+          labels: {'Все категории': LunoraLocalization.text('Все категории', 'All categories')}, 
           onChanged: (value) {
             setState(() {
               _selectedCategory = value;
