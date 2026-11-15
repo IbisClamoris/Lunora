@@ -40,7 +40,12 @@ internal sealed class InstallerForm : Form
         StartPosition = FormStartPosition.CenterScreen;
         BackColor = ink;
         Font = new Font("Segoe UI", 10);
-        try { Icon = new Icon(Path.Combine(AppContext.BaseDirectory, "app_icon.ico")); } catch { }
+        try
+        {
+            using var iconStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("Lunora.Installer.AppIcon.ico");
+            if (iconStream is not null) Icon = new Icon(iconStream);
+        }
+        catch { }
 
         var hero = new Panel { Dock = DockStyle.Left, Width = 330 };
         hero.Paint += PaintHero;
