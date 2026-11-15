@@ -172,7 +172,7 @@ class _PlannerPageState extends State<PlannerPage> {
   }
 
   String _formatTime(int? minutes) {
-    if (minutes == null) return 'Весь день';
+    if (minutes == null) return LunoraLocalization.text('Весь день', 'All day');
 
     final hour = minutes ~/ 60;
     final minute = minutes % 60;
