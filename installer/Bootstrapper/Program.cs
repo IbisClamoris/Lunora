@@ -54,11 +54,6 @@ internal sealed class InstallerForm : Form
         Controls.Add(content);
         Controls.Add(hero);
 
-        var close = new Button { Text = "×", ForeColor = muted, BackColor = Color.Transparent, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI Light", 20), Size = new Size(42, 38), Location = new Point(510, 8), Anchor = AnchorStyles.Top | AnchorStyles.Right };
-        close.FlatAppearance.BorderSize = 0;
-        close.Click += (_, _) => Close();
-        content.Controls.Add(close);
-
         var eyebrow = MakeLabel("YOUR PERSONAL WORLD", 9, muted, true);
         eyebrow.Location = new Point(38, 44); eyebrow.AutoSize = true; content.Controls.Add(eyebrow);
         var title = MakeLabel("Добро пожаловать домой", 23, Color.FromArgb(250, 241, 222), true);
