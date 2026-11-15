@@ -26,7 +26,8 @@ internal sealed class InstallerForm : Form
     private readonly Button browse = new();
     private readonly Label status = new();
     private readonly ProgressBar progress = new();
-    private bool installing;\n    private bool completed;
+    private bool installing;
+    private bool completed;
 
     public InstallerForm()
     {
@@ -117,7 +118,14 @@ internal sealed class InstallerForm : Form
     }
     private static PointF[] StarPoints(float x, float y, float outer, float inner) { var p = new PointF[10]; for (int i = 0; i < 10; i++) { double a = (-90 + i * 36) * Math.PI / 180; float r = i % 2 == 0 ? outer : inner; p[i] = new PointF(x + r * (float)Math.Cos(a), y + r * (float)Math.Sin(a)); } return p; }
 
-    private void LaunchApp()\n    {\n        var exe = Path.Combine(folder.Text, "lunora.exe");\n        if (File.Exists(exe)) Process.Start(new ProcessStartInfo(exe) { UseShellExecute = true });\n        Close();\n    }\n\n    private async Task InstallAsync()
+    private void LaunchApp()
+    {
+        var exe = Path.Combine(folder.Text, "lunora.exe");
+        if (File.Exists(exe)) Process.Start(new ProcessStartInfo(exe) { UseShellExecute = true });
+        Close();
+    }
+
+    private async Task InstallAsync()
     {
         if (installing) return;
         if (string.IsNullOrWhiteSpace(folder.Text)) { MessageBox.Show(this, "Выберите папку установки.", "Lunora", MessageBoxButtons.OK, MessageBoxIcon.Information); return; }
@@ -137,7 +145,7 @@ internal sealed class InstallerForm : Form
             if (process.ExitCode != 0) throw new InvalidOperationException($"Установщик завершился с кодом {process.ExitCode}.");
             progress.Style = ProgressBarStyle.Continuous; progress.Value = 100;
             status.Text = "Lunora установлена. Ваше личное пространство готово.";
-            install.Text = "ЗАПУСТИТЬ LUNORA"; install.Enabled = true; install.Click -= async (_, _) => await InstallAsync();
+            completed = true; install.Text = "ЗАПУСТИТЬ LUNORA"; install.Enabled = true;
             install.Click += (_, _) => { var exe = Path.Combine(folder.Text, "lunora.exe"); if (File.Exists(exe)) Process.Start(new ProcessStartInfo(exe) { UseShellExecute = true }); Close(); };
         }
         catch (Exception ex)
