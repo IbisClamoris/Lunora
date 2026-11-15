@@ -12,6 +12,6 @@
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="../../build/installer/Lunora-Payload.exe" LogicalName="Lunora.Installer.Lunora-Payload.exe" />
-    <Content Include="../../windows/runner/resources/app_icon.ico" Link="app_icon.ico" CopyToOutputDirectory="PreserveNewest" />
+    <EmbeddedResource Include="../../windows/runner/resources/app_icon.ico" LogicalName="Lunora.Installer.AppIcon.ico" />
   </ItemGroup>
 </Project>
