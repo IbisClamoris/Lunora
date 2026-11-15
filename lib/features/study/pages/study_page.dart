@@ -406,7 +406,7 @@ class _StudyPageState extends State<StudyPage> {
 
       builder: (dialogContext) {
         return AlertDialog(
-          title: Text(isEditing ? LunoraLocalization.text('Редактировать предмет') : LunoraLocalization.text('Новый предмет')),
+          title: Text(isEditing ? LunoraLocalization.text('Редактировать предмет', 'Edit subject') : LunoraLocalization.text('Новый предмет', 'New subject')),
 
           content: SizedBox(
             width: 420,
@@ -422,7 +422,7 @@ class _StudyPageState extends State<StudyPage> {
                     autofocus: true,
 
                     decoration: InputDecoration(
-                      labelText: LunoraLocalization.text('Название предмета *'),
+                      labelText: LunoraLocalization.text('Название предмета *', 'Subject name *'),
 
                       border: OutlineInputBorder(),
                     ),
@@ -434,7 +434,7 @@ class _StudyPageState extends State<StudyPage> {
                     controller: teacherController,
 
                     decoration: InputDecoration(
-                      labelText: LunoraLocalization.text('Преподаватель'),
+                      labelText: LunoraLocalization.text('Преподаватель', 'Teacher'),
 
                       border: OutlineInputBorder(),
                     ),
@@ -450,7 +450,7 @@ class _StudyPageState extends State<StudyPage> {
                     maxLines: 4,
 
                     decoration: InputDecoration(
-                      labelText: LunoraLocalization.text('Описание'),
+                      labelText: LunoraLocalization.text('Описание', 'Description'),
 
                       border: OutlineInputBorder(),
                     ),
