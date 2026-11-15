@@ -41,14 +41,14 @@ class _RecipeWebSearchPageState extends State<RecipeWebSearchPage> {
         _results = results;
         _loading = false;
         if (results.isEmpty) {
-          _error = 'Источники не вернули результаты. Попробуй другое название или проверь подключение к интернету.';
+          _error = LunoraLocalization.text('Источники не вернули результаты. Попробуй другое название или проверь подключение к интернету.', 'No results were returned. Try another name or check your internet connection.');
         }
       });
     } catch (error) {
       if (!mounted) return;
       setState(() {
         _loading = false;
-        _error = 'Не удалось выполнить поиск: $error';
+        _error = LunoraLocalization.text('Не удалось выполнить поиск: $error', 'Search failed: $error');
       });
     }
   }
@@ -95,10 +95,10 @@ class _RecipeWebSearchPageState extends State<RecipeWebSearchPage> {
               onSubmitted: (_) => _search(),
               decoration: InputDecoration(
                 labelText: LunoraLocalization.text(
-                  'Ищи блюдо по названию или ингредиентам',
+                  LunoraLocalization.text('Ищи блюдо по названию или ингредиентам', 'Search for a dish by name or ingredients'),
                 ),
                 hintText: LunoraLocalization.text(
-                  'Например, борщ или курица с картошкой',
+                  LunoraLocalization.text('Например, борщ или курица с картошкой', 'For example, borscht or chicken with potatoes'),
                 ),
                 prefixIcon: const Icon(Icons.search),
                 suffixIcon: IconButton(
@@ -133,7 +133,7 @@ class _RecipeWebSearchPageState extends State<RecipeWebSearchPage> {
                     child: Padding(
                       padding: const EdgeInsets.all(24),
                       child: Text(
-                        _error ?? 'Введи название блюда или ингредиент и нажми поиск.',
+                        _error ?? LunoraLocalization.text('Введи название блюда или ингредиент и нажми поиск.', 'Enter a dish name or ingredient and tap Search.'),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -218,7 +218,7 @@ class _RecipeWebSearchPageState extends State<RecipeWebSearchPage> {
                                       )
                                     : const Icon(Icons.add),
                                 label: Text(
-                                  importing ? 'Загрузка' : 'Добавить',
+                                  importing ? LunoraLocalization.text('Загрузка', 'Loading') : LunoraLocalization.text('Добавить', 'Add'),
                                 ),
                               ),
                             ],
