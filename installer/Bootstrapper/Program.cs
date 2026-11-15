@@ -44,10 +44,10 @@ internal sealed class InstallerForm : Form
 
         var hero = new Panel { Dock = DockStyle.Left, Width = 330 };
         hero.Paint += PaintHero;
-        Controls.Add(hero);
 
         var content = new Panel { Dock = DockStyle.Fill, BackColor = panel, Padding = new Padding(38, 34, 38, 26) };
         Controls.Add(content);
+        Controls.Add(hero);
 
         var close = new Button { Text = "×", ForeColor = muted, BackColor = Color.Transparent, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI Light", 20), Size = new Size(42, 38), Location = new Point(510, 8), Anchor = AnchorStyles.Top | AnchorStyles.Right };
         close.FlatAppearance.BorderSize = 0;
@@ -84,10 +84,10 @@ internal sealed class InstallerForm : Form
         progress.Location = new Point(40, 430); progress.Size = new Size(472, 7); progress.Style = ProgressBarStyle.Continuous;
         progress.Visible = false; content.Controls.Add(progress);
         status.Text = "Установка без лишних окон и сложных настроек.";
-        status.ForeColor = muted; status.Location = new Point(40, 447); status.Size = new Size(470, 32); status.Font = new Font("Segoe UI", 8.5f);
+        status.ForeColor = muted; status.Location = new Point(40, 440); status.Size = new Size(470, 28); status.Font = new Font("Segoe UI", 8.5f);
         content.Controls.Add(status);
 
-        install.Text = "УСТАНОВИТЬ LUNORA"; install.Location = new Point(300, 493); install.Size = new Size(212, 48); install.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+        install.Text = "УСТАНОВИТЬ LUNORA"; install.Location = new Point(300, 470); install.Size = new Size(212, 48); install.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         StyleButton(install, true); install.Click += async (_, _) => { if (completed) LaunchApp(); else await InstallAsync(); }; content.Controls.Add(install);
     }
 
@@ -146,7 +146,6 @@ internal sealed class InstallerForm : Form
             progress.Style = ProgressBarStyle.Continuous; progress.Value = 100;
             status.Text = "Lunora установлена. Ваше личное пространство готово.";
             completed = true; install.Text = "ЗАПУСТИТЬ LUNORA"; install.Enabled = true;
-            install.Click += (_, _) => { var exe = Path.Combine(folder.Text, "lunora.exe"); if (File.Exists(exe)) Process.Start(new ProcessStartInfo(exe) { UseShellExecute = true }); Close(); };
         }
         catch (Exception ex)
         {
