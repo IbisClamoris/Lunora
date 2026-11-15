@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Microsoft.Win32;
 
 namespace Lunora.Installer;
 
@@ -35,6 +36,8 @@ internal sealed class InstallerForm : Form
     private readonly ProgressBar progress = new();
     private bool installing;
     private bool completed;
+    private string? installedVersion;
+    private const string UninstallKeyName = @"Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\{D0A9E57C-7E7D-4D71-9E1B-8F4A2C91B6D3}_is1";
 
     public InstallerForm()
     {
@@ -113,6 +116,30 @@ internal sealed class InstallerForm : Form
 
         install.Text = "УСТАНОВИТЬ LUNORA"; install.Location = new Point(300, 470); install.Size = new Size(212, 48); install.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         StyleButton(install, true); install.Click += async (_, _) => { if (completed) LaunchApp(); else await InstallAsync(); }; content.Controls.Add(install);
+        DetectExistingInstallation();
+    }
+
+    private void DetectExistingInstallation()
+    {
+        foreach (var hive in new[] { Registry.CurrentUser, Registry.LocalMachine })
+        {
+            try
+            {
+                using var key = hive.OpenSubKey(UninstallKeyName);
+                if (key is null) continue;
+                var installLocation = key.GetValue("InstallLocation") as string;
+                installedVersion = key.GetValue("DisplayVersion") as string;
+                if (!string.IsNullOrWhiteSpace(installLocation) && Directory.Exists(installLocation))
+                    folder.Text = installLocation;
+                install.Text = "ОБНОВИТЬ LUNORA";
+                status.Text = string.IsNullOrWhiteSpace(installedVersion)
+                    ? "Найдена установленная Lunora. Новая версия будет установлена поверх неё."
+                    : $"Найдена Lunora версии {installedVersion}. Установим обновление, сохранив ваши данные.";
+                return;
+            }
+            catch (UnauthorizedAccessException) { }
+            catch (System.Security.SecurityException) { }
+        }
     }
 
     private void BeginWindowDrag(object? sender, MouseEventArgs e)
