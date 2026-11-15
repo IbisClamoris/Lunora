@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace Lunora.Installer;
 
@@ -16,6 +17,12 @@ internal static class Program
 
 internal sealed class InstallerForm : Form
 {
+    [DllImport("user32.dll")]
+    private static extern bool ReleaseCapture();
+    [DllImport("user32.dll")]
+    private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
+    private const int WmNcLButtonDown = 0xA1;
+    private static readonly IntPtr HtCaption = new(2);
     private readonly Color ink = Color.FromArgb(25, 22, 48);
     private readonly Color panel = Color.FromArgb(34, 30, 62);
     private readonly Color muted = Color.FromArgb(183, 176, 205);
@@ -35,7 +42,7 @@ internal sealed class InstallerForm : Form
         ClientSize = new Size(900, 570);
         MinimumSize = new Size(900, 570);
         MaximumSize = new Size(900, 570);
-        FormBorderStyle = FormBorderStyle.FixedSingle;
+        FormBorderStyle = FormBorderStyle.None;
         MaximizeBox = false;
         StartPosition = FormStartPosition.CenterScreen;
         BackColor = ink;
@@ -53,6 +60,23 @@ internal sealed class InstallerForm : Form
         var content = new Panel { Dock = DockStyle.Fill, BackColor = panel, Padding = new Padding(38, 34, 38, 26) };
         Controls.Add(content);
         Controls.Add(hero);
+
+        // Custom title bar replaces the native Windows caption.
+        var titleBar = new Panel { Location = new Point(0, 0), Size = new Size(570, 38), BackColor = panel };
+        titleBar.MouseDown += BeginWindowDrag;
+        var windowTitle = MakeLabel("Lunora Setup", 8.5f, muted, false);
+        windowTitle.Location = new Point(18, 10); windowTitle.AutoSize = true;
+        titleBar.Controls.Add(windowTitle);
+        var minimize = new Button { Text = "−", ForeColor = muted, BackColor = Color.Transparent, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI Light", 16), Size = new Size(38, 34), Location = new Point(478, 2) };
+        minimize.FlatAppearance.BorderSize = 0;
+        minimize.Click += (_, _) => WindowState = FormWindowState.Minimized;
+        titleBar.Controls.Add(minimize);
+        var close = new Button { Text = "×", ForeColor = muted, BackColor = Color.Transparent, FlatStyle = FlatStyle.Flat, Font = new Font("Segoe UI Light", 20), Size = new Size(38, 34), Location = new Point(522, 1) };
+        close.FlatAppearance.BorderSize = 0;
+        close.Click += (_, _) => Close();
+        titleBar.Controls.Add(close);
+        content.Controls.Add(titleBar);
+        titleBar.BringToFront();
 
         var eyebrow = MakeLabel("YOUR PERSONAL WORLD", 9, muted, true);
         eyebrow.Location = new Point(38, 44); eyebrow.AutoSize = true; content.Controls.Add(eyebrow);
@@ -89,6 +113,13 @@ internal sealed class InstallerForm : Form
 
         install.Text = "УСТАНОВИТЬ LUNORA"; install.Location = new Point(300, 470); install.Size = new Size(212, 48); install.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         StyleButton(install, true); install.Click += async (_, _) => { if (completed) LaunchApp(); else await InstallAsync(); }; content.Controls.Add(install);
+    }
+
+    private void BeginWindowDrag(object? sender, MouseEventArgs e)
+    {
+        if (e.Button != MouseButtons.Left) return;
+        ReleaseCapture();
+        SendMessage(Handle, WmNcLButtonDown, HtCaption, IntPtr.Zero);
     }
 
     private static Label MakeLabel(string text, float size, Color color, bool bold) => new() { Text = text, Font = new Font("Segoe UI", size, bold ? FontStyle.Bold : FontStyle.Regular), ForeColor = color, BackColor = Color.Transparent };
