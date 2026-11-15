@@ -503,7 +503,7 @@ class _RecipeEditorPageState extends State<RecipeEditorPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildSectionTitle(LunoraLocalization.text('Моя оценка'), Icons.star_outline),
+        _buildSectionTitle(LunoraLocalization.text('Моя оценка', 'My rating'), Icons.star_outline),
         Wrap(
           spacing: 4,
           children: List.generate(5, (index) {
