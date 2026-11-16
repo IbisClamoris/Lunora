@@ -3,6 +3,8 @@ import 'package:lunora/core/localization/lunora_localization.dart';
 
 import 'package:flutter/material.dart';
 
+import '../../collections/widgets/add_to_collection_action.dart';
+
 import '../../../core/localization/lunora_localization.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -563,6 +565,7 @@ class _RecipeDetailsPageState extends State<RecipeDetailsPage> {
       appBar: AppBar(
         title: Text(LunoraLocalization.text('Рецепт', 'Recipe')),
         actions: [
+          AddToCollectionAction(recordModule: 'recipes', recordId: _recipe.id, recordTitle: _recipe.title),
           IconButton(
             tooltip: _recipe.isFavorite
                 ? LunoraLocalization.text('Убрать из избранного', 'Remove from favourites')

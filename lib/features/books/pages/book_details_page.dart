@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../collections/widgets/add_to_collection_action.dart';
+
 import '../models/book_entry.dart';
 import '../repositories/book_repository.dart';
 import 'book_editor_page.dart';
@@ -226,6 +228,7 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
       appBar: AppBar(
         title: Text(LunoraLocalization.text('О книге')),
         actions: [
+          AddToCollectionAction(recordModule: 'books', recordId: _book.id, recordTitle: _book.title),
           IconButton(
             tooltip: LunoraLocalization.text('Избранное'),
             onPressed: _toggleFavorite,
