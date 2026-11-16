@@ -79,6 +79,7 @@ class _LunoraHomeState extends State<LunoraHome> {
   }
 
   Future<void> _checkForUpdatesAtStartup() async {
+    var progressDialogShown = false;
     if (!Platform.isWindows ||
         !SettingsService.instance.settings.checkForUpdatesAutomatically) {
       return;
@@ -129,6 +130,7 @@ class _LunoraHomeState extends State<LunoraHome> {
       if (install != true || !mounted) return;
 
       final progress = ValueNotifier<double?>(null);
+      progressDialogShown = true;
       unawaited(showDialog<void>(
         context: context,
         barrierDismissible: false,
@@ -171,6 +173,9 @@ class _LunoraHomeState extends State<LunoraHome> {
       debugPrint('Lunora startup update failed: $error');
       debugPrintStack(stackTrace: stackTrace);
       if (!mounted) return;
+      if (progressDialogShown && Navigator.of(context, rootNavigator: true).canPop()) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
       showDialog<void>(
         context: context,
         builder: (dialogContext) => AlertDialog(
