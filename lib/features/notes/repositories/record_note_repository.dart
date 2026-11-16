@@ -11,6 +11,9 @@ class RecordNoteRepository {
     : _databaseProvider =
           databaseProvider ?? (() => LunoraDatabase.instance.database);
 
+  RecordNoteRepository.forTesting({required NoteDatabaseProvider databaseProvider})
+    : _databaseProvider = databaseProvider;
+
   static final RecordNoteRepository instance = RecordNoteRepository._();
   static const Uuid _uuid = Uuid();
 
