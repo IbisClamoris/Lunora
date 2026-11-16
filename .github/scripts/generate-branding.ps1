@@ -35,22 +35,53 @@ function Draw-LunoraWizardArt([int]$width,[int]$height) {
   $bmp = New-Object System.Drawing.Bitmap($width,$height,[System.Drawing.Imaging.PixelFormat]::Format24bppRgb)
   $g = [System.Drawing.Graphics]::FromImage($bmp)
   $g.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+  $g.TextRenderingHint = [System.Drawing.Text.TextRenderingHint]::AntiAlias
   $rect = New-Object System.Drawing.Rectangle(0,0,$width,$height)
-  $bg = New-Object System.Drawing.Drawing2D.LinearGradientBrush($rect,[System.Drawing.Color]::FromArgb(255,35,27,64),[System.Drawing.Color]::FromArgb(255,12,19,43),35)
+  $bg = New-Object System.Drawing.Drawing2D.LinearGradientBrush($rect,[System.Drawing.Color]::FromArgb(255,48,34,79),[System.Drawing.Color]::FromArgb(255,13,20,46),35)
   $g.FillRectangle($bg,$rect)
+
+  # Subtle atmospheric glow and fine orbital arcs.
+  $glow = New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(24,210,184,151))
+  $g.FillEllipse($glow,-42,36,248,248)
+  $glow.Dispose()
+  $orbitPen = New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(55,230,211,185),1)
+  $g.DrawEllipse($orbitPen,-34,42,228,228)
+  $g.DrawEllipse($orbitPen,-18,58,196,196)
+  $orbitPen.Dispose()
+
   $rand = New-Object System.Random(17)
-  for($i=0;$i -lt 34;$i++){
-    $x=$rand.Next(8,$width-8); $y=$rand.Next(8,$height-8); $r=if($i%7 -eq 0){2.4}else{1.1}
-    $alpha=if($i%3 -eq 0){190}else{95}
-    $b=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb($alpha,244,224,190))
+  for($i=0;$i -lt 42;$i++){
+    $x=$rand.Next(7,$width-7); $y=$rand.Next(7,$height-7); $r=if($i%8 -eq 0){2.1}else{1.0}
+    $alpha=if($i%3 -eq 0){190}else{90}
+    $b=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb($alpha,248,229,197))
     $g.FillEllipse($b,[single]($x-$r),[single]($y-$r),[single]($r*2),[single]($r*2)); $b.Dispose()
   }
-  $cx=$width/2.0; $cy=$height*.39; $s=[Math]::Min($width,$height)*.53
-  $moon=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,244,224,190))
+
+  # Brand mark.
+  $cx=$width/2.0; $cy=91.0; $s=91.0
+  $moon=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,246,226,193))
   $g.FillEllipse($moon,[single]($cx-$s*.42),[single]($cy-$s*.48),[single]($s*.84),[single]($s*.96))
-  $cut=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,24,24,52))
+  $cut=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,31,27,60))
   $g.FillEllipse($cut,[single]($cx-$s*.03),[single]($cy-$s*.60),[single]($s*.78),[single]($s*.90))
-  $moon.Dispose(); $cut.Dispose(); $bg.Dispose(); $g.Dispose()
+  $star=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,255,239,204))
+  $points=@()
+  for($i=0;$i -lt 10;$i++){ $a=(-90+$i*36)*[Math]::PI/180; $r=if($i%2 -eq 0){10}else{4}; $points += [System.Drawing.PointF]::new([single]($cx+34+$r*[Math]::Cos($a)),[single]($cy-23+$r*[Math]::Sin($a))) }
+  $g.FillPolygon($star,$points)
+
+  $titleFont=New-Object System.Drawing.Font('Segoe UI Semibold',17,[System.Drawing.FontStyle]::Regular,[System.Drawing.GraphicsUnit]::Pixel)
+  $tagFont=New-Object System.Drawing.Font('Segoe UI',8,[System.Drawing.FontStyle]::Regular,[System.Drawing.GraphicsUnit]::Pixel)
+  $titleBrush=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(255,250,239,220))
+  $tagBrush=New-Object System.Drawing.SolidBrush([System.Drawing.Color]::FromArgb(220,211,199,218))
+  $format=New-Object System.Drawing.StringFormat
+  $format.Alignment=[System.Drawing.StringAlignment]::Center
+  $g.DrawString('LUNORA',$titleFont,$titleBrush,(New-Object System.Drawing.RectangleF(0,166,$width,28)),$format)
+  $g.DrawString('YOUR PERSONAL WORLD',$tagFont,$tagBrush,(New-Object System.Drawing.RectangleF(0,197,$width,18)),$format)
+  $linePen=New-Object System.Drawing.Pen([System.Drawing.Color]::FromArgb(125,222,195,160),1)
+  $g.DrawLine($linePen,49,229,115,229)
+  $g.DrawString('A little universe, just for you',$tagFont,$tagBrush,(New-Object System.Drawing.RectangleF(6,239,([single]($width - 12)),30)),$format)
+
+  $moon.Dispose(); $cut.Dispose(); $star.Dispose(); $titleFont.Dispose(); $tagFont.Dispose()
+  $titleBrush.Dispose(); $tagBrush.Dispose(); $format.Dispose(); $linePen.Dispose(); $bg.Dispose(); $g.Dispose()
   return $bmp
 }
 

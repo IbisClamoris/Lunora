@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Lunora-Setup</AssemblyName>
+    <RootNamespace>Lunora.Installer</RootNamespace>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="../../build/installer/Lunora-Payload.exe" LogicalName="Lunora.Installer.Lunora-Payload.exe" />
+    <EmbeddedResource Include="../../windows/runner/resources/app_icon.ico" LogicalName="Lunora.Installer.AppIcon.ico" />
+  </ItemGroup>
+</Project>
