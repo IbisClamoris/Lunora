@@ -164,7 +164,7 @@ class _LunoraHomeState extends State<LunoraHome> {
         update,
         onProgress: (received, total) {
           if (total != null && total > 0) {
-            progress.value = (received / total).clamp(0.0, 1.0);
+            progress.value = (received / total).clamp(0.0, 1.0).toDouble();
           }
         },
       );
