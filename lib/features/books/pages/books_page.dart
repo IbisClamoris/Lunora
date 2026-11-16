@@ -13,6 +13,7 @@ import '../../../shared/widgets/lunora_section_header.dart';
 import 'package:file_picker/file_picker.dart';
 
 import '../../../core/theme/app_theme.dart';
+import '../../collections/widgets/add_to_collection_button.dart';
 import '../../../core/import_export/services/excel_service.dart';
 import '../models/book_entry.dart';
 import '../repositories/book_repository.dart';
@@ -651,6 +652,7 @@ class _BooksPageState extends State<BooksPage> {
                             ),
                           ),
                         ),
+                        AddToCollectionButton(recordModule: 'books', recordId: book.id, recordTitle: book.title, iconColor: palette.secondary, compact: true),
                         IconButton(
                           visualDensity: VisualDensity.compact,
                           tooltip: book.isFavorite
