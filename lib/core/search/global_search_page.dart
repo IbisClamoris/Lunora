@@ -118,6 +118,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
         return LunoraLocalization.text('Книга рецептов', 'Recipe book');
       case LunoraSection.wishlist:
         return LunoraLocalization.text('Вишлист', 'Wishlist');
+      case LunoraSection.collections:
+        return LunoraLocalization.text('Коллекции', 'Collections');
       case LunoraSection.settings:
         return LunoraLocalization.text('Настройки', 'Settings');
     }

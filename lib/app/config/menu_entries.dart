@@ -80,6 +80,11 @@ const List<MenuEntry> menuEntries = [
     'Желания, покупки мечты и планы на будущее.',
   ),
   MenuEntry(
+    'Коллекции',
+    Icons.collections_bookmark_outlined,
+    'Личные подборки из разных разделов Lunora.',
+  ),
+  MenuEntry(
     'Настройки',
     Icons.settings_outlined,
     'Внешний вид, уведомления, данные и поведение Lunora.',

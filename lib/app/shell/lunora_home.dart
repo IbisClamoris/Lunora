@@ -21,6 +21,7 @@ import 'package:lunora/features/notifications/services/system_notification_servi
 import 'package:lunora/features/recipes/pages/recipes_page.dart';
 import 'package:lunora/features/shopping/pages/shopping_page.dart';
 import 'package:lunora/features/wishlist/pages/wishlist_page.dart';
+import 'package:lunora/features/collections/pages/collections_page.dart';
 import 'package:lunora/shared/widgets/lunora_theme_backdrop.dart';
 
 import '../config/menu_entries.dart';
@@ -492,6 +493,8 @@ class _LunoraHomeState extends State<LunoraHome> {
                                       const RecipesPage(),
                                     LunoraSection.wishlist =>
                                       const WishlistPage(),
+                                    LunoraSection.collections =>
+                                      const CollectionsPage(),
                                     LunoraSection.shoppingList =>
                                       const ShoppingPage(),
                                     _ => LunoraSectionPage(
