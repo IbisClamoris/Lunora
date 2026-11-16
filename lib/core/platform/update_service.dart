@@ -153,6 +153,7 @@ class UpdateService {
           onProgress?.call(received, total);
         }
         await sink.flush();
+        await sink.close();
       } catch (_) {
         await sink.close();
         if (await destination.exists()) await destination.delete();
