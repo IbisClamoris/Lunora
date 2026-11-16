@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:lunora/core/navigation/lunora_navigation.dart';
 import 'package:lunora/core/settings/settings_service.dart';
+import 'package:lunora/core/platform/update_service.dart';
 import 'package:lunora/core/search/global_search_page.dart';
 import 'package:lunora/features/books/pages/books_page.dart';
 import 'package:lunora/features/diary/pages/diary_gallery_page.dart';
@@ -70,6 +72,125 @@ class _LunoraHomeState extends State<LunoraHome> {
         _handleNotificationTap(payload);
       }
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _checkForUpdatesAtStartup();
+    });
+  }
+
+  Future<void> _checkForUpdatesAtStartup() async {
+    if (!Platform.isWindows ||
+        !SettingsService.instance.settings.checkForUpdatesAutomatically) {
+      return;
+    }
+
+    try {
+      final update = await UpdateService.instance.checkForUpdate();
+      if (!mounted || update == null) return;
+
+      final english =
+          SettingsService.instance.settings.language.name == 'english';
+      final install = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          icon: const Icon(Icons.system_update_alt_rounded, size: 30),
+          title: Text(english ? 'Lunora update available' : 'Доступно обновление Lunora'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(english
+                    ? 'Version ${update.version} is ready. Your data will be backed up before installation.'
+                    : 'Доступна версия ${update.version}. Перед установкой будет создана резервная копия данных.'),
+                if (update.notes.trim().isNotEmpty) ...[
+                  const SizedBox(height: 14),
+                  Text(english ? 'What’s new' : 'Что нового',
+                      style: const TextStyle(fontWeight: FontWeight.w700)),
+                  const SizedBox(height: 6),
+                  Text(update.notes),
+                ],
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text(english ? 'Later' : 'Позже'),
+            ),
+            FilledButton.icon(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              icon: const Icon(Icons.download_rounded),
+              label: Text(english ? 'Update now' : 'Обновить'),
+            ),
+          ],
+        ),
+      );
+      if (install != true || !mounted) return;
+
+      var progress = 0.0;
+      var hasProgress = false;
+      await showDialog<void>(
+        context: context,
+        barrierDismissible: false,
+        builder: (dialogContext) => StatefulBuilder(
+          builder: (context, setDialogState) => AlertDialog(
+            title: Text(english ? 'Updating Lunora' : 'Обновление Lunora'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                LinearProgressIndicator(value: hasProgress ? progress : null),
+                const SizedBox(height: 14),
+                Text(english
+                    ? (hasProgress ? 'Downloading installer… ${(progress * 100).round()}%' : 'Preparing download…')
+                    : (hasProgress ? 'Загрузка установщика… ${(progress * 100).round()}%' : 'Подготовка загрузки…')),
+                const SizedBox(height: 8),
+                Text(
+                  english
+                      ? 'The installer will verify the file and create a backup before replacing the app.'
+                      : 'Установщик проверит файл и создаст резервную копию перед заменой приложения.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+      await UpdateService.instance.downloadVerifyBackupAndInstall(
+        update,
+        onProgress: (received, total) {
+          if (!mounted || total == null || total <= 0) return;
+          // The progress dialog is managed below by the route's state.
+        },
+      );
+    } catch (error, stackTrace) {
+      debugPrint('Lunora startup update failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      if (!mounted) return;
+      showDialog<void>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: Text(
+            SettingsService.instance.settings.language.name == 'english'
+                ? 'Update failed'
+                : 'Не удалось обновить Lunora',
+          ),
+          content: SelectableText(error.toString()),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext),
+              child: Text(
+                SettingsService.instance.settings.language.name == 'english'
+                    ? 'Close'
+                    : 'Закрыть',
+              ),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   void _onSettingsChanged() {
