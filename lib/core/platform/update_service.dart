@@ -81,7 +81,10 @@ class UpdateService {
     }
   }
 
-  Future<void> downloadVerifyBackupAndInstall(LunoraUpdate update) async {
+  Future<void> downloadVerifyBackupAndInstall(
+    LunoraUpdate update, {
+    void Function(int received, int? total)? onProgress,
+  }) async {
     if (!Platform.isWindows) {
       throw UnsupportedError('Lunora updates are currently available on Windows only.');
     }
@@ -90,7 +93,7 @@ class UpdateService {
     final installer = File(p.join(directory.path, 'Lunora-Setup-${update.version}.exe'));
     final checksumFile = File('${installer.path}.sha256');
 
-    await _download(update.installerUrl, installer);
+    await _download(update.installerUrl, installer, onProgress: onProgress);
     await _download(update.checksumUrl, checksumFile);
 
     final expected = (await checksumFile.readAsString()).trim().split(RegExp(r'\s+')).first.toLowerCase();
@@ -125,7 +128,11 @@ class UpdateService {
     exit(0);
   }
 
-  Future<void> _download(String url, File destination) async {
+  Future<void> _download(
+    String url,
+    File destination, {
+    void Function(int received, int? total)? onProgress,
+  }) async {
     final client = HttpClient()..connectionTimeout = const Duration(seconds: 30);
     try {
       final request = await client.getUrl(Uri.parse(url));
@@ -136,9 +143,16 @@ class UpdateService {
       if (response.statusCode != HttpStatus.ok) {
         throw HttpException('Download failed with HTTP ${response.statusCode}');
       }
+      final total = response.contentLength >= 0 ? response.contentLength : null;
+      var received = 0;
       final sink = destination.openWrite();
       try {
-        await response.pipe(sink);
+        await for (final chunk in response) {
+          sink.add(chunk);
+          received += chunk.length;
+          onProgress?.call(received, total);
+        }
+        await sink.flush();
       } catch (_) {
         await sink.close();
         if (await destination.exists()) await destination.delete();
