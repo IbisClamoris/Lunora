@@ -4,6 +4,8 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 
+import '../../collections/widgets/add_to_collection_action.dart';
+
 import '../models/movie_entry.dart';
 import '../repositories/movie_repository.dart';
 import 'movie_editor_page.dart';
@@ -252,6 +254,7 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
       appBar: AppBar(
         title: Text(_movie.isSeries ? LunoraLocalization.text('О сериале') : LunoraLocalization.text('О фильме')),
         actions: [
+          AddToCollectionAction(recordModule: 'movies', recordId: _movie.id, recordTitle: _movie.title),
           IconButton(
             tooltip: LunoraLocalization.text('Редактировать'),
             onPressed: _editMovie,
