@@ -7,13 +7,11 @@ import '../repositories/record_note_repository.dart';
 class RecordNotesSection extends StatefulWidget {
   final String sourceModule;
   final String sourceRecordId;
-  final String recordTitle;
 
   const RecordNotesSection({
     super.key,
     required this.sourceModule,
     required this.sourceRecordId,
-    required this.recordTitle,
   });
 
   @override
