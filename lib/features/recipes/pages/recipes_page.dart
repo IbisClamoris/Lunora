@@ -8,6 +8,7 @@ import '../../../core/theme/lunora_theme_assets.dart';
 
 import '../../../core/localization/lunora_localization.dart';
 import '../../../core/theme/app_theme.dart';
+import '../../collections/widgets/add_to_collection_button.dart';
 
 import 'recipe_web_search_page.dart';
 import '../models/recipe_entry.dart';
@@ -244,6 +245,15 @@ class _RecipesPageState extends State<RecipesPage> {
                     )
                   else
                     _buildCoverPlaceholder(),
+                  Positioned(
+                    top: 10,
+                    right: 58,
+                    child: Material(
+                      color: palette.surface.withValues(alpha: 0.94),
+                      shape: const CircleBorder(),
+                      child: AddToCollectionButton(recordModule: 'recipes', recordId: recipe.id, recordTitle: recipe.title, iconColor: palette.text, compact: true),
+                    ),
+                  ),
                   Positioned(
                     top: 10,
                     right: 10,

@@ -11,6 +11,7 @@ import '../../../core/theme/lunora_theme_assets.dart';
 import '../../../shared/widgets/lunora_section_header.dart';
 
 import '../models/movie_entry.dart';
+import '../../collections/widgets/add_to_collection_button.dart';
 import '../repositories/movie_repository.dart';
 import 'movie_details_page.dart';
 import 'movie_editor_page.dart';
@@ -492,6 +493,15 @@ class _MoviesPageState extends State<MoviesPage> {
                           letterSpacing: 0.5,
                         ),
                       ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 10,
+                    right: 10,
+                    child: Material(
+                      color: Colors.black.withValues(alpha: 0.68),
+                      shape: const CircleBorder(),
+                      child: AddToCollectionButton(recordModule: 'movies', recordId: movie.id, recordTitle: movie.title, iconColor: Colors.white, compact: true),
                     ),
                   ),
                   if (movie.rating != null)
