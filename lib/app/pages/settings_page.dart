@@ -42,9 +42,6 @@ class _SettingsPageState extends State<SettingsPage> {
     try {
       await _service.load();
       _volumePreview = _settings.notificationVolume.toDouble();
-      if (_settings.checkForUpdatesAutomatically && Platform.isWindows) {
-        WidgetsBinding.instance.addPostFrameCallback((_) => _checkForUpdates(silent: true));
-      }
     } catch (error) {
       if (mounted) {
         _showMessage(LunoraLocalization.text('Не удалось загрузить настройки: $error', 'Could not load settings: $error'));
@@ -933,8 +930,8 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             _settingRow(
               title: _settings.language == AppLanguage.english
-                  ? 'Check for updates when opening Settings'
-                  : LunoraLocalization.text('Проверять обновления при открытии настроек', 'Check for updates when opening settings'),
+                  ? 'Check for updates when Lunora starts'
+                  : LunoraLocalization.text('Проверять обновления при запуске Lunora', 'Check for updates when Lunora starts'),
               description: _settings.language == AppLanguage.english
                   ? 'Updates are never installed without your confirmation.'
                   : LunoraLocalization.text('Обновления никогда не устанавливаются без подтверждения.', 'Updates are never installed without confirmation.'),
