@@ -15,6 +15,7 @@ enum LunoraSection {
   movies,
   recipes,
   wishlist,
+  collections,
   settings,
 }
 
