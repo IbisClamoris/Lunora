@@ -128,22 +128,22 @@ class _LunoraHomeState extends State<LunoraHome> {
       );
       if (install != true || !mounted) return;
 
-      var progress = 0.0;
-      var hasProgress = false;
-      await showDialog<void>(
+      final progress = ValueNotifier<double?>(null);
+      unawaited(showDialog<void>(
         context: context,
         barrierDismissible: false,
-        builder: (dialogContext) => StatefulBuilder(
-          builder: (context, setDialogState) => AlertDialog(
-            title: Text(english ? 'Updating Lunora' : 'Обновление Lunora'),
-            content: Column(
+        builder: (dialogContext) => AlertDialog(
+          title: Text(english ? 'Updating Lunora' : 'Обновление Lunora'),
+          content: ValueListenableBuilder<double?>(
+            valueListenable: progress,
+            builder: (context, value, child) => Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                LinearProgressIndicator(value: hasProgress ? progress : null),
+                LinearProgressIndicator(value: value),
                 const SizedBox(height: 14),
                 Text(english
-                    ? (hasProgress ? 'Downloading installer… ${(progress * 100).round()}%' : 'Preparing download…')
-                    : (hasProgress ? 'Загрузка установщика… ${(progress * 100).round()}%' : 'Подготовка загрузки…')),
+                    ? (value == null ? 'Preparing download…' : 'Downloading installer… ${(value * 100).round()}%')
+                    : (value == null ? 'Подготовка загрузки…' : 'Загрузка установщика… ${(value * 100).round()}%')),
                 const SizedBox(height: 8),
                 Text(
                   english
@@ -156,15 +156,17 @@ class _LunoraHomeState extends State<LunoraHome> {
             ),
           ),
         ),
-      );
+      ));
 
       await UpdateService.instance.downloadVerifyBackupAndInstall(
         update,
         onProgress: (received, total) {
-          if (!mounted || total == null || total <= 0) return;
-          // The progress dialog is managed below by the route's state.
+          if (total != null && total > 0) {
+            progress.value = (received / total).clamp(0.0, 1.0);
+          }
         },
       );
+      progress.dispose();
     } catch (error, stackTrace) {
       debugPrint('Lunora startup update failed: $error');
       debugPrintStack(stackTrace: stackTrace);
