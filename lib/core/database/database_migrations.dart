@@ -85,6 +85,9 @@ class DatabaseMigrations {
         case 25:
           await _migration25(db);
           break;
+        case 26:
+          await _migration26(db);
+          break;
       }
     }
   }
@@ -1336,6 +1339,96 @@ class DatabaseMigrations {
           END
       WHERE created_at IS NULL OR created_at = ''
          OR updated_at IS NULL OR updated_at = ''
+    ''');
+  }
+
+
+  // ============================================================
+  // MIGRATION 26: reusable links, collections and richer notes
+  // ============================================================
+
+  static Future<void> _migration26(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS record_links (
+        id TEXT PRIMARY KEY,
+        source_module TEXT NOT NULL,
+        source_record_id TEXT NOT NULL,
+        target_module TEXT NOT NULL,
+        target_record_id TEXT NOT NULL,
+        relation_type TEXT NOT NULL DEFAULT 'related',
+        note TEXT NOT NULL DEFAULT '',
+        created_at TEXT NOT NULL,
+        CHECK (
+          source_module != target_module OR
+          source_record_id != target_record_id
+        ),
+        UNIQUE (
+          source_module, source_record_id,
+          target_module, target_record_id, relation_type
+        )
+      )
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_record_links_source
+      ON record_links(source_module, source_record_id)
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_record_links_target
+      ON record_links(target_module, target_record_id)
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS collections (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL DEFAULT '',
+        cover_path TEXT,
+        color_value INTEGER,
+        sort_order INTEGER NOT NULL DEFAULT 0,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL
+      )
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_collections_order
+      ON collections(sort_order, updated_at DESC)
+    ''');
+
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS collection_items (
+        id TEXT PRIMARY KEY,
+        collection_id TEXT NOT NULL,
+        record_module TEXT NOT NULL,
+        record_id TEXT NOT NULL,
+        note TEXT NOT NULL DEFAULT '',
+        sort_order INTEGER NOT NULL DEFAULT 0,
+        added_at TEXT NOT NULL,
+        FOREIGN KEY(collection_id)
+          REFERENCES collections(id) ON DELETE CASCADE,
+        UNIQUE(collection_id, record_module, record_id)
+      )
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_collection_items_order
+      ON collection_items(collection_id, sort_order, added_at)
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_collection_items_record
+      ON collection_items(record_module, record_id)
+    ''');
+
+    // Keep the original notes table and rows intact. These fields make a
+    // note attachable to a specific record and support lightweight tagging.
+    await _ensureColumn(db, 'notes', 'source_record_id', 'TEXT');
+    await _ensureColumn(db, 'notes', 'tags', "TEXT NOT NULL DEFAULT '[]'");
+    await _ensureColumn(db, 'notes', 'is_pinned', 'INTEGER NOT NULL DEFAULT 0');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_notes_source_record
+      ON notes(source_module, source_record_id)
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_notes_pinned_updated
+      ON notes(is_pinned, updated_at DESC)
     ''');
   }
 
