@@ -38,6 +38,7 @@ class _RecordLinksSectionState extends State<RecordLinksSection> {
   List<_LinkCandidate> _candidates = [];
   bool _loading = true;
   bool _saving = false;
+  bool _candidatesLoaded = false;
 
   @override
   void initState() {
@@ -47,14 +48,13 @@ class _RecordLinksSectionState extends State<RecordLinksSection> {
 
   Future<void> _load() async {
     try {
-      final results = await Future.wait([
-        RecordLinkRepository.instance.getForRecord(widget.sourceModule, widget.sourceRecordId),
-        _loadCandidates(),
-      ]);
+      final links = await RecordLinkRepository.instance.getForRecord(
+        widget.sourceModule,
+        widget.sourceRecordId,
+      );
       if (!mounted) return;
       setState(() {
-        _links = results[0] as List<LinkedRecord>;
-        _candidates = results[1] as List<_LinkCandidate>;
+        _links = links;
         _loading = false;
       });
     } catch (_) {
@@ -114,6 +114,19 @@ class _RecordLinksSectionState extends State<RecordLinksSection> {
   }
 
   Future<void> _addLink() async {
+    if (!_candidatesLoaded) {
+      try {
+        final candidates = await _loadCandidates();
+        if (!mounted) return;
+        setState(() {
+          _candidates = candidates;
+          _candidatesLoaded = true;
+        });
+      } catch (error) {
+        _message(LunoraLocalization.text('Не удалось загрузить записи: $error', 'Could not load records: $error'));
+        return;
+      }
+    }
     if (_candidates.isEmpty) {
       _message(LunoraLocalization.text('Пока нет других записей, которые можно связать.', 'There are no other records to link yet.'));
       return;
@@ -205,8 +218,6 @@ class _RecordLinksSectionState extends State<RecordLinksSection> {
       final record = await MovieRepository.instance.getById(item.id);
       if (record != null && mounted) {
         await Navigator.of(context).push(MaterialPageRoute(builder: (_) => MovieDetailsPage(movie: record)));
-      } else if (item.module == 'notes') {
-        await _openNoteSource(item.id);
       }
     } else if (item.module == 'notes') {
       await _openNoteSource(item.id);
