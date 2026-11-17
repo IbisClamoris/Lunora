@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../collections/widgets/add_to_collection_action.dart';
 import '../../notes/widgets/record_notes_section.dart';
+import '../../record_links/widgets/record_links_section.dart';
 
 import '../models/book_entry.dart';
 import '../repositories/book_repository.dart';
@@ -298,6 +299,12 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                       _textCard(colors, _book.review),
                       const SizedBox(height: 26),
                     ],
+
+                    RecordLinksSection(
+                      sourceModule: 'books',
+                      sourceRecordId: _book.id,
+                    ),
+                    const SizedBox(height: 20),
 
                     RecordNotesSection(
                       sourceModule: 'books',
