@@ -146,7 +146,7 @@ class _RecordLinksSectionState extends State<RecordLinksSection> {
               Expanded(
                 child: ListView.separated(
                   itemCount: available.length,
-                  separatorBuilder: (_, _) => const Divider(height: 1),
+                  separatorBuilder: (context, index) => const Divider(height: 1),
                   itemBuilder: (context, index) {
                     final item = available[index];
                     final icon = item.module == 'books'
