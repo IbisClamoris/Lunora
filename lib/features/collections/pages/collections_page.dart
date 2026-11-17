@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import '../../books/repositories/book_repository.dart';
+import '../../movies/repositories/movie_repository.dart';
 
 import '../../../core/localization/lunora_localization.dart';
 import '../../../core/theme/app_theme.dart';
@@ -214,6 +218,90 @@ class _CollectionsPageState extends State<CollectionsPage> {
     await _load(selectId: item.collectionId);
   }
 
+  Future<Map<String, String?>> _resolveRecord(CollectionItem item) async {
+    switch (item.recordModule) {
+      case 'books':
+        final book = await BookRepository.instance.getById(item.recordId);
+        return {
+          'title': book?.title ?? LunoraLocalization.text('Книга недоступна', 'Book unavailable'),
+          'subtitle': book?.authors ?? '',
+          'image': book?.coverPath,
+          'kind': 'book',
+        };
+      case 'movies':
+        final movie = await MovieRepository.instance.getById(item.recordId);
+        return {
+          'title': movie?.title ?? LunoraLocalization.text('Фильм недоступен', 'Movie unavailable'),
+          'subtitle': movie?.releaseYear?.toString() ?? '',
+          'image': movie?.posterPath,
+          'kind': 'movie',
+        };
+      default:
+        return {
+          'title': item.recordId,
+          'subtitle': item.recordModule,
+          'image': null,
+          'kind': item.recordModule,
+        };
+    }
+  }
+
+  Widget _collectionItemTile(CollectionItem item, LunoraPalette palette) {
+    return FutureBuilder<Map<String, String?>>(
+      future: _resolveRecord(item),
+      builder: (context, snapshot) {
+        final record = snapshot.data;
+        final path = record?['image'];
+        final kind = record?['kind'];
+        final icon = kind == 'book' ? Icons.menu_book_outlined
+            : kind == 'movie' ? Icons.movie_outlined : _moduleIcon(item.recordModule);
+        Widget cover = Container(
+          width: 46, height: 62,
+          decoration: BoxDecoration(
+            color: palette.sagePanel,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Icon(icon, color: palette.accent, size: 22),
+        );
+        if (path != null && path.isNotEmpty) {
+          cover = ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.file(
+              File(path), width: 46, height: 62, fit: BoxFit.cover,
+              errorBuilder: (_, _, _) => coverPlaceholder(icon, palette),
+            ),
+          );
+        }
+        return ListTile(
+          contentPadding: const EdgeInsets.symmetric(vertical: 5),
+          leading: cover,
+          title: Text(
+            record?['title'] ?? LunoraLocalization.text('Загрузка…', 'Loading…'),
+            maxLines: 2, overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: palette.text, fontWeight: FontWeight.w600),
+          ),
+          subtitle: Text(
+            [record?['subtitle'], if (item.note.isNotEmpty) item.note]
+                .where((value) => value != null && value.isNotEmpty).join(' • '),
+            maxLines: 2, overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: palette.secondary),
+          ),
+          trailing: IconButton(
+            icon: const Icon(Icons.close_rounded),
+            tooltip: LunoraLocalization.text('Убрать из коллекции', 'Remove from collection'),
+            onPressed: () => _removeItem(item),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget coverPlaceholder(IconData icon, LunoraPalette palette) => Container(
+    width: 46, height: 62,
+    decoration: BoxDecoration(color: palette.sagePanel, borderRadius: BorderRadius.circular(8)),
+    child: Icon(icon, color: palette.accent, size: 22),
+  );
+
   void _showError(Object error) {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.toString())));
@@ -337,16 +425,7 @@ class _CollectionsPageState extends State<CollectionsPage> {
             'Здесь пока пусто. Добавь первую запись.',
             'Nothing here yet. Add the first record.',
           ), style: TextStyle(color: palette.secondary))),
-        ) else ..._items.map((item) => ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: Icon(_moduleIcon(item.recordModule), color: palette.accent),
-          title: Text(item.recordId, style: TextStyle(color: palette.text)),
-          subtitle: Text('${item.recordModule}${item.note.isEmpty ? '' : ' • ${item.note}'}',
-            style: TextStyle(color: palette.secondary)),
-          trailing: IconButton(icon: const Icon(Icons.close_rounded),
-            tooltip: LunoraLocalization.text('Убрать из коллекции', 'Remove from collection'),
-            onPressed: () => _removeItem(item)),
-        )),
+        ) else ..._items.map((item) => _collectionItemTile(item, palette)),
       ]),
     );
   }
