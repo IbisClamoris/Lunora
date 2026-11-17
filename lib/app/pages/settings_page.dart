@@ -704,6 +704,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ('movies', 'Мир кино и сериалов', 'Movies & series'),
               ('recipes', 'Моя книга рецептов', 'Recipe book'),
               ('wishlist', 'Вишлист', 'Wishlist'),
+              ('collections', 'Коллекции', 'Collections'),
             ])
               _settingRow(
                 title: _settings.language == AppLanguage.english
