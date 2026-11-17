@@ -147,33 +147,77 @@ class _CollectionsPageState extends State<CollectionsPage> {
   }
 
   Future<void> _addRecord() async {
-    final module = TextEditingController();
-    final recordId = TextEditingController();
+    final books = await BookRepository.instance.getAll();
+    final movies = await MovieRepository.instance.getAll();
+    final records = <(String, String, String, String)>[
+      ...books.map((book) => ('books', book.id, book.title, book.authors)),
+      ...movies.map((movie) => ('movies', movie.id, movie.title,
+          movie.releaseYear?.toString() ?? '')),
+    ];
+    if (!mounted) return;
+    if (records.isEmpty) {
+      _showError(LunoraLocalization.text(
+        'Сначала добавь книги или фильмы в соответствующие разделы.',
+        'Add books or movies to their sections first.',
+      ));
+      return;
+    }
+
+    String? selectedRecordId = records.first.$2;
     final note = TextEditingController();
     final result = await showDialog<(String, String, String)>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: Text(LunoraLocalization.text('Добавить запись', 'Add a record')),
-        content: SizedBox(width: 420, child: Column(mainAxisSize: MainAxisSize.min, children: [
-          TextField(controller: module, decoration: InputDecoration(
-            labelText: LunoraLocalization.text('Раздел', 'Module'),
-            hintText: 'books, movies, recipes, knowledge')),
-          TextField(controller: recordId, decoration: InputDecoration(
-            labelText: 'ID', hintText: LunoraLocalization.text('Идентификатор записи', 'Record identifier'))),
-          TextField(controller: note, decoration: InputDecoration(
-            labelText: LunoraLocalization.text('Заметка', 'Note'))),
-        ])),
-        actions: [
-          TextButton(onPressed: () => Navigator.pop(dialogContext),
-            child: Text(LunoraLocalization.text('Отмена', 'Cancel'))),
-          FilledButton(onPressed: () {
-            if (module.text.trim().isEmpty || recordId.text.trim().isEmpty) return;
-            Navigator.pop(dialogContext, (module.text, recordId.text, note.text));
-          }, child: Text(LunoraLocalization.text('Добавить', 'Add'))),
-        ],
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          final selected = records.where((record) => record.$2 == selectedRecordId)
+              .firstOrNull ?? records.first;
+          return AlertDialog(
+            title: Text(LunoraLocalization.text('Добавить запись', 'Add a record')),
+            content: SizedBox(
+              width: 440,
+              child: Column(mainAxisSize: MainAxisSize.min, children: [
+                DropdownButtonFormField<String>(
+                  value: selectedRecordId,
+                  isExpanded: true,
+                  decoration: InputDecoration(
+                    labelText: LunoraLocalization.text('Книга или фильм', 'Book or movie'),
+                  ),
+                  items: records.map((record) => DropdownMenuItem(
+                    value: record.$2,
+                    child: Text(
+                      '${record.$3}${record.$4.isEmpty ? '' : ' · ${record.$4}'}',
+                      maxLines: 1, overflow: TextOverflow.ellipsis,
+                    ),
+                  )).toList(),
+                  onChanged: (value) => setDialogState(() => selectedRecordId = value),
+                ),
+                const SizedBox(height: 14),
+                TextField(
+                  controller: note,
+                  maxLines: 2,
+                  decoration: InputDecoration(
+                    labelText: LunoraLocalization.text('Заметка (необязательно)', 'Note (optional)'),
+                  ),
+                ),
+              ]),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(dialogContext),
+                child: Text(LunoraLocalization.text('Отмена', 'Cancel')),
+              ),
+              FilledButton(
+                onPressed: selectedRecordId == null ? null : () => Navigator.pop(
+                  dialogContext, (selected.$1, selected.$2, note.text),
+                ),
+                child: Text(LunoraLocalization.text('Добавить', 'Add')),
+              ),
+            ],
+          );
+        },
       ),
     );
-    module.dispose(); recordId.dispose(); note.dispose();
+    note.dispose();
     if (result == null || _selected == null) return;
     try {
       final added = await _repository.addRecord(
