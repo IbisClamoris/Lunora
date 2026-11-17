@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../collections/widgets/add_to_collection_action.dart';
+import '../../notes/widgets/record_notes_section.dart';
 
 import '../models/book_entry.dart';
 import '../repositories/book_repository.dart';
@@ -298,6 +299,10 @@ class _BookDetailsPageState extends State<BookDetailsPage> {
                       const SizedBox(height: 26),
                     ],
 
+                    RecordNotesSection(
+                      sourceModule: 'books',
+                      sourceRecordId: _book.id,
+                    ),
                     const SizedBox(height: 20),
                   ],
                 ),

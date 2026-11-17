@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 
 import '../../collections/widgets/add_to_collection_action.dart';
+import '../../notes/widgets/record_notes_section.dart';
 
 import '../models/movie_entry.dart';
 import '../repositories/movie_repository.dart';
@@ -321,6 +322,10 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                       const SizedBox(height: 26),
                     ],
 
+                    RecordNotesSection(
+                      sourceModule: 'movies',
+                      sourceRecordId: _movie.id,
+                    ),
                     const SizedBox(height: 20),
                   ],
                 ),
