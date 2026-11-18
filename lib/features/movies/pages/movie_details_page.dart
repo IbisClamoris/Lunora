@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 
 import '../../collections/widgets/add_to_collection_action.dart';
 import '../../notes/widgets/record_notes_section.dart';
+import '../../record_links/widgets/record_links_section.dart';
 
 import '../models/movie_entry.dart';
 import '../repositories/movie_repository.dart';
@@ -321,6 +322,12 @@ class _MovieDetailsPageState extends State<MovieDetailsPage> {
                       _textCard(colors, _movie.review),
                       const SizedBox(height: 26),
                     ],
+
+                    RecordLinksSection(
+                      sourceModule: 'movies',
+                      sourceRecordId: _movie.id,
+                    ),
+                    const SizedBox(height: 20),
 
                     RecordNotesSection(
                       sourceModule: 'movies',

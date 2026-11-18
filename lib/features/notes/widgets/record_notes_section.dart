@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../core/localization/lunora_localization.dart';
 import '../models/record_note.dart';
 import '../repositories/record_note_repository.dart';
+import '../../record_links/widgets/record_links_section.dart';
 
 class RecordNotesSection extends StatefulWidget {
   final String sourceModule;
@@ -246,6 +247,11 @@ class _RecordNotesSectionState extends State<RecordNotesSection> {
                     const SizedBox(height: 10),
                     Wrap(spacing: 6, runSpacing: 4, children: note.tags.map((tag) => Chip(label: Text(tag), visualDensity: VisualDensity.compact)).toList()),
                   ],
+                  const SizedBox(height: 12),
+                  RecordLinksSection(
+                    sourceModule: 'notes',
+                    sourceRecordId: note.id,
+                  ),
                 ],
               ),
             ),
