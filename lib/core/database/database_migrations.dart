@@ -88,6 +88,9 @@ class DatabaseMigrations {
         case 26:
           await _migration26(db);
           break;
+        case 27:
+          await _migration27(db);
+          break;
       }
     }
   }
@@ -1429,6 +1432,46 @@ class DatabaseMigrations {
     await db.execute('''
       CREATE INDEX IF NOT EXISTS idx_notes_pinned_updated
       ON notes(is_pinned, updated_at DESC)
+    ''');
+  }
+
+  // ============================================================
+  // MIGRATION 27: habit tracker and completion history
+  // ============================================================
+
+  static Future<void> _migration27(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS habits (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        description TEXT NOT NULL DEFAULT '',
+        target_per_week INTEGER NOT NULL DEFAULT 7
+          CHECK (target_per_week BETWEEN 1 AND 7),
+        color_value INTEGER NOT NULL DEFAULT 0xFF8E9BCB,
+        icon_code_point INTEGER NOT NULL DEFAULT 0xe3a1,
+        created_at TEXT NOT NULL,
+        updated_at TEXT NOT NULL,
+        is_archived INTEGER NOT NULL DEFAULT 0
+          CHECK (is_archived IN (0, 1))
+      )
+    ''');
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS habit_completions (
+        id TEXT PRIMARY KEY,
+        habit_id TEXT NOT NULL,
+        completed_on TEXT NOT NULL,
+        created_at TEXT NOT NULL,
+        FOREIGN KEY (habit_id) REFERENCES habits(id) ON DELETE CASCADE,
+        UNIQUE (habit_id, completed_on)
+      )
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_habits_active
+      ON habits(is_archived, created_at)
+    ''');
+    await db.execute('''
+      CREATE INDEX IF NOT EXISTS idx_habit_completions_date
+      ON habit_completions(habit_id, completed_on)
     ''');
   }
 
