@@ -55,9 +55,9 @@ void main() {
       final habit = await repository.create(name: 'Read');
       final day = DateTime(2026, 11, 18);
       expect(await repository.toggleCompletion(habit.id, day), isTrue);
-      expect(await repository.toggleCompletion(habit.id, day), isFalse);
       expect(await repository.getCompletionDates(habit.id, day, day), contains('2026-11-18'));
-      expect(await repository.getCompletionDates(habit.id, day, day), hasLength(0));
+      expect(await repository.toggleCompletion(habit.id, day), isFalse);
+      expect(await repository.getCompletionDates(habit.id, day, day), isEmpty);
     });
 
     test('deleting a habit removes its completion history', () async {
