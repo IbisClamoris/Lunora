@@ -36,8 +36,12 @@ class _HabitsPageState extends State<HabitsPage> {
     setState(() => _loading = true);
     try {
       final habits = await _repository.getAll(includeArchived: _showArchived);
-      final first = DateTime(_month.year, _month.month, 1);
-      final last = DateTime(_month.year, _month.month + 1, 0);
+      final monthFirst = DateTime(_month.year, _month.month, 1);
+      final monthLast = DateTime(_month.year, _month.month + 1, 0);
+      final weekStart = _today.subtract(Duration(days: (_today.weekday + 6) % 7));
+      final weekEnd = weekStart.add(const Duration(days: 6));
+      final first = monthFirst.isBefore(weekStart) ? monthFirst.subtract(const Duration(days: 365)) : weekStart;
+      final last = monthLast.isAfter(weekEnd) ? monthLast : weekEnd;
       final dates = await Future.wait(habits.map((habit) =>
           _repository.getCompletionDates(habit.id, first, last)));
       if (!mounted) return;
@@ -70,7 +74,7 @@ class _HabitsPageState extends State<HabitsPage> {
   Future<void> _toggle(HabitEntry habit, DateTime date) async {
     if (date.isAfter(_today)) return;
     await _repository.toggleCompletion(habit.id, date);
-    await _load();
+    if (mounted) await _load();
   }
 
   Future<void> _editHabit([HabitEntry? habit]) async {
@@ -128,27 +132,27 @@ class _HabitsPageState extends State<HabitsPage> {
                   const SizedBox(height: 8),
                   Wrap(
                     spacing: 10,
-                    children: const [
-                      0xFF8E9BCB, 0xFF7EAA91, 0xFFD29A9E,
-                      0xFFC39BCB, 0xFFD0A66F, 0xFF78A9B5,
-                    ].map((value) => value).map((value) => value).toList().asMap().entries.map((entry) {
-                      final value = entry.value;
-                      return GestureDetector(
-                        onTap: () => setDialogState(() => colorValue = value),
-                        child: Container(
-                          width: 28,
-                          height: 28,
-                          decoration: BoxDecoration(
-                            color: Color(value),
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: colorValue == value ? Theme.of(context).colorScheme.onSurface : Colors.transparent,
-                              width: 2,
+                    children: [
+                      for (final value in const <int>[
+                        0xFF8E9BCB, 0xFF7EAA91, 0xFFD29A9E,
+                        0xFFC39BCB, 0xFFD0A66F, 0xFF78A9B5,
+                      ])
+                        GestureDetector(
+                          onTap: () => setDialogState(() => colorValue = value),
+                          child: Container(
+                            width: 28,
+                            height: 28,
+                            decoration: BoxDecoration(
+                              color: Color(value),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: colorValue == value ? Theme.of(context).colorScheme.onSurface : Colors.transparent,
+                                width: 2,
+                              ),
                             ),
                           ),
                         ),
-                      );
-                    }).toList(),
+                    ],
                   ),
                 ],
               ),
