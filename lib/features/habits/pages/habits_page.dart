@@ -23,8 +23,6 @@ class _HabitsPageState extends State<HabitsPage> {
   bool get _english => LunoraLocalization.isEnglish;
   DateTime get _today => DateUtils.dateOnly(DateTime.now());
 
-  String _dateKey(DateTime date) =>
-      '${date.year.toString().padLeft(4, '0')}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}';
 
   @override
   void initState() {
