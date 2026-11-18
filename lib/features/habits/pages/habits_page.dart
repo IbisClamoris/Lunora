@@ -379,7 +379,9 @@ class _HabitCard extends StatelessWidget {
     final weekDone = List.generate(7, (i) => weekStart.add(Duration(days: i)))
         .where((date) => dates.contains(_key(date))).length;
     var streak = 0;
-    var cursor = today;
+    var cursor = dates.contains(_key(today))
+        ? today
+        : today.subtract(const Duration(days: 1));
     while (dates.contains(_key(cursor))) {
       streak++;
       cursor = cursor.subtract(const Duration(days: 1));
