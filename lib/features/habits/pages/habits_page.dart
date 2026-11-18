@@ -402,7 +402,7 @@ class _HabitCard extends StatelessWidget {
                 Container(
                   width: 42, height: 42,
                   decoration: BoxDecoration(color: accent.withValues(alpha: .14), borderRadius: BorderRadius.circular(13)),
-                  child: Icon(IconData(habit.iconCodePoint, fontFamily: 'MaterialIcons'), color: accent),
+                  child: const Icon(Icons.spa_outlined),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
