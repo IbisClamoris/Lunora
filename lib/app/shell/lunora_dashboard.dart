@@ -316,6 +316,42 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
             accentColor: palette.accent,
           ),
         };
+        final blocks = <Widget>[];
+        for (var index = 0; index < order.length; index++) {
+          final id = order[index];
+          if (!(visibility[id] ?? true)) continue;
+
+          final hasAdjacentPair = (id == 'agenda' && index + 1 < order.length &&
+                  order[index + 1] == 'life') ||
+              (id == 'life' && index + 1 < order.length &&
+                  order[index + 1] == 'agenda');
+          if (hasAdjacentPair && (visibility[order[index + 1]] ?? true)) {
+            final first = sections[id]!;
+            final second = sections[order[index + 1]]!;
+            blocks.add(
+              compact
+                  ? Column(
+                      children: [
+                        first,
+                        const SizedBox(height: 18),
+                        second,
+                      ],
+                    )
+                  : Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 6, child: first),
+                        const SizedBox(width: 18),
+                        Expanded(flex: 5, child: second),
+                      ],
+                    ),
+            );
+            index++;
+          } else {
+            blocks.add(sections[id]!);
+          }
+          blocks.add(const SizedBox(height: 18));
+        }
 
         return RefreshIndicator(
           onRefresh: _loadDashboard,
@@ -343,11 +379,7 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                     else if (_error != null)
                       _ErrorPanel(message: _error!, onRetry: _loadDashboard)
                     else
-                      for (final id in order)
-                        if (visibility[id] ?? true) ...[
-                          sections[id]!,
-                          const SizedBox(height: 18),
-                        ],
+                      ...blocks,
                   ],
                 ),
               ),
