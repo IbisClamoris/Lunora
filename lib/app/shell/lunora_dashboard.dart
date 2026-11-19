@@ -33,6 +33,7 @@ class LunoraDashboard extends StatefulWidget {
   final VoidCallback onCreateRecipe;
   final VoidCallback onOpenShopping;
   final VoidCallback onOpenDebts;
+  final VoidCallback onCustomize;
 
   const LunoraDashboard({
     super.key,
@@ -43,6 +44,7 @@ class LunoraDashboard extends StatefulWidget {
     required this.onCreateRecipe,
     required this.onOpenShopping,
     required this.onOpenDebts,
+    required this.onCustomize,
   });
 
   @override
@@ -160,13 +162,162 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
     return value[0].toUpperCase() + value.substring(1);
   }
 
+  List<String> _normalizedWidgetOrder(List<String> stored) {
+    const defaults = ['overview', 'agenda', 'life', 'quickActions', 'thought'];
+    final result = stored.where(defaults.contains).toSet().toList();
+    for (final id in defaults) {
+      if (!result.contains(id)) result.add(id);
+    }
+    return result;
+  }
+
+  String _widgetTitle(String id, bool english) => switch (id) {
+        'overview' => english ? 'Daily overview' : 'Сводка дня',
+        'agenda' => english ? 'Today’s plan' : 'План на сегодня',
+        'life' => english ? 'Life in progress' : 'Что происходит',
+        'quickActions' => english ? 'Quick actions' : 'Быстрые действия',
+        'thought' => english ? 'Daily thought' : 'Мысль дня',
+        _ => id,
+      };
+
+  Future<void> _customizeDashboard() async {
+    final settings = SettingsService.instance.settings;
+    final order = _normalizedWidgetOrder(settings.dashboardWidgetOrder);
+    final visibility = <String, bool>{
+      for (final id in order)
+        id: settings.dashboardWidgetVisibility[id] ?? true,
+    };
+    final english = LunoraLocalization.isEnglish;
+
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: Text(english ? 'Customize home page' : 'Настроить главную'),
+          content: SizedBox(
+            width: 470,
+            height: 430,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  english
+                      ? 'Choose which blocks to show and drag them into your preferred order.'
+                      : 'Выбери нужные блоки и перетащи их в удобном порядке.',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const SizedBox(height: 12),
+                Expanded(
+                  child: ReorderableListView.builder(
+                    itemCount: order.length,
+                    onReorder: (oldIndex, newIndex) {
+                      setDialogState(() {
+                        if (newIndex > oldIndex) newIndex--;
+                        final item = order.removeAt(oldIndex);
+                        order.insert(newIndex, item);
+                      });
+                    },
+                    itemBuilder: (context, index) {
+                      final id = order[index];
+                      return ListTile(
+                        key: ValueKey(id),
+                        contentPadding: EdgeInsets.zero,
+                        leading: Checkbox(
+                          value: visibility[id] ?? true,
+                          onChanged: (value) => setDialogState(
+                            () => visibility[id] = value ?? true,
+                          ),
+                        ),
+                        title: Text(_widgetTitle(id, english)),
+                        trailing: ReorderableDragStartListener(
+                          index: index,
+                          child: const Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Icon(Icons.drag_handle_rounded),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(dialogContext, false),
+              child: Text(english ? 'Cancel' : 'Отмена'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(dialogContext, true),
+              child: Text(english ? 'Save' : 'Сохранить'),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (saved != true || !mounted) return;
+    try {
+      await SettingsService.instance.update(
+        SettingsService.instance.settings.copyWith(
+          dashboardWidgetOrder: List<String>.from(order),
+          dashboardWidgetVisibility: Map<String, bool>.from(visibility),
+        ),
+      );
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(english
+                ? 'Could not save home page layout: $error'
+                : 'Не удалось сохранить главную страницу: $error'),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = Theme.of(context).extension<LunoraPalette>()!;
+    final settings = SettingsService.instance.settings;
+    final order = _normalizedWidgetOrder(settings.dashboardWidgetOrder);
+    final visibility = settings.dashboardWidgetVisibility;
 
     return LayoutBuilder(
       builder: (context, constraints) {
         final compact = constraints.maxWidth < 760;
+        final sections = <String, Widget>{
+          'overview': _DailyOverview(
+            todayCount: _todayTasks.length,
+            overdueCount: _overdueTasks.length,
+            completedCount: _completedToday,
+            shoppingCount: _shoppingItems.length,
+          ),
+          'agenda': _TodayPanel(tasks: _todayTasks, overdue: _overdueTasks),
+          'life': _LifeInProgressPanel(
+            readingBooks: _readingBooks,
+            diaryEntries: _diaryEntries,
+            shoppingItems: _shoppingItems,
+            activeDebts: _activeDebts,
+            onNavigate: widget.onNavigate,
+            onOpenDiaryEntry: _openDiaryEntry,
+            onOpenShopping: widget.onOpenShopping,
+            onOpenDebts: widget.onOpenDebts,
+          ),
+          'quickActions': _QuickActions(
+            onCreatePlannerNote: widget.onCreatePlannerNote,
+            onCreateDiaryEntry: widget.onCreateDiaryEntry,
+            onCreateShoppingItem: widget.onCreateShoppingItem,
+            onCreateRecipe: widget.onCreateRecipe,
+          ),
+          'thought': _DailyThought(
+            color: palette.accentSoft,
+            textColor: palette.text,
+            accentColor: palette.accent,
+          ),
+        };
 
         return RefreshIndicator(
           onRefresh: _loadDashboard,
@@ -183,10 +334,9 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                       greeting: _greeting(),
                       date: _dateLabel(),
                       onCalendar: () => widget.onNavigate(1),
+                      onCustomize: _customizeDashboard,
                     ),
-
                     const SizedBox(height: 24),
-
                     if (_loading)
                       const Padding(
                         padding: EdgeInsets.all(48),
@@ -194,74 +344,12 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                       )
                     else if (_error != null)
                       _ErrorPanel(message: _error!, onRetry: _loadDashboard)
-                    else ...[
-                      _DailyOverview(
-                        todayCount: _todayTasks.length,
-                        overdueCount: _overdueTasks.length,
-                        completedCount: _completedToday,
-                        shoppingCount: _shoppingItems.length,
-                      ),
-
-                      const SizedBox(height: 24),
-
-                      if (compact) ...[
-                        _TodayPanel(tasks: _todayTasks, overdue: _overdueTasks),
-                        const SizedBox(height: 18),
-                        _LifeInProgressPanel(
-                          readingBooks: _readingBooks,
-                          diaryEntries: _diaryEntries,
-                          shoppingItems: _shoppingItems,
-                          activeDebts: _activeDebts,
-                          onNavigate: widget.onNavigate,
-                          onOpenDiaryEntry: _openDiaryEntry,
-                          onOpenShopping: widget.onOpenShopping,
-                          onOpenDebts: widget.onOpenDebts,
-                        ),
-                      ] else
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              flex: 6,
-                              child: _TodayPanel(
-                                tasks: _todayTasks,
-                                overdue: _overdueTasks,
-                              ),
-                            ),
-                            const SizedBox(width: 18),
-                            Expanded(
-                              flex: 5,
-                              child: _LifeInProgressPanel(
-                                readingBooks: _readingBooks,
-                                diaryEntries: _diaryEntries,
-                                shoppingItems: _shoppingItems,
-                                activeDebts: _activeDebts,
-                                onNavigate: widget.onNavigate,
-                                onOpenDiaryEntry: _openDiaryEntry,
-                                onOpenShopping: widget.onOpenShopping,
-                                onOpenDebts: widget.onOpenDebts,
-                              ),
-                            ),
-                          ],
-                        ),
-
-                      const SizedBox(height: 24),
-
-                      _QuickActions(
-                        onCreatePlannerNote: widget.onCreatePlannerNote,
-                        onCreateDiaryEntry: widget.onCreateDiaryEntry,
-                        onCreateShoppingItem: widget.onCreateShoppingItem,
-                        onCreateRecipe: widget.onCreateRecipe,
-                      ),
-                    ],
-
-                    const SizedBox(height: 20),
-
-                    _DailyThought(
-                      color: palette.accentSoft,
-                      textColor: palette.text,
-                      accentColor: palette.accent,
-                    ),
+                    else
+                      for (final id in order)
+                        if (visibility[id] ?? true) ...[
+                          sections[id]!,
+                          const SizedBox(height: 18),
+                        ],
                   ],
                 ),
               ),
@@ -282,11 +370,13 @@ class _DashboardHeader extends StatelessWidget {
     required this.greeting,
     required this.date,
     required this.onCalendar,
+    required this.onCustomize,
   });
 
   final String greeting;
   final String date;
   final VoidCallback onCalendar;
+  final VoidCallback onCustomize;
 
   @override
   Widget build(BuildContext context) {
@@ -337,6 +427,11 @@ class _DashboardHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
+          IconButton(
+            tooltip: LunoraLocalization.text('Настроить главную', 'Customize home page'),
+            onPressed: onCustomize,
+            icon: const Icon(Icons.dashboard_customize_outlined),
+          ),
           FilledButton.icon(
             onPressed: onCalendar,
             icon: const Icon(Icons.calendar_month_outlined, size: 18),
