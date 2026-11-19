@@ -704,6 +704,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ('movies', 'Мир кино и сериалов', 'Movies & series'),
               ('recipes', 'Моя книга рецептов', 'Recipe book'),
               ('wishlist', 'Вишлист', 'Wishlist'),
+              ('habits', 'Привычки', 'Habits'),
               ('collections', 'Коллекции', 'Collections'),
             ])
               _settingRow(

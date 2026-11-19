@@ -42,6 +42,7 @@ class LunoraSidebar extends StatelessWidget {
     'film',
     'recipes',
     'wishes',
+    'planner',
     'books',
     'settings',
   ];
@@ -61,6 +62,7 @@ class LunoraSidebar extends StatelessWidget {
     'Movies & series',
     'Recipe book',
     'Wishlist',
+    'Habits',
     'Collections',
     'Settings',
   ];

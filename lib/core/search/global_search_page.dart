@@ -118,6 +118,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
         return LunoraLocalization.text('Книга рецептов', 'Recipe book');
       case LunoraSection.wishlist:
         return LunoraLocalization.text('Вишлист', 'Wishlist');
+      case LunoraSection.habits:
+        return LunoraLocalization.text('Привычки', 'Habits');
       case LunoraSection.collections:
         return LunoraLocalization.text('Коллекции', 'Collections');
       case LunoraSection.settings:
@@ -151,6 +153,8 @@ class _GlobalSearchPageState extends State<GlobalSearchPage> {
         return Icons.restaurant_menu_outlined;
       case LunoraSection.wishlist:
         return Icons.auto_awesome_outlined;
+      case LunoraSection.habits:
+        return Icons.spa_outlined;
       default:
         return Icons.folder_outlined;
     }
