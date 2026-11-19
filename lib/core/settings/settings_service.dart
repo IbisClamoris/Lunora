@@ -83,6 +83,8 @@ class SettingsService extends ChangeNotifier {
       'botanicalDecorations': settings.botanicalDecorations.toString(),
       'animationsEnabled': settings.animationsEnabled.toString(),
       'sectionVisibility': jsonEncode(settings.sectionVisibility),
+      'dashboardWidgetOrder': jsonEncode(settings.dashboardWidgetOrder),
+      'dashboardWidgetVisibility': jsonEncode(settings.dashboardWidgetVisibility),
     };
   }
 
@@ -121,7 +123,28 @@ class SettingsService extends ChangeNotifier {
       botanicalDecorations: _bool(values, 'botanicalDecorations', true),
       animationsEnabled: _bool(values, 'animationsEnabled', true),
       sectionVisibility: _decodeSectionVisibility(values['sectionVisibility']),
+      dashboardWidgetOrder: _decodeDashboardWidgetOrder(values['dashboardWidgetOrder']),
+      dashboardWidgetVisibility: _decodeSectionVisibility(values['dashboardWidgetVisibility']),
     );
+  }
+
+  List<String> _decodeDashboardWidgetOrder(String? raw) {
+    const defaults = ['overview', 'agenda', 'life', 'quickActions', 'thought'];
+    if (raw == null || raw.isEmpty) return defaults;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is List) {
+        final valid = decoded.whereType<String>().where((value) =>
+            defaults.contains(value)).toSet().toList();
+        for (final value in defaults) {
+          if (!valid.contains(value)) valid.add(value);
+        }
+        return valid;
+      }
+    } catch (_) {
+      return defaults;
+    }
+    return defaults;
   }
 
   Map<String, bool> _decodeSectionVisibility(String? raw) {
