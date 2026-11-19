@@ -480,7 +480,6 @@ class _LunoraHomeState extends State<LunoraHome> {
                                       onCreateRecipe: _createRecipe,
                                       onOpenShopping: _openShoppingSection,
                                       onOpenDebts: _openDebtSection,
-                                      onCustomize: () {},
                                     ),
                                     LunoraSection.settings =>
                                       const SettingsPage(),
