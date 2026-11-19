@@ -33,7 +33,6 @@ class LunoraDashboard extends StatefulWidget {
   final VoidCallback onCreateRecipe;
   final VoidCallback onOpenShopping;
   final VoidCallback onOpenDebts;
-  final VoidCallback onCustomize;
 
   const LunoraDashboard({
     super.key,
@@ -44,7 +43,6 @@ class LunoraDashboard extends StatefulWidget {
     required this.onCreateRecipe,
     required this.onOpenShopping,
     required this.onOpenDebts,
-    required this.onCustomize,
   });
 
   @override
