@@ -490,9 +490,6 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
             ? constraints.maxWidth
             : (constraints.maxWidth - 18) / 2;
         final visibleIds = order.where((id) => visibility[id] ?? true).toList();
-        final tileWidth = compact
-            ? constraints.maxWidth
-            : (constraints.maxWidth - 18) / 2;
         final blocks = <Widget>[
           for (final id in visibleIds)
             SizedBox(
