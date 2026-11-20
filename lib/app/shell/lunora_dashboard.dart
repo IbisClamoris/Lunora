@@ -51,6 +51,7 @@ class LunoraDashboard extends StatefulWidget {
 
 class _LunoraDashboardState extends State<LunoraDashboard> {
   bool _loading = true;
+  bool _layoutEditing = false;
   String? _error;
 
   List<Task> _tasks = [];
@@ -276,6 +277,21 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
     }
   }
 
+  Future<void> _moveWidget(String draggedId, String targetId) async {
+    if (draggedId == targetId) return;
+    final settings = SettingsService.instance.settings;
+    final order = _normalizedWidgetOrder(settings.dashboardWidgetOrder);
+    final from = order.indexOf(draggedId);
+    final to = order.indexOf(targetId);
+    if (from < 0 || to < 0) return;
+    final moved = order.removeAt(from);
+    order.insert(to, moved);
+    await SettingsService.instance.update(
+      settings.copyWith(dashboardWidgetOrder: List<String>.from(order)),
+    );
+    if (mounted) setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final palette = Theme.of(context).extension<LunoraPalette>()!;
@@ -297,8 +313,7 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
           'life': _LifeInProgressPanel(
             readingBooks: _readingBooks,
             diaryEntries: _diaryEntries,
-            shoppingItems: _shoppingItems,
-            activeDebts: _activeDebts,
+            shoppingItems: _shoppingItems,            activeDebts: _activeDebts,
             onNavigate: widget.onNavigate,
             onOpenDiaryEntry: _openDiaryEntry,
             onOpenShopping: widget.onOpenShopping,
@@ -316,43 +331,85 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
             accentColor: palette.accent,
           ),
         };
-        final blocks = <Widget>[];
-        for (var index = 0; index < order.length; index++) {
-          final id = order[index];
-          if (!(visibility[id] ?? true)) continue;
-
-          final hasAdjacentPair = (id == 'agenda' && index + 1 < order.length &&
-                  order[index + 1] == 'life') ||
-              (id == 'life' && index + 1 < order.length &&
-                  order[index + 1] == 'agenda');
-          if (hasAdjacentPair && (visibility[order[index + 1]] ?? true)) {
-            final first = sections[id]!;
-            final second = sections[order[index + 1]]!;
-            blocks.add(
-              compact
-                  ? Column(
-                      children: [
-                        first,
-                        const SizedBox(height: 18),
-                        second,
-                      ],
-                    )
-                  : Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(flex: 6, child: first),
-                        const SizedBox(width: 18),
-                        Expanded(flex: 5, child: second),
-                      ],
-                    ),
-            );
-            index++;
-          } else {
-            blocks.add(sections[id]!);
-          }
-          blocks.add(const SizedBox(height: 18));
-        }
-
+        final tileWidth = compact
+            ? constraints.maxWidth
+            : (constraints.maxWidth - 18) / 2;
+        final blocks = <Widget>[
+          for (final id in order)
+            if (visibility[id] ?? true)
+              SizedBox(
+                key: ValueKey('dashboard-$id'),
+                width: tileWidth,
+                child: DragTarget<String>(
+                  onWillAcceptWithDetails: (details) =>
+                      _layoutEditing && details.data != id,
+                  onAcceptWithDetails: (details) =>
+                      _moveWidget(details.data, id),
+                  builder: (context, candidates, rejected) {
+                    final card = sections[id]!;
+                    final highlighted = candidates.isNotEmpty;
+                    final decorated = AnimatedContainer(
+                      duration: const Duration(milliseconds: 160),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(LunoraRadius.lg),
+                        border: _layoutEditing
+                            ? Border.all(
+                                color: highlighted
+                                    ? palette.accent
+                                    : palette.accent.withValues(alpha: 0.42),
+                                width: highlighted ? 2 : 1,
+                              )
+                            : null,
+                      ),
+                      child: Stack(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.all(_layoutEditing ? 5 : 0),
+                            child: card,
+                          ),
+                          if (_layoutEditing)
+                            Positioned(
+                              top: 10,
+                              right: 10,
+                              child: DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: palette.accentSoft,
+                                  borderRadius: BorderRadius.circular(9),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(6),
+                                  child: Icon(
+                                    Icons.open_with_rounded,
+                                    size: 17,
+                                    color: palette.text,
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    );
+                    if (!_layoutEditing) return decorated;
+                    return LongPressDraggable<String>(
+                      data: id,
+                      dragAnchorStrategy: pointerDragAnchorStrategy,
+                      feedback: Material(
+                        color: Colors.transparent,
+                        child: SizedBox(
+                          width: tileWidth,
+                          child: Opacity(opacity: 0.88, child: card),
+                        ),
+                      ),
+                      childWhenDragging: Opacity(
+                        opacity: 0.28,
+                        child: decorated,
+                      ),
+                      child: decorated,
+                    );
+                  },
+                ),
+              ),
+        ];
         return RefreshIndicator(
           onRefresh: _loadDashboard,
           child: SingleChildScrollView(
@@ -369,6 +426,10 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                       date: _dateLabel(),
                       onCalendar: () => widget.onNavigate(1),
                       onCustomize: _customizeDashboard,
+                      layoutEditing: _layoutEditing,
+                      onToggleLayout: () => setState(
+                        () => _layoutEditing = !_layoutEditing,
+                      ),
                     ),
                     const SizedBox(height: 24),
                     if (_loading)
@@ -378,8 +439,20 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                       )
                     else if (_error != null)
                       _ErrorPanel(message: _error!, onRetry: _loadDashboard)
-                    else
-                      ...blocks,
+                    else ...[
+                      if (_layoutEditing)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 14),
+                          child: Text(
+                            LunoraLocalization.text(
+                              'Зажми карточку и перетащи её в нужное место',
+                              'Long-press a card and drop it where you want',
+                            ),
+                            style: TextStyle(color: palette.secondary, fontSize: 12),
+                          ),
+                        ),
+                      Wrap(spacing: 18, runSpacing: 18, children: blocks),
+                    ],
                   ],
                 ),
               ),
@@ -401,12 +474,16 @@ class _DashboardHeader extends StatelessWidget {
     required this.date,
     required this.onCalendar,
     required this.onCustomize,
+    required this.layoutEditing,
+    required this.onToggleLayout,
   });
 
   final String greeting;
   final String date;
   final VoidCallback onCalendar;
   final VoidCallback onCustomize;
+  final bool layoutEditing;
+  final VoidCallback onToggleLayout;
 
   @override
   Widget build(BuildContext context) {
@@ -457,6 +534,15 @@ class _DashboardHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
+          IconButton(
+            tooltip: layoutEditing
+                ? LunoraLocalization.text('Завершить настройку', 'Finish arranging')
+                : LunoraLocalization.text('Переместить блоки', 'Arrange blocks'),
+            onPressed: onToggleLayout,
+            icon: Icon(
+              layoutEditing ? Icons.check_rounded : Icons.open_with_rounded,
+            ),
+          ),
           IconButton(
             tooltip: LunoraLocalization.text('Настроить главную', 'Customize home page'),
             onPressed: onCustomize,
@@ -648,7 +734,6 @@ class _StatCard extends StatelessWidget {
 
 class _TodayPanel extends StatelessWidget {
   const _TodayPanel({required this.tasks, required this.overdue});
-
   final List<Task> tasks;
   final List<Task> overdue;
 
@@ -997,8 +1082,7 @@ class _CompactLine extends StatelessWidget {
 class _QuickActions extends StatelessWidget {
   const _QuickActions({
     required this.onCreatePlannerNote,
-    required this.onCreateDiaryEntry,
-    required this.onCreateShoppingItem,
+    required this.onCreateDiaryEntry,    required this.onCreateShoppingItem,
     required this.onCreateRecipe,
   });
 
