@@ -62,7 +62,11 @@ class AppSettings {
     this.botanicalDecorations = true,
     this.animationsEnabled = true,
     this.sectionVisibility = const {},
-    this.dashboardWidgetOrder = const ['overview', 'agenda', 'life', 'quickActions', 'thought'],
+    this.dashboardWidgetOrder = const [
+      'overview', 'agenda', 'inProgress', 'reminders', 'quickActions',
+      'thought', 'habits', 'reading', 'movies', 'collections', 'finance',
+      'recipes', 'wishlist', 'diary', 'shopping',
+    ],
     this.dashboardWidgetVisibility = const {},
   });
 
