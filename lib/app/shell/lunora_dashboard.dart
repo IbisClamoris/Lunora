@@ -191,7 +191,7 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
 
   List<String> _normalizedWidgetOrder(List<String> stored) {
     const defaults = [
-      'overview', 'agenda', 'life', 'quickActions', 'thought',
+      'overview', 'agenda', 'inProgress', 'reminders', 'quickActions', 'thought',
       'habits', 'reading', 'movies', 'collections', 'finance',
       'recipes', 'wishlist', 'diary', 'shopping',
     ];
@@ -205,7 +205,8 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
   String _widgetTitle(String id, bool english) => switch (id) {
         'overview' => english ? 'Daily overview' : 'Сводка дня',
         'agenda' => english ? 'Today’s plan' : 'План на сегодня',
-        'life' => english ? 'Life in progress' : 'Что происходит',
+        'inProgress' => english ? 'In progress' : 'Сейчас в процессе',
+        'reminders' => english ? 'Small reminders' : 'Небольшие напоминания',
         'quickActions' => english ? 'Quick actions' : 'Быстрые действия',
         'thought' => english ? 'Daily thought' : 'Мысль дня',
         'habits' => english ? 'Habits' : 'Привычки',
@@ -362,7 +363,7 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
             shoppingCount: _shoppingItems.length,
           ),
           'agenda': _TodayPanel(tasks: _todayTasks, overdue: _overdueTasks),
-          'life': _LifeInProgressPanel(
+          'inProgress': _LifeInProgressPanel(
             readingBooks: _readingBooks,
             diaryEntries: _diaryEntries,
             shoppingItems: _shoppingItems,
@@ -371,6 +372,18 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
             onOpenDiaryEntry: _openDiaryEntry,
             onOpenShopping: widget.onOpenShopping,
             onOpenDebts: widget.onOpenDebts,
+            showInProgress: true,
+          ),
+          'reminders': _LifeInProgressPanel(
+            readingBooks: _readingBooks,
+            diaryEntries: _diaryEntries,
+            shoppingItems: _shoppingItems,
+            activeDebts: _activeDebts,
+            onNavigate: widget.onNavigate,
+            onOpenDiaryEntry: _openDiaryEntry,
+            onOpenShopping: widget.onOpenShopping,
+            onOpenDebts: widget.onOpenDebts,
+            showInProgress: false,
           ),
           'quickActions': _QuickActions(
             onCreatePlannerNote: widget.onCreatePlannerNote,
@@ -1052,141 +1065,128 @@ class _LifeInProgressPanel extends StatelessWidget {
     required this.onOpenDiaryEntry,
     required this.onOpenShopping,
     required this.onOpenDebts,
+    required this.showInProgress,
   });
 
   final List<BookEntry> readingBooks;
   final List<DiaryEntry> diaryEntries;
   final List<ShoppingItem> shoppingItems;
   final List<FinanceDebt> activeDebts;
-
   final ValueChanged<int> onNavigate;
   final ValueChanged<DiaryEntry> onOpenDiaryEntry;
   final VoidCallback onOpenShopping;
   final VoidCallback onOpenDebts;
+  final bool showInProgress;
 
   @override
   Widget build(BuildContext context) {
     final latestDiary = [...diaryEntries]
       ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
 
-    return Column(
-      children: [
-        _Panel(
-          title: LunoraLocalization.text('Сейчас в процессе', "In progress"),
-          subtitle: LunoraLocalization.text(
-            LunoraLocalization.text('То, к чему можно вернуться', 'Things to return to'),
-            "Things to return to",
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (readingBooks.isEmpty)
-                _CompactLine(
+    if (showInProgress) {
+      return _Panel(
+        title: LunoraLocalization.text('Сейчас в процессе', 'In progress'),
+        subtitle: LunoraLocalization.text(
+          'То, к чему можно вернуться',
+          'Things to return to',
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (readingBooks.isEmpty)
+              _CompactLine(
+                icon: Icons.menu_book_outlined,
+                assetPath: LunoraThemeAssets.icon(
+                  SettingsService.instance.settings.colorTheme,
+                  'books',
+                ),
+                title: LunoraLocalization.text('Нет книги в процессе чтения'),
+                subtitle: LunoraLocalization.text(
+                  'Книжный мир ждёт продолжения',
+                  'Your bookshelf is waiting for the next chapter',
+                ),
+                onTap: () => onNavigate(10),
+              )
+            else
+              ...readingBooks.take(2).map(
+                (book) => _CompactLine(
                   icon: Icons.menu_book_outlined,
                   assetPath: LunoraThemeAssets.icon(
                     SettingsService.instance.settings.colorTheme,
                     'books',
                   ),
-                  title: LunoraLocalization.text('Нет книги в процессе чтения'),
-                  subtitle: LunoraLocalization.text(
-                    LunoraLocalization.text('Книжный мир ждёт продолжения', 'Your bookshelf is waiting for the next chapter'),
-                  ),
+                  title: book.title,
+                  subtitle: book.pageCount == null
+                      ? LunoraLocalization.text('Читаю сейчас', 'Currently reading')
+                      : '${book.currentPage} из ${book.pageCount} страниц',
                   onTap: () => onNavigate(10),
-                )
-              else
-                ...readingBooks
-                    .take(2)
-                    .map(
-                      (book) => _CompactLine(
-                        icon: Icons.menu_book_outlined,
-                        assetPath: LunoraThemeAssets.icon(
-                          SettingsService.instance.settings.colorTheme,
-                          'books',
-                        ),
-                        title: book.title,
-                        subtitle: book.pageCount == null
-                            ? LunoraLocalization.text('Читаю сейчас', 'Currently reading')
-                            : '${book.currentPage} из ${book.pageCount} страниц',
-                        onTap: () => onNavigate(10),
-                      ),
-                    ),
-
-              const LunoraThemeDivider(height: 28, opacity: 0.8),
-
-              if (latestDiary.isEmpty)
-                _CompactLine(
+                ),
+              ),
+            const LunoraThemeDivider(height: 28, opacity: 0.8),
+            if (latestDiary.isEmpty)
+              _CompactLine(
+                icon: Icons.edit_note_outlined,
+                assetPath: LunoraThemeAssets.icon(
+                  SettingsService.instance.settings.colorTheme,
+                  'diary',
+                ),
+                title: LunoraLocalization.text('Дневник пока пуст'),
+                subtitle: LunoraLocalization.text(
+                  'Сохрани маленький момент дня',
+                ),
+                onTap: null,
+              )
+            else
+              ...latestDiary.take(2).map(
+                (entry) => _CompactLine(
                   icon: Icons.edit_note_outlined,
                   assetPath: LunoraThemeAssets.icon(
                     SettingsService.instance.settings.colorTheme,
                     'diary',
                   ),
-                  title: LunoraLocalization.text('Дневник пока пуст'),
-                  subtitle: LunoraLocalization.text(
-                    'Сохрани маленький момент дня',
-                  ),
-                  onTap: null,
-                )
-              else
-                ...latestDiary
-                    .take(2)
-                    .map(
-                      (entry) => _CompactLine(
-                        icon: Icons.edit_note_outlined,
-                        assetPath: LunoraThemeAssets.icon(
-                          SettingsService.instance.settings.colorTheme,
-                          'diary',
-                        ),
-                        title: entry.title.isEmpty
-                            ? LunoraLocalization.text('Запись без названия')
-                            : entry.title,
-                        subtitle: _shortDate(entry.entryDate),
-                        onTap: () => onOpenDiaryEntry(entry),
-                      ),
-                    ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 14),
-
-        _Panel(
-          title: LunoraLocalization.text(
-            LunoraLocalization.text('Небольшие напоминания', 'Small reminders'),
-            "Small reminders",
-          ),
-          subtitle: LunoraLocalization.text(
-            LunoraLocalization.text('Сводка по другим делам', 'A summary of other things'),
-            "A summary of other things",
-          ),
-          child: Column(
-            children: [
-              _CompactLine(
-                icon: Icons.shopping_basket_outlined,
-                assetPath: LunoraThemeAssets.icon(
-                  SettingsService.instance.settings.colorTheme,
-                  'shopping',
+                  title: entry.title.isEmpty
+                      ? LunoraLocalization.text('Запись без названия')
+                      : entry.title,
+                  subtitle: _shortDate(entry.entryDate),
+                  onTap: () => onOpenDiaryEntry(entry),
                 ),
-                title: LunoraLocalization.text('Покупки'),
-                subtitle: shoppingItems.isEmpty
-                    ? LunoraLocalization.text('Список пуст')
-                    : LunoraLocalization.text('${shoppingItems.length} пунктов ожидают покупки'),
-                onTap: onOpenShopping,
               ),
-
-              const LunoraThemeDivider(height: 28, opacity: 0.8),
-
-              _CompactLine(
-                icon: Icons.account_balance_wallet_outlined,
-                title: LunoraLocalization.text('Активные кредиты'),
-                subtitle: activeDebts.isEmpty
-                    ? LunoraLocalization.text('Нет активных задолженностей')
-                    : LunoraLocalization.text('${activeDebts.length} активных обязательств'),
-                onTap: onOpenDebts,
-              ),
-            ],
-          ),
+          ],
         ),
-      ],
+      );
+    }
+
+    return _Panel(
+      title: LunoraLocalization.text('Небольшие напоминания', 'Small reminders'),
+      subtitle: LunoraLocalization.text(
+        'Сводка по другим делам',
+        'A summary of other things',
+      ),
+      child: Column(
+        children: [
+          _CompactLine(
+            icon: Icons.shopping_basket_outlined,
+            assetPath: LunoraThemeAssets.icon(
+              SettingsService.instance.settings.colorTheme,
+              'shopping',
+            ),
+            title: LunoraLocalization.text('Покупки'),
+            subtitle: shoppingItems.isEmpty
+                ? LunoraLocalization.text('Список пуст')
+                : LunoraLocalization.text('${shoppingItems.length} пунктов ожидают покупки'),
+            onTap: onOpenShopping,
+          ),
+          const LunoraThemeDivider(height: 28, opacity: 0.8),
+          _CompactLine(
+            icon: Icons.account_balance_wallet_outlined,
+            title: LunoraLocalization.text('Активные кредиты'),
+            subtitle: activeDebts.isEmpty
+                ? LunoraLocalization.text('Нет активных задолженностей')
+                : LunoraLocalization.text('${activeDebts.length} активных обязательств'),
+            onTap: onOpenDebts,
+          ),
+        ],
+      ),
     );
   }
 
