@@ -479,8 +479,8 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
             subtitle: LunoraLocalization.text('То, что ещё нужно купить', 'Things still to buy'),
             icon: Icons.shopping_basket_outlined,
             items: _shoppingItems.take(4).map((item) => _DashboardSummaryItem(
-              title: item.name,
-              subtitle: item.quantity.trim().isEmpty ? LunoraLocalization.text('Ожидает покупки', 'To buy') : item.quantity,
+              title: item.title,
+              subtitle: item.quantity == null ? LunoraLocalization.text('Ожидает покупки', 'To buy') : '${item.quantity} ${item.unit ?? ''}'.trim(),
             )).toList(),
             emptyText: LunoraLocalization.text('Список покупок пуст', 'Shopping list is empty'),
             onOpen: widget.onOpenShopping,
@@ -611,7 +611,50 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                                 ? Border.all(color: palette.accent, width: 2)
                                 : null,
                           ),
-                          child: Wrap(spacing: 18, runSpacing: 18, children: blocks),
+                          child: SizedBox(
+                            width: constraints.maxWidth,
+                            child: compact
+                                ? Column(
+                                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                                    children: [
+                                      for (var i = 0; i < blocks.length; i++) ...[
+                                        blocks[i],
+                                        if (i != blocks.length - 1)
+                                          const SizedBox(height: 18),
+                                      ],
+                                    ],
+                                  )
+                                : Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: [
+                                            for (var i = 0; i < blocks.length; i += 2) ...[
+                                              blocks[i],
+                                              if (i + 2 < blocks.length)
+                                                const SizedBox(height: 18),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(width: 18),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: [
+                                            for (var i = 1; i < blocks.length; i += 2) ...[
+                                              blocks[i],
+                                              if (i + 2 < blocks.length)
+                                                const SizedBox(height: 18),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                          ),
                         ),
                       ),
                     ],
