@@ -313,7 +313,8 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
           'life': _LifeInProgressPanel(
             readingBooks: _readingBooks,
             diaryEntries: _diaryEntries,
-            shoppingItems: _shoppingItems,            activeDebts: _activeDebts,
+            shoppingItems: _shoppingItems,
+            activeDebts: _activeDebts,
             onNavigate: widget.onNavigate,
             onOpenDiaryEntry: _openDiaryEntry,
             onOpenShopping: widget.onOpenShopping,
