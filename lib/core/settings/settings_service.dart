@@ -129,7 +129,11 @@ class SettingsService extends ChangeNotifier {
   }
 
   List<String> _decodeDashboardWidgetOrder(String? raw) {
-    const defaults = ['overview', 'agenda', 'life', 'quickActions', 'thought'];
+    const defaults = [
+      'overview', 'agenda', 'inProgress', 'reminders', 'quickActions',
+      'thought', 'habits', 'reading', 'movies', 'collections', 'finance',
+      'recipes', 'wishlist', 'diary', 'shopping',
+    ];
     if (raw == null || raw.isEmpty) return defaults;
     try {
       final decoded = jsonDecode(raw);
