@@ -373,7 +373,6 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
             onOpenShopping: widget.onOpenShopping,
             onOpenDebts: widget.onOpenDebts,
             showInProgress: true,
-            showReminders: false,
           ),
           'reminders': _LifeInProgressPanel(
             readingBooks: _readingBooks,
@@ -385,7 +384,6 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
             onOpenShopping: widget.onOpenShopping,
             onOpenDebts: widget.onOpenDebts,
             showInProgress: false,
-            showReminders: true,
           ),
           'quickActions': _QuickActions(
             onCreatePlannerNote: widget.onCreatePlannerNote,
@@ -1068,7 +1066,6 @@ class _LifeInProgressPanel extends StatelessWidget {
     required this.onOpenShopping,
     required this.onOpenDebts,
     required this.showInProgress,
-    required this.showReminders,
   });
 
   final List<BookEntry> readingBooks;
@@ -1080,7 +1077,6 @@ class _LifeInProgressPanel extends StatelessWidget {
   final VoidCallback onOpenShopping;
   final VoidCallback onOpenDebts;
   final bool showInProgress;
-  final bool showReminders;
 
   @override
   Widget build(BuildContext context) {
