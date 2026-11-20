@@ -38,6 +38,8 @@ class AppSettings {
   final bool botanicalDecorations;
   final bool animationsEnabled;
   final Map<String, bool> sectionVisibility;
+  final List<String> dashboardWidgetOrder;
+  final Map<String, bool> dashboardWidgetVisibility;
 
   const AppSettings({
     this.themeMode = AppThemeMode.light,
@@ -60,6 +62,8 @@ class AppSettings {
     this.botanicalDecorations = true,
     this.animationsEnabled = true,
     this.sectionVisibility = const {},
+    this.dashboardWidgetOrder = const ['overview', 'agenda', 'life', 'quickActions', 'thought'],
+    this.dashboardWidgetVisibility = const {},
   });
 
   AppSettings copyWith({
@@ -83,6 +87,8 @@ class AppSettings {
     bool? botanicalDecorations,
     bool? animationsEnabled,
     Map<String, bool>? sectionVisibility,
+    List<String>? dashboardWidgetOrder,
+    Map<String, bool>? dashboardWidgetVisibility,
   }) {
     return AppSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -105,6 +111,8 @@ class AppSettings {
       botanicalDecorations: botanicalDecorations ?? this.botanicalDecorations,
       animationsEnabled: animationsEnabled ?? this.animationsEnabled,
       sectionVisibility: sectionVisibility ?? this.sectionVisibility,
+      dashboardWidgetOrder: dashboardWidgetOrder ?? this.dashboardWidgetOrder,
+      dashboardWidgetVisibility: dashboardWidgetVisibility ?? this.dashboardWidgetVisibility,
     );
   }
 
