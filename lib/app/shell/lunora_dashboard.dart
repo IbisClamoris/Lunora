@@ -1434,7 +1434,7 @@ class _QuickActionsState extends State<_QuickActions> {
   };
 
   String? _asset(String id) {
-    const assets = {'planner': 'planner', 'diary': 'diary', 'shopping': 'shopping', 'recipe': 'recipes', 'books': 'books', 'movies': 'movies', 'wishlist': 'wishlist'};
+    const assets = {'planner': 'planner', 'diary': 'diary', 'shopping': 'shopping', 'recipe': 'recipes', 'books': 'books'};
     final key = assets[id];
     return key == null ? null : LunoraThemeAssets.icon(SettingsService.instance.settings.colorTheme, key);
   }
