@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 import 'package:lunora/core/database/database.dart';
 import 'package:lunora/features/notifications/models/notification_item.dart';
 import 'package:lunora/features/notifications/services/notification_service.dart';
+import 'package:lunora/core/settings/settings_service.dart';
 
 import '../models/study_subject.dart';
 import '../models/study_period.dart';
@@ -403,6 +404,7 @@ class StudyRepository {
 
   Future<void> _syncItemReminders(StudyItem item) async {
     final service = NotificationService.instance;
+    final leadMinutes = SettingsService.instance.settings.reminderLeadTimeMinutes;
 
     final isActive =
         item.status != StudyItemStatus.completed &&
@@ -426,7 +428,7 @@ class StudyRepository {
         'Class starting soon',
       ),
       message: LunoraLocalization.text(
-        'Занятие «${item.title}» начнётся через 15 минут.',
+        'Занятие «${item.title}» начнётся через $leadMinutes минут.',
       ),
     );
 
@@ -437,7 +439,7 @@ class StudyRepository {
       eventType: 'study_deadline',
       title: LunoraLocalization.text('Скоро дедлайн', 'Deadline approaching'),
       message: LunoraLocalization.text(
-        'Срок выполнения «${item.title}» наступит через 15 минут.',
+        'Срок выполнения «${item.title}» наступит через $leadMinutes минут.',
       ),
     );
   }
@@ -457,7 +459,8 @@ class StudyRepository {
       return;
     }
 
-    final reminderAt = eventAt.subtract(const Duration(minutes: 15));
+    final leadMinutes = SettingsService.instance.settings.reminderLeadTimeMinutes;
+    final reminderAt = eventAt.subtract(Duration(minutes: leadMinutes));
 
     final existing = await service.getByEventKey(eventKey);
 
@@ -481,6 +484,7 @@ class StudyRepository {
       metadata: {
         'eventAt': eventAt.toIso8601String(),
         'studyItemType': item.type.name,
+        'leadTimeMinutes': leadMinutes,
       },
     );
   }
