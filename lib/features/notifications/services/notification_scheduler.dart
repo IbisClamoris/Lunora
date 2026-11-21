@@ -81,8 +81,8 @@ class NotificationScheduler {
             ..['leadTimeMinutes'] = settings.reminderLeadTimeMinutes;
           final leadMinutes = settings.reminderLeadTimeMinutes;
           final updatedMessage = current.message
-              .replaceAll(RegExp(r'\\d+ минут'), '$leadMinutes минут')
-              .replaceAll(RegExp(r'\\d+ minutes'), '$leadMinutes minutes');
+              .replaceAll(RegExp(r'\d+ минут'), '$leadMinutes минут')
+              .replaceAll(RegExp(r'\d+ minutes'), '$leadMinutes minutes');
           current = current.copyWith(
             scheduledAt: eventAt.subtract(Duration(minutes: leadMinutes)),
             message: updatedMessage,
