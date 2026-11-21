@@ -1434,7 +1434,7 @@ class _QuickActionsState extends State<_QuickActions> {
   };
 
   String? _asset(String id) {
-    const assets = {'planner': 'planner', 'diary': 'diary', 'shopping': 'shopping', 'recipe': 'recipes', 'books': 'books', 'movies': 'movies', 'wishlist': 'wishlist', 'habits': 'habits', 'collections': 'collections'};
+    const assets = {'planner': 'planner', 'diary': 'diary', 'shopping': 'shopping', 'recipe': 'recipes', 'books': 'books', 'movies': 'movies', 'wishlist': 'wishlist'};
     final key = assets[id];
     return key == null ? null : LunoraThemeAssets.icon(SettingsService.instance.settings.colorTheme, key);
   }
@@ -1538,7 +1538,7 @@ class _QuickActionsState extends State<_QuickActions> {
     final order = settings.quickActionOrder.where(_ids.contains).toList();
     for (final id in _ids) { if (!order.contains(id)) order.add(id); }
     final enabled = order.where((id) => settings.quickActionVisibility[id] ?? true).toList();
-    final count = settings.quickActionVisibleCount.clamp(4, _ids.length);
+    final count = settings.quickActionVisibleCount.clamp(4, _ids.length).toInt();
     final shown = _showAll ? enabled : enabled.take(count).toList();
     return _Panel(
       title: LunoraLocalization.text('Быстрые действия', 'Quick actions'),
