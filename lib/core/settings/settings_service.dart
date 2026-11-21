@@ -132,7 +132,7 @@ class SettingsService extends ChangeNotifier {
       dashboardWidgetColumns: _decodeDashboardWidgetColumns(values['dashboardWidgetColumns']),
       quickActionOrder: _decodeQuickActionOrder(values['quickActionOrder']),
       quickActionVisibility: _decodeSectionVisibility(values['quickActionVisibility']),
-      quickActionVisibleCount: (int.tryParse(values['quickActionVisibleCount'] ?? '') ?? 4).clamp(4, 13),
+      quickActionVisibleCount: (int.tryParse(values['quickActionVisibleCount'] ?? '') ?? 4).clamp(4, 13).toInt(),
     );
   }
 
