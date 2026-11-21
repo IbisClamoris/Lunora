@@ -79,10 +79,13 @@ class NotificationScheduler {
                 settings.reminderLeadTimeMinutes) {
           final metadata = Map<String, dynamic>.from(current.metadata)
             ..['leadTimeMinutes'] = settings.reminderLeadTimeMinutes;
+          final leadMinutes = settings.reminderLeadTimeMinutes;
+          final updatedMessage = current.message
+              .replaceAll(RegExp(r'\\d+ минут'), '$leadMinutes минут')
+              .replaceAll(RegExp(r'\\d+ minutes'), '$leadMinutes minutes');
           current = current.copyWith(
-            scheduledAt: eventAt.subtract(
-              Duration(minutes: settings.reminderLeadTimeMinutes),
-            ),
+            scheduledAt: eventAt.subtract(Duration(minutes: leadMinutes)),
+            message: updatedMessage,
             metadata: metadata,
           );
           await _repository.update(current);
