@@ -402,6 +402,7 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
             onCreateDiaryEntry: widget.onCreateDiaryEntry,
             onCreateShoppingItem: widget.onCreateShoppingItem,
             onCreateRecipe: widget.onCreateRecipe,
+            onNavigate: widget.onNavigate,
           ),
           'thought': _DailyThought(
             color: palette.accentSoft,
@@ -1377,71 +1378,200 @@ class _DashboardSummaryPanel extends StatelessWidget {
 // QUICK ACTIONS
 // ============================================================
 
-class _QuickActions extends StatelessWidget {
+class _QuickActions extends StatefulWidget {
   const _QuickActions({
     required this.onCreatePlannerNote,
-    required this.onCreateDiaryEntry,    required this.onCreateShoppingItem,
+    required this.onCreateDiaryEntry,
+    required this.onCreateShoppingItem,
     required this.onCreateRecipe,
+    required this.onNavigate,
   });
-
   final VoidCallback onCreatePlannerNote;
   final VoidCallback onCreateDiaryEntry;
   final VoidCallback onCreateShoppingItem;
   final VoidCallback onCreateRecipe;
+  final ValueChanged<int> onNavigate;
+  @override
+  State<_QuickActions> createState() => _QuickActionsState();
+}
+
+class _QuickActionsState extends State<_QuickActions> {
+  bool _showAll = false;
+  static const _ids = ['planner', 'diary', 'shopping', 'recipe', 'calendar', 'books', 'movies', 'wishlist', 'habits', 'collections', 'finances', 'knowledgeBase', 'studyPlanner'];
+
+  String _title(String id, bool en) => switch (id) {
+    'planner' => en ? 'Planner note' : 'Запись в планер',
+    'diary' => en ? 'Diary entry' : 'Запись в дневник',
+    'shopping' => en ? 'Shopping item' : 'Покупка',
+    'recipe' => en ? 'New recipe' : 'Новый рецепт',
+    'calendar' => en ? 'Tasks' : 'Задачи',
+    'books' => en ? 'Books' : 'Книги',
+    'movies' => en ? 'Movies & series' : 'Фильмы и сериалы',
+    'wishlist' => en ? 'Wishlist' : 'Желания',
+    'habits' => en ? 'Habits' : 'Привычки',
+    'collections' => en ? 'Collections' : 'Коллекции',
+    'finances' => en ? 'Finances' : 'Финансы',
+    'knowledgeBase' => en ? 'Knowledge base' : 'База знаний',
+    'studyPlanner' => en ? 'Study planner' : 'Учебный планер',
+    _ => id,
+  };
+
+  IconData _icon(String id) => switch (id) {
+    'planner' => Icons.calendar_view_day_outlined,
+    'diary' => Icons.edit_note_outlined,
+    'shopping' => Icons.add_shopping_cart_outlined,
+    'recipe' => Icons.restaurant_menu_outlined,
+    'calendar' => Icons.checklist_rounded,
+    'books' => Icons.menu_book_outlined,
+    'movies' => Icons.movie_outlined,
+    'wishlist' => Icons.favorite_border_rounded,
+    'habits' => Icons.spa_outlined,
+    'collections' => Icons.collections_bookmark_outlined,
+    'finances' => Icons.account_balance_wallet_outlined,
+    'knowledgeBase' => Icons.auto_stories_outlined,
+    'studyPlanner' => Icons.school_outlined,
+    _ => Icons.bolt_rounded,
+  };
+
+  String? _asset(String id) {
+    const assets = {'planner': 'planner', 'diary': 'diary', 'shopping': 'shopping', 'recipe': 'recipes', 'books': 'books'};
+    final key = assets[id];
+    return key == null ? null : LunoraThemeAssets.icon(SettingsService.instance.settings.colorTheme, key);
+  }
+
+  void _run(String id) {
+    switch (id) {
+      case 'planner': widget.onCreatePlannerNote(); break;
+      case 'diary': widget.onCreateDiaryEntry(); break;
+      case 'shopping': widget.onCreateShoppingItem(); break;
+      case 'recipe': widget.onCreateRecipe(); break;
+      case 'calendar': widget.onNavigate(1); break;
+      case 'books': widget.onNavigate(10); break;
+      case 'movies': widget.onNavigate(11); break;
+      case 'wishlist': widget.onNavigate(13); break;
+      case 'habits': widget.onNavigate(14); break;
+      case 'collections': widget.onNavigate(15); break;
+      case 'finances': widget.onNavigate(6); break;
+      case 'knowledgeBase': widget.onNavigate(7); break;
+      case 'studyPlanner': widget.onNavigate(5); break;
+    }
+  }
+
+  Future<void> _configure() async {
+    final settings = SettingsService.instance.settings;
+    final order = settings.quickActionOrder.where(_ids.contains).toList();
+    for (final id in _ids) { if (!order.contains(id)) order.add(id); }
+    final visibility = <String, bool>{for (final id in _ids) id: settings.quickActionVisibility[id] ?? true};
+    var visibleCount = [4, 6, 8, 13].contains(settings.quickActionVisibleCount) ? settings.quickActionVisibleCount : 4;
+    final en = LunoraLocalization.isEnglish;
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: Text(en ? 'Customize quick actions' : 'Настроить быстрые действия'),
+          content: SizedBox(
+            width: 440,
+            height: 500,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(en ? 'Choose actions, set their order and how many shortcuts appear before “More”.' : 'Выбери действия, расставь их по порядку и укажи, сколько показывать сразу.', style: Theme.of(context).textTheme.bodySmall),
+                const SizedBox(height: 14),
+                Row(children: [
+                  Expanded(child: Text(en ? 'Visible shortcuts' : 'Кнопок до «Ещё»')),
+                  DropdownButton<int>(
+                    value: visibleCount,
+                    items: [4, 6, 8, 13].map((n) => DropdownMenuItem(value: n, child: Text(n == 13 ? (en ? 'All' : 'Все') : '$n'))).toList(),
+                    onChanged: (value) { if (value != null) setDialogState(() => visibleCount = value); },
+                  ),
+                ]),
+                const SizedBox(height: 8),
+                Expanded(child: ReorderableListView.builder(
+                  itemCount: order.length,
+                  onReorder: (oldIndex, newIndex) {
+                    setDialogState(() {
+                      if (newIndex > oldIndex) newIndex--;
+                      final item = order.removeAt(oldIndex);
+                      order.insert(newIndex, item);
+                    });
+                  },
+                  itemBuilder: (context, index) {
+                    final id = order[index];
+                    return ListTile(
+                      key: ValueKey(id),
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      leading: Checkbox(value: visibility[id] ?? true, onChanged: (value) => setDialogState(() => visibility[id] = value ?? true)),
+                      title: Text(_title(id, en)),
+                      trailing: ReorderableDragStartListener(index: index, child: const Padding(padding: EdgeInsets.all(8), child: Icon(Icons.drag_handle_rounded))),
+                    );
+                  },
+                )),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(onPressed: () => Navigator.pop(dialogContext, false), child: Text(en ? 'Cancel' : 'Отмена')),
+            FilledButton(onPressed: () => Navigator.pop(dialogContext, true), child: Text(en ? 'Save' : 'Сохранить')),
+          ],
+        ),
+      ),
+    );
+    if (saved != true || !mounted) return;
+    try {
+      await SettingsService.instance.update(SettingsService.instance.settings.copyWith(
+        quickActionOrder: List<String>.from(order),
+        quickActionVisibility: Map<String, bool>.from(visibility),
+        quickActionVisibleCount: visibleCount,
+      ));
+      if (mounted) setState(() => _showAll = false);
+    } catch (error) {
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(en ? 'Could not save quick actions: $error' : 'Не удалось сохранить быстрые действия: $error')));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final p = Theme.of(context).extension<LunoraPalette>()!;
-
+    final settings = SettingsService.instance.settings;
+    final en = LunoraLocalization.isEnglish;
+    final order = settings.quickActionOrder.where(_ids.contains).toList();
+    for (final id in _ids) { if (!order.contains(id)) order.add(id); }
+    final enabled = order.where((id) => settings.quickActionVisibility[id] ?? true).toList();
+    final count = settings.quickActionVisibleCount.clamp(4, _ids.length).toInt();
+    final shown = _showAll ? enabled : enabled.take(count).toList();
     return _Panel(
-      title: LunoraLocalization.text('Быстрые действия'),
-      subtitle: LunoraLocalization.text(
-        LunoraLocalization.text('Перейти сразу к тому, что хочешь добавить', 'Jump straight to what you want to add'),
-      ),
-      child: Wrap(
-        spacing: 10,
-        runSpacing: 10,
+      title: LunoraLocalization.text('Быстрые действия', 'Quick actions'),
+      subtitle: LunoraLocalization.text('Частые команды и переходы в один клик', 'Frequent commands and shortcuts in one click'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _ActionChip(
-            icon: Icons.calendar_view_day_outlined,
-            assetPath: LunoraThemeAssets.icon(
-              SettingsService.instance.settings.colorTheme,
-              'planner',
-            ),
-            label: LunoraLocalization.text('Мой планер'),
-            color: p.sagePanel,
-            onTap: onCreatePlannerNote,
-          ),
-          _ActionChip(
-            icon: Icons.edit_note_outlined,
-            assetPath: LunoraThemeAssets.icon(
-              SettingsService.instance.settings.colorTheme,
-              'diary',
-            ),
-            label: LunoraLocalization.text('Запись в дневник'),
-            color: p.lavender,
-            onTap: onCreateDiaryEntry,
-          ),
-          _ActionChip(
-            icon: Icons.add_shopping_cart_outlined,
-            assetPath: LunoraThemeAssets.icon(
-              SettingsService.instance.settings.colorTheme,
-              'shopping',
-            ),
-            label: LunoraLocalization.text('Покупка'),
-            color: p.rose,
-            onTap: onCreateShoppingItem,
-          ),
-          _ActionChip(
-            icon: Icons.menu_book_outlined,
-            assetPath: LunoraThemeAssets.icon(
-              SettingsService.instance.settings.colorTheme,
-              'recipes',
-            ),
-            label: LunoraLocalization.text('Рецепты'),
-            color: p.accentSoft,
-            onTap: onCreateRecipe,
-          ),
+          Align(alignment: Alignment.centerRight, child: TextButton.icon(onPressed: _configure, icon: const Icon(Icons.tune_rounded, size: 16), label: Text(en ? 'Customize' : 'Настроить'))),
+          if (shown.isNotEmpty)
+            Wrap(
+              spacing: 10,
+              runSpacing: 10,
+              children: shown.map((id) => _ActionChip(
+                icon: _icon(id),
+                assetPath: _asset(id),
+                label: _title(id, en),
+                color: switch (id) {
+                  'planner' || 'calendar' => p.sagePanel,
+                  'diary' || 'books' => p.lavender,
+                  'shopping' || 'wishlist' => p.rose,
+                  'recipe' || 'collections' => p.accentSoft,
+                  _ => p.background,
+                },
+                onTap: () => _run(id),
+              )).toList(),
+            )
+          else
+            Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text(en ? 'No actions selected. Customize this panel to add shortcuts.' : 'Действия не выбраны. Открой настройки карточки, чтобы добавить кнопки.', style: TextStyle(color: p.secondary, fontSize: 12))),
+          if (enabled.length > count)
+            Align(alignment: Alignment.center, child: TextButton(
+              onPressed: () => setState(() => _showAll = !_showAll),
+              child: Text(_showAll ? (en ? 'Show less' : 'Свернуть') : (en ? 'More actions' : 'Ещё действия')),
+            )),
         ],
       ),
     );
@@ -1449,45 +1579,26 @@ class _QuickActions extends StatelessWidget {
 }
 
 class _ActionChip extends StatelessWidget {
-  const _ActionChip({
-    required this.icon,
-    this.assetPath,
-    required this.label,
-    required this.color,
-    required this.onTap,
-  });
-
+  const _ActionChip({required this.icon, this.assetPath, required this.label, required this.color, required this.onTap});
   final IconData icon;
   final String? assetPath;
   final String label;
   final Color color;
   final VoidCallback? onTap;
-
   @override
   Widget build(BuildContext context) {
     final p = Theme.of(context).extension<LunoraPalette>()!;
-
     return ActionChip(
-      avatar: assetPath == null
-          ? Icon(icon, size: 17, color: p.text)
-          : LunoraAssetIcon(assetPath!, size: 19),
+      avatar: assetPath == null ? Icon(icon, size: 17, color: p.text) : LunoraAssetIcon(assetPath!, size: 19),
       label: Text(label),
       onPressed: onTap,
       backgroundColor: color,
       side: BorderSide(color: p.border),
-      labelStyle: TextStyle(
-        color: p.text,
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
-      ),
+      labelStyle: TextStyle(color: p.text, fontSize: 12, fontWeight: FontWeight.w600),
       padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 7),
     );
   }
 }
-
-// ============================================================
-// SHARED PANEL
-// ============================================================
 
 class _Panel extends StatelessWidget {
   const _Panel({

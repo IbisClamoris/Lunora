@@ -86,6 +86,9 @@ class SettingsService extends ChangeNotifier {
       'dashboardWidgetOrder': jsonEncode(settings.dashboardWidgetOrder),
       'dashboardWidgetVisibility': jsonEncode(settings.dashboardWidgetVisibility),
       'dashboardWidgetColumns': jsonEncode(settings.dashboardWidgetColumns),
+      'quickActionOrder': jsonEncode(settings.quickActionOrder),
+      'quickActionVisibility': jsonEncode(settings.quickActionVisibility),
+      'quickActionVisibleCount': settings.quickActionVisibleCount.toString(),
     };
   }
 
@@ -127,6 +130,9 @@ class SettingsService extends ChangeNotifier {
       dashboardWidgetOrder: _decodeDashboardWidgetOrder(values['dashboardWidgetOrder']),
       dashboardWidgetVisibility: _decodeSectionVisibility(values['dashboardWidgetVisibility']),
       dashboardWidgetColumns: _decodeDashboardWidgetColumns(values['dashboardWidgetColumns']),
+      quickActionOrder: _decodeQuickActionOrder(values['quickActionOrder']),
+      quickActionVisibility: _decodeSectionVisibility(values['quickActionVisibility']),
+      quickActionVisibleCount: (int.tryParse(values['quickActionVisibleCount'] ?? '') ?? 4).clamp(4, 13).toInt(),
     );
   }
 
@@ -144,6 +150,24 @@ class SettingsService extends ChangeNotifier {
             defaults.contains(value)).toSet().toList();
         for (final value in defaults) {
           if (!valid.contains(value)) valid.add(value);
+        }
+        return valid;
+      }
+    } catch (_) {
+      return defaults;
+    }
+    return defaults;
+  }
+
+  List<String> _decodeQuickActionOrder(String? raw) {
+    const defaults = ['planner', 'diary', 'shopping', 'recipe', 'calendar', 'books', 'movies', 'wishlist', 'habits', 'collections', 'finances', 'knowledgeBase', 'studyPlanner'];
+    if (raw == null || raw.isEmpty) return defaults;
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is List) {
+        final valid = decoded.whereType<String>().where(defaults.contains).toSet().toList();
+        for (final id in defaults) {
+          if (!valid.contains(id)) valid.add(id);
         }
         return valid;
       }
