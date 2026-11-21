@@ -160,7 +160,7 @@ class SettingsService extends ChangeNotifier {
       if (decoded is Map<String, dynamic>) {
         return decoded.map((key, value) {
           final column = value is num ? value.toInt() : int.tryParse('$value') ?? 0;
-          return MapEntry(key, column.clamp(0, 1));
+          return MapEntry(key, column.clamp(0, 1).toInt());
         });
       }
     } catch (_) {
