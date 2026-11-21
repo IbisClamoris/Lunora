@@ -30,6 +30,7 @@ class AppSettings {
   final bool quietHoursEnabled;
   final String quietHoursStart;
   final String quietHoursEnd;
+  final int reminderLeadTimeMinutes;
 
   final bool startWithWindows;
   final bool checkForUpdatesAutomatically;
@@ -60,6 +61,7 @@ class AppSettings {
     this.quietHoursEnabled = false,
     this.quietHoursStart = '23:00',
     this.quietHoursEnd = '08:00',
+    this.reminderLeadTimeMinutes = 15,
     this.startWithWindows = false,
     this.checkForUpdatesAutomatically = true,
     this.minimizeToTray = true,
@@ -93,6 +95,7 @@ class AppSettings {
     bool? quietHoursEnabled,
     String? quietHoursStart,
     String? quietHoursEnd,
+    int? reminderLeadTimeMinutes,
     bool? startWithWindows,
     bool? checkForUpdatesAutomatically,
     bool? minimizeToTray,
@@ -121,6 +124,7 @@ class AppSettings {
       quietHoursEnabled: quietHoursEnabled ?? this.quietHoursEnabled,
       quietHoursStart: quietHoursStart ?? this.quietHoursStart,
       quietHoursEnd: quietHoursEnd ?? this.quietHoursEnd,
+      reminderLeadTimeMinutes: reminderLeadTimeMinutes ?? this.reminderLeadTimeMinutes,
       startWithWindows: startWithWindows ?? this.startWithWindows,
       checkForUpdatesAutomatically: checkForUpdatesAutomatically ?? this.checkForUpdatesAutomatically,
       minimizeToTray: minimizeToTray ?? this.minimizeToTray,
