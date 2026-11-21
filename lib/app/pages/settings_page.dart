@@ -839,6 +839,39 @@ class _SettingsPageState extends State<SettingsPage> {
                     _update(_settings.copyWith(soundEnabled: value)),
               ),
             ),
+            _settingRow(
+              title: LunoraLocalization.text(
+                'Когда напоминать о событиях',
+                'Remind me before events',
+              ),
+              description: LunoraLocalization.text(
+                'Для задач, занятий и учебных дедлайнов',
+                'For tasks, classes and study deadlines',
+              ),
+              control: _dropdown<int>(
+                value: const [5, 15, 30, 60].contains(
+                  _settings.reminderLeadTimeMinutes,
+                ) ? _settings.reminderLeadTimeMinutes : 15,
+                items: [
+                  for (final minutes in const [5, 15, 30, 60])
+                    DropdownMenuItem(
+                      value: minutes,
+                      child: Text(
+                        _settings.language == AppLanguage.english
+                            ? '$minutes min'
+                            : '$minutes мин.',
+                      ),
+                    ),
+                ],
+                onChanged: (value) {
+                  if (value != null) {
+                    _update(_settings.copyWith(
+                      reminderLeadTimeMinutes: value,
+                    ));
+                  }
+                },
+              ),
+            ),
             const SizedBox(height: 12),
             Text(
               '${LunoraLocalization.text('Громкость: ')}${(_volumePreview ?? _settings.notificationVolume.toDouble()).round()}%',
