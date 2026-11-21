@@ -327,7 +327,8 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
     final to = order.indexOf(targetId);
     if (from < 0 || to < 0) return;
     final moved = order.removeAt(from);
-    order.insert(to, moved);
+    final insertionIndex = from < to ? to - 1 : to;
+    order.insert(insertionIndex, moved);
     final columns = Map<String, int>.from(settings.dashboardWidgetColumns);
     for (var index = 0; index < order.length; index++) {
       columns.putIfAbsent(order[index], () => index % 2);
