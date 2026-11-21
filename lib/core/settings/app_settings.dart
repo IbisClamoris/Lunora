@@ -41,6 +41,9 @@ class AppSettings {
   final List<String> dashboardWidgetOrder;
   final Map<String, bool> dashboardWidgetVisibility;
   final Map<String, int> dashboardWidgetColumns;
+  final List<String> quickActionOrder;
+  final Map<String, bool> quickActionVisibility;
+  final int quickActionVisibleCount;
 
   const AppSettings({
     this.themeMode = AppThemeMode.light,
@@ -70,6 +73,9 @@ class AppSettings {
     ],
     this.dashboardWidgetVisibility = const {},
     this.dashboardWidgetColumns = const {},
+    this.quickActionOrder = const ['planner', 'diary', 'shopping', 'recipe', 'calendar', 'books', 'movies', 'wishlist', 'habits', 'collections', 'finances', 'knowledgeBase', 'studyPlanner'],
+    this.quickActionVisibility = const {},
+    this.quickActionVisibleCount = 4,
   });
 
   AppSettings copyWith({
@@ -96,6 +102,9 @@ class AppSettings {
     List<String>? dashboardWidgetOrder,
     Map<String, bool>? dashboardWidgetVisibility,
     Map<String, int>? dashboardWidgetColumns,
+    List<String>? quickActionOrder,
+    Map<String, bool>? quickActionVisibility,
+    int? quickActionVisibleCount,
   }) {
     return AppSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -121,6 +130,9 @@ class AppSettings {
       dashboardWidgetOrder: dashboardWidgetOrder ?? this.dashboardWidgetOrder,
       dashboardWidgetVisibility: dashboardWidgetVisibility ?? this.dashboardWidgetVisibility,
       dashboardWidgetColumns: dashboardWidgetColumns ?? this.dashboardWidgetColumns,
+      quickActionOrder: quickActionOrder ?? this.quickActionOrder,
+      quickActionVisibility: quickActionVisibility ?? this.quickActionVisibility,
+      quickActionVisibleCount: quickActionVisibleCount ?? this.quickActionVisibleCount,
     );
   }
 
