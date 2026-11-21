@@ -319,17 +319,6 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
     }
   }
 
-  Future<void> _moveWidgetToEnd(String draggedId) async {
-    final settings = SettingsService.instance.settings;
-    final order = _normalizedWidgetOrder(settings.dashboardWidgetOrder);
-    order.remove(draggedId);
-    order.add(draggedId);
-    await SettingsService.instance.update(
-      settings.copyWith(dashboardWidgetOrder: List<String>.from(order)),
-    );
-    if (mounted) setState(() {});
-  }
-
   Future<void> _moveWidget(String draggedId, String targetId) async {
     if (draggedId == targetId) return;
     final settings = SettingsService.instance.settings;
@@ -340,6 +329,9 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
     final moved = order.removeAt(from);
     order.insert(to, moved);
     final columns = Map<String, int>.from(settings.dashboardWidgetColumns);
+    for (var index = 0; index < order.length; index++) {
+      columns.putIfAbsent(order[index], () => index % 2);
+    }
     columns[draggedId] = columns[targetId] ?? (to % 2);
     await SettingsService.instance.update(
       settings.copyWith(
@@ -352,7 +344,11 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
 
   Future<void> _moveWidgetToColumn(String draggedId, int column) async {
     final settings = SettingsService.instance.settings;
+    final order = _normalizedWidgetOrder(settings.dashboardWidgetOrder);
     final columns = Map<String, int>.from(settings.dashboardWidgetColumns);
+    for (var index = 0; index < order.length; index++) {
+      columns.putIfAbsent(order[index], () => index % 2);
+    }
     columns[draggedId] = column;
     await SettingsService.instance.update(
       settings.copyWith(dashboardWidgetColumns: columns),
@@ -678,6 +674,8 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                                               blocks[leftIds[i]]!,
                                               if (i != leftIds.length - 1) const SizedBox(height: 18),
                                             ],
+                                            if (_layoutEditing && leftIds.isEmpty)
+                                              const SizedBox(height: 90),
                                           ],
                                         ),
                                       ),
