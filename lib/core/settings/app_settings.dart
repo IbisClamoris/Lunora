@@ -40,6 +40,7 @@ class AppSettings {
   final Map<String, bool> sectionVisibility;
   final List<String> dashboardWidgetOrder;
   final Map<String, bool> dashboardWidgetVisibility;
+  final Map<String, int> dashboardWidgetColumns;
 
   const AppSettings({
     this.themeMode = AppThemeMode.light,
@@ -68,6 +69,7 @@ class AppSettings {
       'recipes', 'wishlist', 'diary', 'shopping',
     ],
     this.dashboardWidgetVisibility = const {},
+    this.dashboardWidgetColumns = const {},
   });
 
   AppSettings copyWith({
@@ -93,6 +95,7 @@ class AppSettings {
     Map<String, bool>? sectionVisibility,
     List<String>? dashboardWidgetOrder,
     Map<String, bool>? dashboardWidgetVisibility,
+    Map<String, int>? dashboardWidgetColumns,
   }) {
     return AppSettings(
       themeMode: themeMode ?? this.themeMode,
@@ -117,6 +120,7 @@ class AppSettings {
       sectionVisibility: sectionVisibility ?? this.sectionVisibility,
       dashboardWidgetOrder: dashboardWidgetOrder ?? this.dashboardWidgetOrder,
       dashboardWidgetVisibility: dashboardWidgetVisibility ?? this.dashboardWidgetVisibility,
+      dashboardWidgetColumns: dashboardWidgetColumns ?? this.dashboardWidgetColumns,
     );
   }
 

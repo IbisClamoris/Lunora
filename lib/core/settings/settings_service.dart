@@ -85,6 +85,7 @@ class SettingsService extends ChangeNotifier {
       'sectionVisibility': jsonEncode(settings.sectionVisibility),
       'dashboardWidgetOrder': jsonEncode(settings.dashboardWidgetOrder),
       'dashboardWidgetVisibility': jsonEncode(settings.dashboardWidgetVisibility),
+      'dashboardWidgetColumns': jsonEncode(settings.dashboardWidgetColumns),
     };
   }
 
@@ -125,6 +126,7 @@ class SettingsService extends ChangeNotifier {
       sectionVisibility: _decodeSectionVisibility(values['sectionVisibility']),
       dashboardWidgetOrder: _decodeDashboardWidgetOrder(values['dashboardWidgetOrder']),
       dashboardWidgetVisibility: _decodeSectionVisibility(values['dashboardWidgetVisibility']),
+      dashboardWidgetColumns: _decodeDashboardWidgetColumns(values['dashboardWidgetColumns']),
     );
   }
 
@@ -149,6 +151,22 @@ class SettingsService extends ChangeNotifier {
       return defaults;
     }
     return defaults;
+  }
+
+  Map<String, int> _decodeDashboardWidgetColumns(String? raw) {
+    if (raw == null || raw.isEmpty) return const {};
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is Map<String, dynamic>) {
+        return decoded.map((key, value) {
+          final column = value is num ? value.toInt() : int.tryParse('$value') ?? 0;
+          return MapEntry(key, column.clamp(0, 1).toInt());
+        });
+      }
+    } catch (_) {
+      return const {};
+    }
+    return const {};
   }
 
   Map<String, bool> _decodeSectionVisibility(String? raw) {

@@ -319,17 +319,6 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
     }
   }
 
-  Future<void> _moveWidgetToEnd(String draggedId) async {
-    final settings = SettingsService.instance.settings;
-    final order = _normalizedWidgetOrder(settings.dashboardWidgetOrder);
-    order.remove(draggedId);
-    order.add(draggedId);
-    await SettingsService.instance.update(
-      settings.copyWith(dashboardWidgetOrder: List<String>.from(order)),
-    );
-    if (mounted) setState(() {});
-  }
-
   Future<void> _moveWidget(String draggedId, String targetId) async {
     if (draggedId == targetId) return;
     final settings = SettingsService.instance.settings;
@@ -338,9 +327,32 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
     final to = order.indexOf(targetId);
     if (from < 0 || to < 0) return;
     final moved = order.removeAt(from);
-    order.insert(to, moved);
+    final insertionIndex = from < to ? to - 1 : to;
+    order.insert(insertionIndex, moved);
+    final columns = Map<String, int>.from(settings.dashboardWidgetColumns);
+    for (var index = 0; index < order.length; index++) {
+      columns.putIfAbsent(order[index], () => index % 2);
+    }
+    columns[draggedId] = columns[targetId] ?? (to % 2);
     await SettingsService.instance.update(
-      settings.copyWith(dashboardWidgetOrder: List<String>.from(order)),
+      settings.copyWith(
+        dashboardWidgetOrder: List<String>.from(order),
+        dashboardWidgetColumns: columns,
+      ),
+    );
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _moveWidgetToColumn(String draggedId, int column) async {
+    final settings = SettingsService.instance.settings;
+    final order = _normalizedWidgetOrder(settings.dashboardWidgetOrder);
+    final columns = Map<String, int>.from(settings.dashboardWidgetColumns);
+    for (var index = 0; index < order.length; index++) {
+      columns.putIfAbsent(order[index], () => index % 2);
+    }
+    columns[draggedId] = column;
+    await SettingsService.instance.update(
+      settings.copyWith(dashboardWidgetColumns: columns),
     );
     if (mounted) setState(() {});
   }
@@ -503,9 +515,15 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
             ? constraints.maxWidth
             : (constraints.maxWidth - 18) / 2;
         final visibleIds = order.where((id) => visibility[id] ?? true).toList();
-        final blocks = <Widget>[
+        final columns = settings.dashboardWidgetColumns;
+        int columnOf(String id) => compact
+            ? 0
+            : (columns[id] ?? (order.indexOf(id) % 2)).clamp(0, 1);
+        final leftIds = visibleIds.where((id) => columnOf(id) == 0).toList();
+        final rightIds = visibleIds.where((id) => columnOf(id) == 1).toList();
+        final blocks = <String, Widget>{
           for (final id in visibleIds)
-            SizedBox(
+            id: SizedBox(
               key: ValueKey('dashboard-$id'),
               width: tileWidth,
               child: DragTarget<String>(
@@ -569,7 +587,8 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                 },
               ),
             ),
-        ];
+        };
+
         return RefreshIndicator(
           onRefresh: _loadDashboard,
           child: SingleChildScrollView(
@@ -605,67 +624,92 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                           padding: const EdgeInsets.only(bottom: 14),
                           child: Text(
                             LunoraLocalization.text(
-                              'Перетаскивай блоки за значок ⠿. Можно менять местами карточки или бросать в свободное поле.',
-                              'Drag cards by the handle. Drop on another card or in the open area.',
+                              'Перетаскивай блоки за значок ⠿. Можно менять порядок и переносить карточки между колонками.',
+                              'Drag cards by the handle to reorder them or move them between columns.',
                             ),
                             style: TextStyle(color: palette.secondary, fontSize: 12),
                           ),
                         ),
-                      DragTarget<String>(
-                        onWillAcceptWithDetails: (details) => _layoutEditing,
-                        onAcceptWithDetails: (details) => _moveWidgetToEnd(details.data),
-                        builder: (context, candidates, child) => DecoratedBox(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            border: candidates.isNotEmpty
-                                ? Border.all(color: palette.accent, width: 2)
-                                : null,
-                          ),
-                          child: SizedBox(
-                            width: constraints.maxWidth,
-                            child: compact
-                                ? Column(
+                      SizedBox(
+                        width: constraints.maxWidth,
+                        child: compact
+                            ? DragTarget<String>(
+                                onWillAcceptWithDetails: (details) => _layoutEditing,
+                                onAcceptWithDetails: (details) => _moveWidgetToColumn(details.data, 0),
+                                builder: (context, candidates, child) => DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(16),
+                                    border: candidates.isNotEmpty
+                                        ? Border.all(color: palette.accent, width: 2)
+                                        : null,
+                                  ),
+                                  child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.stretch,
                                     children: [
-                                      for (var i = 0; i < blocks.length; i++) ...[
-                                        blocks[i],
-                                        if (i != blocks.length - 1)
-                                          const SizedBox(height: 18),
+                                      for (var i = 0; i < leftIds.length; i++) ...[
+                                        blocks[leftIds[i]]!,
+                                        if (i != leftIds.length - 1) const SizedBox(height: 18),
                                       ],
                                     ],
-                                  )
-                                : Row(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          children: [
-                                            for (var i = 0; i < blocks.length; i += 2) ...[
-                                              blocks[i],
-                                              if (i + 2 < blocks.length)
-                                                const SizedBox(height: 18),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                      const SizedBox(width: 18),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                                          children: [
-                                            for (var i = 1; i < blocks.length; i += 2) ...[
-                                              blocks[i],
-                                              if (i + 2 < blocks.length)
-                                                const SizedBox(height: 18),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                    ],
                                   ),
-                          ),
-                        ),
+                                ),
+                              )
+                            : Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: DragTarget<String>(
+                                      onWillAcceptWithDetails: (details) => _layoutEditing,
+                                      onAcceptWithDetails: (details) => _moveWidgetToColumn(details.data, 0),
+                                      builder: (context, candidates, child) => DecoratedBox(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(16),
+                                          border: candidates.isNotEmpty
+                                              ? Border.all(color: palette.accent, width: 2)
+                                              : null,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: [
+                                            for (var i = 0; i < leftIds.length; i++) ...[
+                                              blocks[leftIds[i]]!,
+                                              if (i != leftIds.length - 1) const SizedBox(height: 18),
+                                            ],
+                                            if (_layoutEditing && leftIds.isEmpty)
+                                              const SizedBox(height: 90),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 18),
+                                  Expanded(
+                                    child: DragTarget<String>(
+                                      onWillAcceptWithDetails: (details) => _layoutEditing,
+                                      onAcceptWithDetails: (details) => _moveWidgetToColumn(details.data, 1),
+                                      builder: (context, candidates, child) => DecoratedBox(
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(16),
+                                          border: candidates.isNotEmpty
+                                              ? Border.all(color: palette.accent, width: 2)
+                                              : null,
+                                        ),
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                                          children: [
+                                            for (var i = 0; i < rightIds.length; i++) ...[
+                                              blocks[rightIds[i]]!,
+                                              if (i != rightIds.length - 1) const SizedBox(height: 18),
+                                            ],
+                                            if (_layoutEditing && rightIds.isEmpty)
+                                              const SizedBox(height: 90),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                       ),
                     ],
                   ],
