@@ -4,6 +4,7 @@ import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:lunora/core/database/database.dart';
 import 'package:lunora/features/notifications/models/notification_item.dart';
 import 'package:lunora/features/notifications/services/notification_service.dart';
+import 'package:lunora/core/settings/settings_service.dart';
 
 import '../models/task.dart';
 
@@ -11,8 +12,6 @@ class TaskRepository {
   TaskRepository._();
 
   static final TaskRepository instance = TaskRepository._();
-
-  static const Duration _reminderLeadTime = Duration(minutes: 15);
 
   static const String _eventKeyPrefix = 'task_due_';
   static const String _sourceModule = 'tasks';
@@ -114,7 +113,8 @@ class TaskRepository {
       return;
     }
 
-    final reminderAt = eventAt.subtract(_reminderLeadTime);
+    final leadMinutes = SettingsService.instance.settings.reminderLeadTimeMinutes;
+    final reminderAt = eventAt.subtract(Duration(minutes: leadMinutes));
 
     final existing = await notificationService.getByEventKey(eventKey);
 
@@ -134,12 +134,15 @@ class TaskRepository {
       eventKey: eventKey,
       title: LunoraLocalization.text('Скоро срок задачи', 'Task due soon'),
       message: LunoraLocalization.text(
-        'Задача «${task.title}» наступит через 15 минут.',
+        'Задача «${task.title}» наступит через $leadMinutes минут.',
       ),
       sourceModule: _sourceModule,
       sourceRecordId: task.id,
       scheduledAt: reminderAt,
-      metadata: {'eventAt': eventAt.toIso8601String()},
+      metadata: {
+        'eventAt': eventAt.toIso8601String(),
+        'leadTimeMinutes': leadMinutes,
+      },
     );
   }
 }

@@ -62,13 +62,42 @@ class NotificationScheduler {
       final notifications = await _repository.getPending();
 
       for (final notification in notifications) {
-        final scheduledAt = notification.scheduledAt;
+        var current = notification;
+        final eventType = current.eventType;
+        final supportsSmartTiming = eventType == 'task_due' ||
+            eventType == 'study_session' ||
+            eventType == 'study_deadline';
+        final eventAt = DateTime.tryParse(
+          current.metadata['eventAt']?.toString() ?? '',
+        );
+
+        // Изменение времени в настройках применяется и к уже созданным
+        // напоминаниям, а не только к новым задачам и занятиям.
+        if (supportsSmartTiming &&
+            eventAt != null &&
+            current.metadata['leadTimeMinutes'] !=
+                settings.reminderLeadTimeMinutes) {
+          final metadata = Map<String, dynamic>.from(current.metadata)
+            ..['leadTimeMinutes'] = settings.reminderLeadTimeMinutes;
+          final leadMinutes = settings.reminderLeadTimeMinutes;
+          final updatedMessage = current.message
+              .replaceAll(RegExp(r'\d+ минут'), '$leadMinutes минут')
+              .replaceAll(RegExp(r'\d+ minutes'), '$leadMinutes minutes');
+          current = current.copyWith(
+            scheduledAt: eventAt.subtract(Duration(minutes: leadMinutes)),
+            message: updatedMessage,
+            metadata: metadata,
+          );
+          await _repository.update(current);
+        }
+
+        final scheduledAt = current.scheduledAt;
 
         if (scheduledAt == null || scheduledAt.isAfter(now)) {
           continue;
         }
 
-        final status = notification.metadata[deliveryStatusKey];
+        final status = current.metadata[deliveryStatusKey];
 
         if (status == deliveredStatus) {
           continue;
@@ -80,12 +109,12 @@ class NotificationScheduler {
         }
 
         try {
-          final shown = await _systemNotifications.showNow(notification);
+          final shown = await _systemNotifications.showNow(current);
 
           if (!shown) continue;
 
           await _updateDeliveryStatus(
-            notification,
+            current,
             deliveredAt: DateTime.now(),
           );
         } catch (error) {
