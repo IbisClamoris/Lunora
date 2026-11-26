@@ -2,6 +2,18 @@
 
 All notable user-facing changes to Lunora are recorded here.
 
+## [1.0.7] - 2026-11-26
+
+### Added
+- Added configurable dashboard widget placement with independent column and ordering controls.
+- Added customizable quick actions with selectable shortcuts, ordering, and visible item count.
+- Added configurable smart reminder lead times for tasks and study sessions.
+
+### Improved
+- Improved dashboard layout flexibility while preserving saved placement on narrow screens.
+- Rescheduled pending task and study reminders when the lead-time preference changes.
+- Preserved existing notification delivery behavior and defaulted existing installations to a 15-minute reminder lead time.
+
 ## [1.0.4] - 2026-11-15
 
 ### Improved
