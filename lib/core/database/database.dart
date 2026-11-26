@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:path/path.dart' as p;
+import 'package:sqflite/sqflite.dart' as mobile_sqlite;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../storage/storage_service.dart';
@@ -23,21 +27,32 @@ class LunoraDatabase {
   }
 
   Future<Database> _openDatabase() async {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-
     final databaseDirectory = await StorageService.instance.dataDirectory;
+    final databasePath = p.join(databaseDirectory.path, databaseName);
+    final options = OpenDatabaseOptions(
+      version: databaseVersion,
+      onConfigure: _onConfigure,
+      onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
+    );
 
-    final databasePath = '${databaseDirectory.path}\\$databaseName';
+    if (Platform.isWindows) {
+      sqfliteFfiInit();
+      return databaseFactoryFfi.openDatabase(
+        databasePath,
+        options: options,
+      );
+    }
 
-    return databaseFactory.openDatabase(
-      databasePath,
-      options: OpenDatabaseOptions(
-        version: databaseVersion,
-        onConfigure: _onConfigure,
-        onCreate: _onCreate,
-        onUpgrade: _onUpgrade,
-      ),
+    if (Platform.isAndroid || Platform.isIOS) {
+      return mobile_sqlite.openDatabase(
+        databasePath,
+        options: options,
+      );
+    }
+
+    throw UnsupportedError(
+      'Lunora database is not configured for ${Platform.operatingSystem}.',
     );
   }
 
