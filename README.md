@@ -87,9 +87,7 @@ Lunora is designed as a personal desktop workspace. Application binaries are ins
 | **1.0.1** | Database migration fixes and improved compatibility with existing user databases. |
 | **1.0.0** | First public release with the core personal organization sections and interface themes. |
 
-Release versions are driven by the `version` field in `pubspec.yaml`. A stable release is published by pushing a matching version tag, for example `v1.0.7`. GitHub Actions runs tests, builds the Windows installer, generates a SHA-256 checksum, and attaches both files to the GitHub Release.
-
-See [the release guide](docs/RELEASING.md) for maintainer instructions.
+Lunora is regularly updated with new features, improvements, and fixes. You can find the latest version, release notes, and Windows installer on the [GitHub Releases page](https://github.com/IbisClamoris/Lunora/releases).
 
 ## 📜 Open source
 
@@ -191,9 +189,7 @@ Lunora создана как персональное приложение дл�
 | **1.0.1** | Исправления миграций базы данных и повышение совместимости с существующими пользовательскими базами. |
 | **1.0.0** | Первый публичный релиз с основными разделами персональной организации и темами оформления. |
 
-Версия приложения задаётся в поле `version` файла `pubspec.yaml`. Для выпуска новой стабильной версии создаётся тег с таким же номером, например `v1.0.7`. GitHub Actions автоматически запускает тесты, собирает установщик Windows, генерирует SHA-256 и прикрепляет оба файла к релизу.
-
-Инструкции доступны в [руководстве по релизам](docs/RELEASING.md).
+Lunora регулярно получает новые функции, улучшения и исправления. Последнюю версию приложения, описание изменений и установщик Windows можно найти на странице [GitHub Releases](https://github.com/IbisClamoris/Lunora/releases).
 
 ## 📜 Открытый исходный код
 
