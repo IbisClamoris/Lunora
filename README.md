@@ -3,35 +3,61 @@
 
 **A personal space for your everyday life.**
 
-Lunora brings your plans, thoughts, interests, and everyday activities together in one beautiful and organized desktop application.
+Lunora is a personal desktop workspace that brings your plans, thoughts, interests, and everyday activities together in one place. Organize your routines, collect things you love, keep meaningful notes, and shape the app around the way you live.
 
 [**⬇ Download Lunora 1.0.7 for Windows**](https://github.com/IbisClamoris/Lunora/releases/latest)
 
 ## ✨ Features
 
+### Personal organization
+
 | Section | Description |
 |---|---|
-| 🏠 **Home** | An overview of your personal space. |
+| 🏠 **Customizable Dashboard** | Arrange widgets, move cards between columns, and keep the overview that works for you. |
+| ⚡ **Quick Actions** | Choose your favorite shortcuts, change their order, and control how many are visible. |
 | 📅 **Calendar** | Plan days and events. |
+| 🔔 **Reminders** | Set reminders for tasks and study sessions, with configurable lead times. |
 | 📖 **Diary** | Keep personal notes and memories. |
-| 📚 **Book World** | Organize your reading. |
+| 🗂️ **Collections** | Create personal collections and curated lists for books, movies, and other items. |
+| 🔗 **Related Records** | Connect related books, movies, and notes to keep relevant information together. |
+| 🌱 **Habit Tracker** | Track habits, review completion history, and follow your progress. |
+| 📚 **Books** | Organize your reading and keep personal notes about books. |
+| 🎬 **Movies & TV Shows** | Track films and series and keep personal notes. |
 | 💰 **Finance** | Manage personal finances. |
-| 🎬 **Movies & TV Shows** | Track movies and series. |
 | 🍃 **Recipes** | Collect recipes. |
 | 🛍️ **Shopping** | Manage shopping lists. |
-| ✨ **Wishes** | Save wishes and goals. |
+| ✨ **Wishlist** | Save wishes and goals. |
 | 🎓 **Learning Plan** | Organize learning activities. |
-| 🗂️ **Planner** | Structure tasks and plans. |
-| 📚 **Knowledge Base** | Keep useful information. |
+| 🗂️ **Planner & Knowledge Base** | Structure tasks, plans, and useful information. |
 
-## 🎨 Personalization
+### 🎨 Personalization
 
-Choose from several interface themes and make your personal space feel like yours.
+Choose from six interface themes and make your personal space feel like yours:
+
+- 🌿 Botanical
+- 💜 Lavender
+- 🌹 Rose Garden
+- 🪶 Vintage Library
+- ✨ Midnight
+- 🌙 Moonlight
+
+Application icons adapt to the selected theme and appearance mode, including the Windows taskbar and system tray.
+
+### 🔔 Smart reminders
+
+Customize reminder lead times for tasks and study sessions:
+
+- 5 minutes
+- 15 minutes (default)
+- 30 minutes
+- 60 minutes
+
+Existing reminders are rescheduled when the preference changes. Existing notification behavior and quiet hours are preserved.
 
 ## 🖥️ Installation
 
 1. Open the [latest stable release](https://github.com/IbisClamoris/Lunora/releases/latest).
-2. Download **Lunora-Setup-1.0.7.exe** (or the installer matching the release version).
+2. Download **Lunora-Setup-1.0.7.exe** from the Assets section.
 3. Optionally download the accompanying `.sha256` file and verify the installer checksum (see [Release verification](docs/RELEASING.md#verify-a-download)).
 4. Run the installer and follow the on-screen instructions.
 
@@ -39,7 +65,7 @@ The installer supports installing over an existing Lunora installation. Keep you
 
 ## 🔐 Privacy and data
 
-Lunora is designed as a personal desktop workspace. Application binaries are installed separately from user data. The database and personal content should be preserved when updating.
+Lunora is designed as a personal desktop workspace. Application binaries are installed separately from user data. The update workflow creates a database backup before installing an update. Keep your own backups in a safe location as well.
 
 ## 📦 Release information
 
@@ -48,9 +74,20 @@ Lunora is designed as a personal desktop workspace. Application binaries are ins
 - **Supported platform:** Windows x64
 - **Downloads:** [GitHub Releases](https://github.com/IbisClamoris/Lunora/releases)
 
-Release versions are driven by the `version` field in `pubspec.yaml`. A stable release is published by pushing a matching version tag, for example `v1.0.7`. GitHub Actions runs tests, builds the Windows installer, generates a SHA-256 checksum, and attaches both files to the GitHub Release.
+### Version highlights
 
-See [the release guide](docs/RELEASING.md) for maintainer instructions.
+| Version | Highlights |
+|---|---|
+| **1.0.7** | Customizable dashboard layout, configurable quick actions, and adjustable reminder lead times. |
+| **1.0.6** | Automatic update checks, release notes preview, download progress, SHA-256 verification, and database backup before updates. |
+| **1.0.5** | Redesigned branded Windows installer and detection of existing installations. |
+| **1.0.4** | Completed English interface localization and corrected remaining translation issues. |
+| **1.0.3** | Theme-specific application icons for all six themes, with light and dark variants. |
+| **1.0.2** | In-app update workflow, SHA-256 verification, database backup, and branded installer improvements. |
+| **1.0.1** | Database migration fixes and improved compatibility with existing user databases. |
+| **1.0.0** | First public release with the core personal organization sections and interface themes. |
+
+Lunora is regularly updated with new features, improvements, and fixes. You can find the latest version, release notes, and Windows installer on the [GitHub Releases page](https://github.com/IbisClamoris/Lunora/releases).
 
 ## 📜 Open source
 
@@ -68,45 +105,69 @@ Lunora is distributed under the **GNU General Public License v3.0 (GPL-3.0)**.
 
 **Личное пространство для повседневной жизни.**
 
-Lunora объединяет планы, мысли, интересы и повседневные дела в одном удобном приложении.
-
-Планируй дни, сохраняй воспоминания, следи за финансами, собирай любимые книги и фильмы, храни полезную информацию и организуй всё, что для тебя важно.
+Lunora — персональное приложение для Windows, которое объединяет планы, мысли, интересы и повседневные дела. Организуй привычные занятия, собирай любимые вещи, сохраняй важные заметки и настраивай приложение под себя.
 
 [**⬇ Скачать Lunora 1.0.7 для Windows**](https://github.com/IbisClamoris/Lunora/releases/latest)
 
 ## ✨ Возможности
 
+### Личная организация
+
 | Раздел | Описание |
 |---|---|
-| 🏠 **Главная** | Обзор личного пространства. |
+| 🏠 **Настраиваемая главная** | Перемещай виджеты, меняй карточки местами и настраивай расположение по колонкам. |
+| ⚡ **Быстрые действия** | Выбирай нужные ярлыки, меняй их порядок и количество отображаемых действий. |
 | 📅 **Календарь** | Планирование дней и событий. |
+| 🔔 **Напоминания** | Напоминания о задачах и учебных занятиях с настраиваемым временем. |
 | 📖 **Дневник** | Личные записи и воспоминания. |
-| 📚 **Книжный мир** | Учёт книг и чтения. |
+| 🗂️ **Коллекции** | Создание личных коллекций и подборок книг, фильмов и других записей. |
+| 🔗 **Связанные записи** | Объединение связанных книг, фильмов и заметок. |
+| 🌱 **Трекер привычек** | Отслеживание привычек, история выполнения и динамика регулярности. |
+| 📚 **Книги** | Учёт чтения и личные заметки к книгам. |
+| 🎬 **Фильмы и сериалы** | Учёт фильмов и сериалов, личные заметки. |
 | 💰 **Финансы** | Управление личными финансами. |
-| 🎬 **Фильмы и сериалы** | Коллекция фильмов и сериалов. |
 | 🍃 **Рецепты** | Хранение любимых рецептов. |
 | 🛍️ **Покупки** | Списки покупок. |
 | ✨ **Желания** | Список желаний и целей. |
 | 🎓 **Учебный план** | Организация обучения. |
-| 🗂️ **Планер** | Планирование задач. |
-| 📚 **База знаний** | Хранение полезной информации. |
+| 🗂️ **Планер и база знаний** | Планирование задач и хранение полезной информации. |
 
-## 🎨 Персонализация
+### 🎨 Персонализация
 
-Выбирай одну из нескольких тем оформления и создавай пространство с подходящей атмосферой.
+Выбирай одну из шести тем оформления и создавай пространство с подходящей атмосферой:
+
+- 🌿 Botanical — Ботаника
+- 💜 Lavender — Лаванда
+- 🌹 Rose Garden — Розовый сад
+- 🪶 Vintage Library — Винтажная библиотека
+- ✨ Midnight — Полночь
+- 🌙 Moonlight — Лунный свет
+
+Иконки приложения адаптируются к выбранной теме и режиму оформления, в том числе в системном трее и на панели задач Windows.
+
+### 🔔 Умные напоминания
+
+Настраивай время напоминаний о задачах и учебных занятиях:
+
+- За 5 минут
+- За 15 минут (по умолчанию)
+- За 30 минут
+- За 60 минут
+
+При изменении настройки существующие напоминания перепланируются. Прежняя логика уведомлений и тихих часов сохранена.
 
 ## 🖥️ Установка
 
 1. Открой страницу [последнего стабильного релиза](https://github.com/IbisClamoris/Lunora/releases/latest).
-2. Скачай **Lunora-Setup-1.0.7.exe** или установщик, соответствующий версии релиза.
-3. При желании скачай файл `.sha256` и проверь контрольную сумму.
+2. Скачай **Lunora-Setup-1.0.7.exe** из раздела Assets.
+3. При желании скачай файл `.sha256` и проверь контрольную сумму (инструкция: [проверка релиза](docs/RELEASING.md#verify-a-download)).
 4. Запусти установщик и следуй инструкциям.
 
-Установщик рассчитан на установку поверх существующей версии. При обновлении не удаляй вручную папку пользовательских данных и храни резервные копии базы данных.
+Установщик поддерживает установку поверх существующей версии Lunora. При обновлении не удаляй вручную папку пользовательских данных и храни резервные копии базы данных в надёжном месте.
 
 ## 🔐 Конфиденциальность и данные
 
-Файлы приложения устанавливаются отдельно от пользовательских данных. При обновлении база данных и личные материалы должны сохраняться.
+Lunora создана как персональное приложение для Windows. Файлы приложения устанавливаются отдельно от пользовательских данных. Перед установкой обновления система создаёт резервную копию базы данных. Рекомендуется также самостоятельно хранить резервные копии в безопасном месте.
 
 ## 📦 Информация о релизе
 
@@ -115,9 +176,20 @@ Lunora объединяет планы, мысли, интересы и повс
 - **Платформа:** Windows x64
 - **Загрузки:** [GitHub Releases](https://github.com/IbisClamoris/Lunora/releases)
 
-Версия приложения задаётся в поле `version` файла `pubspec.yaml`. Для выпуска новой стабильной версии создаётся тег с таким же номером, например `v1.0.7`. GitHub Actions автоматически запускает тесты, собирает установщик Windows, генерирует SHA-256 и прикрепляет оба файла к релизу.
+### Основные изменения по версиям
 
-Инструкции доступны в [руководстве по релизам](docs/RELEASING.md).
+| Версия | Основные изменения |
+|---|---|
+| **1.0.7** | Настраиваемое расположение карточек главной страницы, персонализация быстрых действий и выбор времени напоминаний. |
+| **1.0.6** | Автоматическая проверка обновлений, просмотр описания релиза, прогресс загрузки, проверка SHA-256 и резервное копирование базы данных перед обновлением. |
+| **1.0.5** | Переработанный фирменный установщик Windows и обнаружение ранее установленной версии. |
+| **1.0.4** | Завершение английской локализации интерфейса и исправление оставшихся ошибок перевода. |
+| **1.0.3** | Тематические иконки для всех шести тем, светлые и тёмные варианты. |
+| **1.0.2** | Обновление из приложения, проверка SHA-256, резервное копирование базы данных и улучшения фирменного установщика. |
+| **1.0.1** | Исправления миграций базы данных и повышение совместимости с существующими пользовательскими базами. |
+| **1.0.0** | Первый публичный релиз с основными разделами персональной организации и темами оформления. |
+
+Lunora регулярно получает новые функции, улучшения и исправления. Последнюю версию приложения, описание изменений и установщик Windows можно найти на странице [GitHub Releases](https://github.com/IbisClamoris/Lunora/releases).
 
 ## 📜 Открытый исходный код
 
@@ -132,5 +204,6 @@ Lunora распространяется на условиях **GNU General Publ
 
 <p align="center">
   <b>🌙 Lunora — Your Personal World</b><br>
-  <i>Make room for what matters.</i>
+  <i>Make room for what matters.</i><br>
+  <i>Освободи место для того, что важно.</i>
 </p>
