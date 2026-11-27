@@ -124,7 +124,7 @@ class RecipeMetadataService {
       final tokens = query
           .toLowerCase()
           .replaceAll('ё', 'е')
-          .split(RegExp(r'[^\\p{L}\\p{N}]+', unicode: true))
+          .split(RegExp(r'[^\p{L}\p{N}]+', unicode: true))
           .where((token) => token.length > 2)
           .toList();
       final seen = <String>{};
@@ -138,9 +138,9 @@ class RecipeMetadataService {
         final parsed = Uri.tryParse(href);
         if (parsed == null || !parsed.hasScheme ||
             !{'http', 'https'}.contains(parsed.scheme)) continue;
-        final host = parsed.host.toLowerCase().replaceFirst(RegExp(r'^www\\.'), '');
+        final host = parsed.host.toLowerCase().replaceFirst(RegExp(r'^www\.'), '');
         if (!host.contains('.') ||
-            RegExp(r'yandex\\.|google\\.|bing\\.|duckduckgo\\.').hasMatch(host) ||
+            RegExp(r'yandex\.|google\.|bing\.|duckduckgo\.').hasMatch(host) ||
             !seen.add(parsed.toString())) continue;
         final title = _cleanText(link.text);
         if (title.length < 4 || title.length > 180) continue;
@@ -191,7 +191,7 @@ class RecipeMetadataService {
               const query = ${jsonEncode(query)};
               const normalize = value => String(value || '')
                 .toLowerCase().replace(/ё/g, 'е')
-                .replace(/[^\\p{L}\\p{N}]+/gu, ' ')
+                .replace(/[^\p{L}\p{N}]+/gu, ' ')
                 .replace(/\\s+/g, ' ').trim();
               const clean = value => String(value || '')
                 .replace(/[\\u00a0\\u200b]/g, ' ')
@@ -209,8 +209,8 @@ class RecipeMetadataService {
                 if (!/^https?:\\/\\//i.test(url)) continue;
                 let parsed;
                 try { parsed = new URL(url); } catch (_) { continue; }
-                const host = parsed.hostname.toLowerCase().replace(/^www\\./, '');
-                if (!host.includes('.') || /yandex\\.|google\\.|bing\\.|duckduckgo\\./i.test(host)) continue;
+                const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
+                if (!host.includes('.') || /yandex\.|google\.|bing\.|duckduckgo\./i.test(host)) continue;
                 if (seen.has(url)) continue;
                 const title = clean(heading ? heading.innerText : link.innerText);
                 if (title.length < 4 || title.length > 180 || collectionPattern.test(title)) continue;
