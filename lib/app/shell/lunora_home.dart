@@ -425,17 +425,7 @@ class _LunoraHomeState extends State<LunoraHome> {
 
               final effectiveSidebarExpanded = sidebarExpanded && !isCompact;
 
-              return Row(
-                children: [
-                  LunoraSidebar(
-                    expanded: effectiveSidebarExpanded,
-                    selectedIndex: currentIndex,
-                    onSelect: openPage,
-                    onToggle: toggleSidebar,
-                    duration: animationDuration,
-                    visibleIndices: visibleIndices,
-                  ),
-                  Expanded(
+              final mainContent = Expanded(
                     child: Column(
                       children: [
                         const LunoraWindowTitleBar(),
@@ -512,13 +502,176 @@ class _LunoraHomeState extends State<LunoraHome> {
                         ),
                       ],
                     ),
+                  );
+              if (isCompact) {
+                return Column(
+                  children: [
+                    mainContent,
+                    _MobileNavigationBar(
+                      selectedIndex: currentIndex,
+                      visibleIndices: visibleIndices,
+                      onSelect: openPage,
+                    ),
+                  ],
+                );
+              }
+              return Row(
+                children: [
+                  LunoraSidebar(
+                    expanded: effectiveSidebarExpanded,
+                    selectedIndex: currentIndex,
+                    onSelect: openPage,
+                    onToggle: toggleSidebar,
+                    duration: animationDuration,
+                    visibleIndices: visibleIndices,
                   ),
+                  mainContent,
                 ],
-              );
+              );;
             },
           ),
         );
       },
+    );
+  }
+}
+
+
+class _MobileNavigationBar extends StatelessWidget {
+  const _MobileNavigationBar({
+    required this.selectedIndex,
+    required this.visibleIndices,
+    required this.onSelect,
+  });
+
+  final int selectedIndex;
+  final List<int> visibleIndices;
+  final ValueChanged<int> onSelect;
+
+  static const _primary = <int>[
+    LunoraSection.home.index,
+    LunoraSection.calendar.index,
+    LunoraSection.books.index,
+  ];
+
+  Future<void> _showMore(BuildContext context) async {
+    final palette = Theme.of(context).extension<LunoraPalette>()!;
+    final english = SettingsService.instance.settings.language.name == 'english';
+    final hidden = visibleIndices.where((i) => !_primary.contains(i)).toList();
+    await showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: palette.surface,
+      isScrollControlled: true,
+      showDragHandle: true,
+      builder: (sheetContext) => SafeArea(
+        child: ListView(
+          shrinkWrap: true,
+          padding: const EdgeInsets.fromLTRB(12, 4, 12, 18),
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(12, 8, 12, 12),
+              child: Text(
+                english ? 'Lunora sections' : 'Разделы Lunora',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            for (final index in hidden)
+              ListTile(
+                leading: Icon(menuEntries[index].icon),
+                title: Text(_title(index, english)),
+                selected: index == selectedIndex,
+                onTap: () {
+                  Navigator.of(sheetContext).pop();
+                  onSelect(index);
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  String _title(int index, bool english) {
+    const titles = <String>[
+      'Home', 'Calendar', 'Notifications', 'Shopping list', 'My planner',
+      'Study planner', 'Finances', 'Knowledge base', 'Diary', 'Diary gallery',
+      'My books', 'Movies & series', 'Recipe book', 'Wishlist', 'Habits',
+      'Collections', 'Settings',
+    ];
+    return english ? titles[index] : menuEntries[index].title;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final palette = Theme.of(context).extension<LunoraPalette>()!;
+    final english = SettingsService.instance.settings.language.name == 'english';
+    final moreSelected = !_primary.contains(selectedIndex);
+    return Material(
+      color: palette.sidebar,
+      child: SafeArea(
+        top: false,
+        child: SizedBox(
+          height: 66,
+          child: Row(
+            children: [
+              for (final item in _primary)
+                Expanded(
+                  child: _item(
+                    context,
+                    icon: menuEntries[item].icon,
+                    label: _title(item, english),
+                    selected: selectedIndex == item,
+                    onTap: () => onSelect(item),
+                    palette: palette,
+                  ),
+                ),
+              Expanded(
+                child: _item(
+                  context,
+                  icon: Icons.grid_view_rounded,
+                  label: english ? 'More' : 'Ещё',
+                  selected: moreSelected,
+                  onTap: () => _showMore(context),
+                  palette: palette,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _item(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required bool selected,
+    required VoidCallback onTap,
+    required LunoraPalette palette,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 2),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 21, color: selected ? palette.accent : palette.secondary),
+            const SizedBox(height: 3),
+            Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
+                color: selected ? palette.accent : palette.secondary,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
