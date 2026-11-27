@@ -43,6 +43,14 @@ The existing feature pages and domain logic should be reused where they work wel
 
 The six existing themes and both locales remain shared application features.
 
+
+### Compatibility audit findings
+
+- The custom Windows title bar now exits before registering window listeners on non-Windows targets and is not rendered there.
+- Startup tray initialization already has a Windows-only runtime guard; the Windows updater is only entered from the Windows-gated startup flow.
+- The recipe search service currently depends directly on `webview_flutter_windows`. Android needs a platform-neutral search implementation or an Android WebView adapter before this feature can be considered supported there.
+- The Android runner has not yet been generated. A real Android build is still required before claiming platform compatibility.
+
 ## Synchronization model
 
 ### Offline-first local data
