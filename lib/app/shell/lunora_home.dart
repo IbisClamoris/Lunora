@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:lunora/core/navigation/lunora_navigation.dart';
 import 'package:lunora/core/settings/settings_service.dart';
+import 'package:lunora/core/theme/app_theme.dart';
 import 'package:lunora/core/platform/update_service.dart';
 import 'package:lunora/core/search/global_search_page.dart';
 import 'package:lunora/features/books/pages/books_page.dart';
