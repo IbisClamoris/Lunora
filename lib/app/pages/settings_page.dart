@@ -924,6 +924,7 @@ class _SettingsPageState extends State<SettingsPage> {
           ],
         ),
 
+        if (Platform.isWindows) ...[
         // Запуск и поведение
         _section(
           title: _settings.language == AppLanguage.english
@@ -990,6 +991,8 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ],
         ),
+
+        ],
 
         // Данные и резервные копии
         _section(
