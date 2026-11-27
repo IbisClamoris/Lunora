@@ -549,7 +549,7 @@ class _MobileNavigationBar extends StatelessWidget {
   final List<int> visibleIndices;
   final ValueChanged<int> onSelect;
 
-  static const _primary = <int>[
+  static final _primary = <int>[
     LunoraSection.home.index,
     LunoraSection.calendar.index,
     LunoraSection.books.index,
