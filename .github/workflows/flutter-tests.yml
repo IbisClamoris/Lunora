@@ -195,7 +195,17 @@ jobs:
         run: flutter pub get
 
       - name: Build Android debug APK
-        run: flutter build apk --debug
+        run: |
+          for attempt in 1 2 3; do
+            if flutter build apk --debug; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Android build failed; retrying after a short dependency-download cooldown (attempt $attempt/3)."
+              sleep 25
+            fi
+          done
+          exit 1
 
       - name: Upload Android smoke-test APK
         uses: actions/upload-artifact@v7
