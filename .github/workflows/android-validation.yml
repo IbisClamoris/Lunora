@@ -43,6 +43,12 @@ jobs:
         run: |
           python -m pip install --disable-pip-version-check cairosvg
           python .github/scripts/generate-android-icons.py
+          test -s android/app/src/main/res/mipmap-mdpi/ic_launcher.png
+          test -s android/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png
+          test -s android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+          test -s android/app/src/main/res/drawable-nodpi/lunora_launcher_foreground.png
+          grep -q 'android:label="Lunora"' android/app/src/main/AndroidManifest.xml
+          grep -q 'android:icon="@mipmap/ic_launcher"' android/app/src/main/AndroidManifest.xml
 
       - name: Enable Android core library desugaring
         run: |
