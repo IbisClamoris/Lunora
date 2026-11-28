@@ -194,10 +194,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Android debug APK
+      - name: Build Android ARM64 release APK
         run: |
           for attempt in 1 2 3; do
-            if flutter build apk --debug; then
+            if flutter build apk --release --target-platform android-arm64; then
               exit 0
             fi
             if [ "$attempt" -lt 3 ]; then
@@ -207,11 +207,11 @@ jobs:
           done
           exit 1
 
-      - name: Upload Android smoke-test APK
+      - name: Upload Android ARM64 test APK
         uses: actions/upload-artifact@v7
         with:
-          name: Lunora-Android-debug-${{ github.sha }}
-          path: build/app/outputs/flutter-apk/app-debug.apk
+          name: Lunora-Android-arm64-test-${{ github.sha }}
+          path: build/app/outputs/flutter-apk/app-release.apk
           if-no-files-found: error
           retention-days: 7
 
