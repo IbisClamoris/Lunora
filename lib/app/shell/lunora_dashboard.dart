@@ -748,73 +748,99 @@ class _DashboardHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = Theme.of(context).extension<LunoraPalette>()!;
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxWidth < 620;
+        final actions = Wrap(
+          alignment: compact ? WrapAlignment.start : WrapAlignment.end,
+          spacing: compact ? 2 : 6,
+          runSpacing: 4,
+          children: [
+            IconButton(
+              tooltip: layoutEditing
+                  ? LunoraLocalization.text('Завершить настройку', 'Finish arranging')
+                  : LunoraLocalization.text('Переместить блоки', 'Arrange blocks'),
+              onPressed: onToggleLayout,
+              visualDensity: VisualDensity.compact,
+              icon: Icon(layoutEditing ? Icons.check_rounded : Icons.open_with_rounded),
+            ),
+            IconButton(
+              tooltip: LunoraLocalization.text('Настроить главную', 'Customize home page'),
+              onPressed: onCustomize,
+              visualDensity: VisualDensity.compact,
+              icon: const Icon(Icons.dashboard_customize_outlined),
+            ),
+            FilledButton.icon(
+              onPressed: onCalendar,
+              icon: const Icon(Icons.calendar_month_outlined, size: 18),
+              label: Text(LunoraLocalization.text('Календарь')),
+            ),
+          ],
+        );
 
-    return LunoraPaperSurface(
-      padding: const EdgeInsets.fromLTRB(26, 24, 24, 22),
-      borderRadius: LunoraRadius.xl,
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  greeting,
-                  style: TextStyle(
-                    color: p.secondary,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 7),
-                Text(
-                  LunoraLocalization.text(
-                    LunoraLocalization.text('Твой день в Lunora', 'Your day in Lunora'),
-                    'Your day in Lunora',
-                  ),
-                  style: TextStyle(
-                    color: p.text,
-                    fontSize: 29,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: -0.6,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(date, style: TextStyle(color: p.secondary, fontSize: 13)),
-                const SizedBox(height: 10),
-                const SizedBox(
-                  width: 300,
-                  child: LunoraThemeDivider(
-                    height: 24,
-                    opacity: 0.8,
-                    horizontalPadding: 0,
-                  ),
-                ),
-              ],
+        final introduction = Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              greeting,
+              style: TextStyle(
+                color: p.secondary,
+                fontSize: compact ? 13 : 14,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          IconButton(
-            tooltip: layoutEditing
-                ? LunoraLocalization.text('Завершить настройку', 'Finish arranging')
-                : LunoraLocalization.text('Переместить блоки', 'Arrange blocks'),
-            onPressed: onToggleLayout,
-            icon: Icon(
-              layoutEditing ? Icons.check_rounded : Icons.open_with_rounded,
+            const SizedBox(height: 6),
+            Text(
+              LunoraLocalization.text('Твой день в Lunora', 'Your day in Lunora'),
+              softWrap: true,
+              style: TextStyle(
+                color: p.text,
+                fontSize: compact ? 23 : 29,
+                fontWeight: FontWeight.w700,
+                letterSpacing: -0.6,
+              ),
             ),
+            const SizedBox(height: 5),
+            Text(date, style: TextStyle(color: p.secondary, fontSize: 13)),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: compact ? 190 : 300,
+              child: const LunoraThemeDivider(
+                height: 20,
+                opacity: 0.8,
+                horizontalPadding: 0,
+              ),
+            ),
+          ],
+        );
+
+        return LunoraPaperSurface(
+          padding: EdgeInsets.fromLTRB(
+            compact ? 18 : 26,
+            compact ? 18 : 24,
+            compact ? 16 : 24,
+            compact ? 16 : 22,
           ),
-          IconButton(
-            tooltip: LunoraLocalization.text('Настроить главную', 'Customize home page'),
-            onPressed: onCustomize,
-            icon: const Icon(Icons.dashboard_customize_outlined),
-          ),
-          FilledButton.icon(
-            onPressed: onCalendar,
-            icon: const Icon(Icons.calendar_month_outlined, size: 18),
-            label: Text(LunoraLocalization.text('Календарь')),
-          ),
-        ],
-      ),
+          borderRadius: LunoraRadius.xl,
+          child: compact
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    introduction,
+                    const SizedBox(height: 8),
+                    actions,
+                  ],
+                )
+              : Row(
+                  children: [
+                    Expanded(child: introduction),
+                    const SizedBox(width: 12),
+                    actions,
+                  ],
+                ),
+        );
+      },
     );
   }
 }
