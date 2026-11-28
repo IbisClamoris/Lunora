@@ -126,6 +126,27 @@ jobs:
       - name: Generate Android platform scaffold
         run: flutter create --platforms=android --project-name lunora .
 
+      - name: Add Android notification runtime permission
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          if not manifest.exists():
+              raise SystemExit("Generated Android manifest was not found")
+
+          source = manifest.read_text()
+          permission = '    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\\n'
+          if "android.permission.POST_NOTIFICATIONS" not in source:
+              marker = "    <application"
+              if marker not in source:
+                  raise SystemExit("Android application element was not found")
+              source = source.replace(marker, permission + marker, 1)
+              manifest.write_text(source)
+          print("Configured Android 13+ notification permission")
+
+          PY
+
       - name: Configure Android notification compatibility
         run: |
           python3 - <<'PY'
