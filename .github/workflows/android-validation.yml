@@ -1,0 +1,57 @@
+name: Android validation
+
+on:
+  push:
+    branches:
+      - feature/android-runner
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-release-build:
+    name: Generate Android runner, test, and build APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.9
+          cache: true
+
+      - name: Generate Android platform project
+        run: flutter create --platforms=android --org com.ibisclamoris --project-name lunora .
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Analyze Dart code
+        run: flutter analyze --no-pub
+
+      - name: Build Android release APK
+        run: flutter build apk --release --target-platform android-arm64 --dart-define=APP_VERSION=$(sed -n 's/^version: *\\([0-9.]*\\).*/\\1/p' pubspec.yaml)
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Lunora-Android-arm64-${{ github.sha }}
+          path: build/app/outputs/flutter-apk/app-release.apk
+          if-no-files-found: error
+          retention-days: 14
