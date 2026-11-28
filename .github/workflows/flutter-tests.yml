@@ -136,7 +136,7 @@ jobs:
               raise SystemExit("Generated Android manifest was not found")
 
           source = manifest.read_text()
-          permission = '    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\\n'
+          permission = '    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n'
           if "android.permission.POST_NOTIFICATIONS" not in source:
               marker = "    <application"
               if marker not in source:
