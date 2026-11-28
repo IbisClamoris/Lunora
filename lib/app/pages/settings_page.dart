@@ -621,7 +621,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   DropdownMenuItem(
                     value: AppThemeMode.system,
                     child: Text(
-                      LunoraLocalization.text('Как в Windows', 'System'),
+                      LunoraLocalization.text('Как в системе', 'System'),
                     ),
                   ),
                 ],
