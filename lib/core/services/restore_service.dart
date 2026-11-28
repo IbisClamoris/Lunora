@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:path/path.dart' as p;
-import 'package:sqflite_common_ffi/sqflite_ffi.dart';
+import 'package:sqflite_common/sqlite_api.dart';
 import 'package:uuid/uuid.dart';
 
 import 'package:lunora/core/database/database.dart';
@@ -157,12 +157,10 @@ class RestoreService {
   }
 
   Future<void> _validateDatabase(String path) async {
-    sqfliteFfiInit();
-
     Database? validationDatabase;
 
     try {
-      validationDatabase = await databaseFactoryFfi.openDatabase(
+      validationDatabase = await LunoraDatabase.openDatabaseAtPath(
         path,
         options: OpenDatabaseOptions(readOnly: true),
       );

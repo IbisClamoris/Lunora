@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -21,6 +22,7 @@ class _LunoraWindowTitleBarState extends State<LunoraWindowTitleBar> {
   @override
   void initState() {
     super.initState();
+    if (defaultTargetPlatform != TargetPlatform.windows) return;
     final window = _windowManager.getCurrent();
     _windowId = window?.id;
     _listenerId = _windowManager.addListener((event) {
@@ -44,6 +46,9 @@ class _LunoraWindowTitleBarState extends State<LunoraWindowTitleBar> {
 
   @override
   Widget build(BuildContext context) {
+    if (defaultTargetPlatform != TargetPlatform.windows) {
+      return const SizedBox.shrink();
+    }
     final palette = Theme.of(context).extension<LunoraPalette>()!;
     final border = palette.border.withValues(alpha: 0.7);
     final window = _windowManager.getCurrent();

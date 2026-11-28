@@ -1,6 +1,7 @@
-import 'package:lunora/core/localization/lunora_localization.dart';
-
 import 'dart:async';
+import 'dart:io';
+
+import 'package:lunora/core/localization/lunora_localization.dart';
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
@@ -56,6 +57,7 @@ class SystemNotificationService {
 
   Future<void> _initializeInternal() async {
     const initializationSettings = InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
       windows: WindowsInitializationSettings(
         appName: 'Lunora',
         appUserModelId: appUserModelId,
@@ -104,6 +106,18 @@ class SystemNotificationService {
     }
   }
 
+  /// Requests Android 13+ notification permission in response to an
+  /// explicit user action. Older Android versions grant it at install time.
+  Future<bool> requestPermission() async {
+    if (!Platform.isAndroid) return true;
+
+    await initialize();
+    final android = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    final granted = await android?.requestNotificationsPermission();
+    return granted ?? false;
+  }
+
   Future<bool> showNow(NotificationItem notification) async {
     await initialize();
 
@@ -127,6 +141,14 @@ class SystemNotificationService {
       body: LunoraLocalization.text(notification.message),
       payload: notification.id,
       notificationDetails: NotificationDetails(
+        android: AndroidNotificationDetails(
+          'lunora_reminders',
+          'Lunora reminders',
+          channelDescription: 'Reminders and updates from Lunora',
+          importance: Importance.high,
+          priority: Priority.high,
+          playSound: settings.soundEnabled,
+        ),
         windows: WindowsNotificationDetails(audio: audio),
       ),
     );

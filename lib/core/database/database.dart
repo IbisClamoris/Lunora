@@ -1,3 +1,7 @@
+import 'dart:io';
+
+import 'package:path/path.dart' as p;
+import 'package:sqflite/sqflite.dart' as mobile_sqlite;
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 
 import '../storage/storage_service.dart';
@@ -23,14 +27,9 @@ class LunoraDatabase {
   }
 
   Future<Database> _openDatabase() async {
-    sqfliteFfiInit();
-    databaseFactory = databaseFactoryFfi;
-
     final databaseDirectory = await StorageService.instance.dataDirectory;
-
-    final databasePath = '${databaseDirectory.path}\\$databaseName';
-
-    return databaseFactory.openDatabase(
+    final databasePath = p.join(databaseDirectory.path, databaseName);
+    return openDatabaseAtPath(
       databasePath,
       options: OpenDatabaseOptions(
         version: databaseVersion,
@@ -38,6 +37,28 @@ class LunoraDatabase {
         onCreate: _onCreate,
         onUpgrade: _onUpgrade,
       ),
+    );
+  }
+
+  /// Opens an existing database path using the platform's native SQLite
+  /// implementation. Used by restore validation as well as the main database.
+  static Future<Database> openDatabaseAtPath(
+    String path, {
+    OpenDatabaseOptions? options,
+  }) async {
+    final databaseOptions = options ?? OpenDatabaseOptions();
+
+    if (Platform.isWindows) {
+      sqfliteFfiInit();
+      return databaseFactoryFfi.openDatabase(path, options: databaseOptions);
+    }
+
+    if (Platform.isAndroid || Platform.isIOS) {
+      return mobile_sqlite.openDatabase(path, options: databaseOptions);
+    }
+
+    throw UnsupportedError(
+      'Lunora database is not configured for ${Platform.operatingSystem}.',
     );
   }
 

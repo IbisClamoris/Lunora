@@ -109,6 +109,112 @@ jobs:
           if-no-files-found: error
           retention-days: 1
 
+  android-smoke-build:
+    name: Generate Android runner and build ARM64 test APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.9
+          cache: true
+
+      - name: Generate Android platform scaffold
+        run: flutter create --platforms=android --project-name lunora .
+
+      - name: Add Android notification runtime permission
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          manifest = Path("android/app/src/main/AndroidManifest.xml")
+          if not manifest.exists():
+              raise SystemExit("Generated Android manifest was not found")
+
+          source = manifest.read_text()
+          permission = '    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />\n'
+          if "android.permission.POST_NOTIFICATIONS" not in source:
+              marker = "    <application"
+              if marker not in source:
+                  raise SystemExit("Android application element was not found")
+              source = source.replace(marker, permission + marker, 1)
+              manifest.write_text(source)
+          print("Configured Android 13+ notification permission")
+
+          PY
+
+      - name: Configure Android notification compatibility
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          gradle = Path("android/app/build.gradle.kts")
+          if not gradle.exists():
+              gradle = Path("android/app/build.gradle")
+          if not gradle.exists():
+              raise SystemExit("Generated Android app Gradle file was not found")
+
+          source = gradle.read_text()
+          if "isCoreLibraryDesugaringEnabled" not in source and "coreLibraryDesugaringEnabled" not in source:
+              if gradle.suffix == ".kts":
+                  source = source.replace(
+                      "compileOptions {",
+                      "compileOptions {\n        isCoreLibraryDesugaringEnabled = true",
+                      1,
+                  )
+              else:
+                  source = source.replace(
+                      "compileOptions {",
+                      "compileOptions {\n        coreLibraryDesugaringEnabled true",
+                      1,
+                  )
+
+          if "desugar_jdk_libs" not in source:
+              dependency = (
+                  '    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")\n'
+                  if gradle.suffix == ".kts"
+                  else "    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'\n"
+              )
+              if "dependencies {" not in source:
+                  source += "\ndependencies {\n" + dependency + "}\n"
+              else:
+                  source = source.replace("dependencies {", "dependencies {\n" + dependency, 1)
+
+          gradle.write_text(source)
+          print(f"Enabled core library desugaring in {gradle}")
+          PY
+
+      - name: Prepare generated asset directory
+        run: mkdir -p assets/branding/theme_icons
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Android ARM64 debug APK
+        run: |
+          for attempt in 1 2 3; do
+            if flutter build apk --debug --target-platform android-arm64; then
+              exit 0
+            fi
+            if [ "$attempt" -lt 3 ]; then
+              echo "Android build failed; retrying after a short dependency-download cooldown (attempt $attempt/3)."
+              sleep 25
+            fi
+          done
+          exit 1
+
+      - name: Upload Android ARM64 test APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: Lunora-Android-arm64-test-${{ github.sha }}
+          path: build/app/outputs/flutter-apk/app-debug.apk
+          if-no-files-found: error
+          retention-days: 7
+
   publish-release:
     name: Publish GitHub Release
     if: startsWith(github.ref, 'refs/tags/v')

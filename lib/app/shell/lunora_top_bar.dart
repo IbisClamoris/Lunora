@@ -36,14 +36,15 @@ class _LunoraTopBarState extends State<LunoraTopBar> {
     final p = Theme.of(context).extension<LunoraPalette>()!;
     return Container(
       height: 68,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width < 560 ? 12 : 24),
       decoration: BoxDecoration(
         color: p.surface,
         border: Border(bottom: BorderSide(color: p.border)),
       ),
       child: Row(
         children: [
-          Text(
+          if (MediaQuery.sizeOf(context).width >= 560)
+            Text(
             LunoraLocalization.text('ТВОЁ ПРОСТРАНСТВО', 'YOUR SPACE'),
             style: TextStyle(
               color: p.secondary,
@@ -54,7 +55,7 @@ class _LunoraTopBarState extends State<LunoraTopBar> {
           ),
           const Spacer(),
           ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 340, minWidth: 180),
+            constraints: BoxConstraints(maxWidth: 340, minWidth: MediaQuery.sizeOf(context).width < 560 ? 80 : 180),
             child: TextField(
               controller: _controller,
               onChanged: _handleSearch,

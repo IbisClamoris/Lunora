@@ -76,11 +76,100 @@ class RecipeMetadataService {
     final clean = query.trim().replaceAll(RegExp(r'\s+'), ' ');
     if (clean.isEmpty) return const [];
 
-    // Используем WebView2, как в рабочем поиске книг Lunora.
-    final results = await _searchWithWebView(clean);
-    if (results.isNotEmpty) return results;
+    if (Platform.isWindows) {
+      // На Windows используем WebView2, как и в настольной версии.
+      final results = await _searchWithWebView(clean);
+      if (results.isNotEmpty) return results;
+      return _searchWithWebView('рецепт $clean');
+    }
 
-    return _searchWithWebView('рецепт $clean');
+    // На Android/iOS используем HTTP-поиск: Windows WebView2 там недоступен.
+    final results = await _searchWithHttp(clean);
+    if (results.isNotEmpty) return results;
+    return _searchWithHttp('рецепт $clean');
+  }
+
+  Future<List<RecipeSearchResult>> _searchWithHttp(String query) async {
+    final searchText = '"$query" рецепт пошагово';
+    final uri = Uri.https('yandex.ru', '/search/', {'text': searchText});
+    try {
+      final request = await _client.getUrl(uri).timeout(
+        const Duration(seconds: 15),
+      );
+      request.headers.set(
+        HttpHeaders.acceptHeader,
+        'text/html,application/xhtml+xml',
+      );
+      request.headers.set(
+        HttpHeaders.acceptLanguageHeader,
+        'ru-RU,ru;q=0.9,en;q=0.7',
+      );
+      final response = await request.close().timeout(
+        const Duration(seconds: 20),
+      );
+      if (response.statusCode < 200 || response.statusCode >= 400) {
+        return const [];
+      }
+      final bytes = await response.fold<List<int>>([], (a, b) => a..addAll(b));
+      if (bytes.isEmpty || bytes.length > 8 * 1024 * 1024) return const [];
+      final document = html_parser.parse(
+        utf8.decode(bytes, allowMalformed: true),
+      );
+      final cards = document.querySelectorAll(
+        'li.serp-item, .serp-item, [data-cid], article',
+      );
+      final candidates = cards.isNotEmpty
+          ? cards
+          : document.querySelectorAll('a[href]');
+      final tokens = query
+          .toLowerCase()
+          .replaceAll('ё', 'е')
+          .split(RegExp(r'[^\p{L}\p{N}]+', unicode: true))
+          .where((token) => token.length > 2)
+          .toList();
+      final seen = <String>{};
+      final results = <RecipeSearchResult>[];
+      for (final card in candidates) {
+        final link = card.localName == 'a'
+            ? card
+            : card.querySelector('h2 a[href], h3 a[href], a[href]');
+        if (link == null) continue;
+        final href = link.attributes['href']?.trim() ?? '';
+        final parsed = Uri.tryParse(href);
+        if (parsed == null || !parsed.hasScheme ||
+            !{'http', 'https'}.contains(parsed.scheme)) continue;
+        final host = parsed.host.toLowerCase().replaceFirst(RegExp(r'^www\.'), '');
+        if (!host.contains('.') ||
+            RegExp(r'yandex\.|google\.|bing\.|duckduckgo\.').hasMatch(host) ||
+            !seen.add(parsed.toString())) continue;
+        final title = _cleanText(link.text);
+        if (title.length < 4 || title.length > 180) continue;
+        final cardText = _cleanText(card.text);
+        if (RegExp(r'реклама|войти|настройки|быстрый ответ', caseSensitive: false)
+            .hasMatch(cardText)) continue;
+        final normalized = title.toLowerCase().replaceAll('ё', 'е');
+        final matched = tokens.where(normalized.contains).length;
+        final required = tokens.length <= 1 ? 1 : (tokens.length * 0.6).ceil();
+        if (matched < required ||
+            !RegExp(r'рецепт|приготов|ингредиент|блюдо', caseSensitive: false)
+                .hasMatch('$title $cardText')) continue;
+        final image = card.querySelector('img');
+        final imageUrl = image?.attributes['src'] ??
+            image?.attributes['data-src'];
+        results.add(RecipeSearchResult(
+          title: title,
+          url: parsed.toString(),
+          snippet: cardText.replaceFirst(title, '').trim(),
+          imageUrl: imageUrl == null ? null : _absoluteUrl(uri, imageUrl),
+          sourceName: host,
+        ));
+        if (results.length >= 30) break;
+      }
+      return results;
+    } catch (error) {
+      stderr.writeln('Recipe HTTP search failed: $error');
+      return const [];
+    }
   }
 
   Future<List<RecipeSearchResult>> _searchWithWebView(String query) async {
@@ -102,7 +191,7 @@ class RecipeMetadataService {
               const query = ${jsonEncode(query)};
               const normalize = value => String(value || '')
                 .toLowerCase().replace(/ё/g, 'е')
-                .replace(/[^\\p{L}\\p{N}]+/gu, ' ')
+                .replace(/[^\p{L}\p{N}]+/gu, ' ')
                 .replace(/\\s+/g, ' ').trim();
               const clean = value => String(value || '')
                 .replace(/[\\u00a0\\u200b]/g, ' ')
@@ -120,8 +209,8 @@ class RecipeMetadataService {
                 if (!/^https?:\\/\\//i.test(url)) continue;
                 let parsed;
                 try { parsed = new URL(url); } catch (_) { continue; }
-                const host = parsed.hostname.toLowerCase().replace(/^www\\./, '');
-                if (!host.includes('.') || /yandex\\.|google\\.|bing\\.|duckduckgo\\./i.test(host)) continue;
+                const host = parsed.hostname.toLowerCase().replace(/^www\./, '');
+                if (!host.includes('.') || /yandex\.|google\.|bing\.|duckduckgo\./i.test(host)) continue;
                 if (seen.has(url)) continue;
                 const title = clean(heading ? heading.innerText : link.innerText);
                 if (title.length < 4 || title.length > 180 || collectionPattern.test(title)) continue;
