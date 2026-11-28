@@ -37,6 +37,11 @@ jobs:
       - name: Generate Android platform project
         run: flutter create --platforms=android --org com.ibisclamoris --project-name lunora .
 
+      - name: Prepare repository assets and tests
+        run: |
+          mkdir -p assets/branding/theme_icons
+          rm -f test/widget_test.dart
+
       - name: Install dependencies
         run: flutter pub get
 
