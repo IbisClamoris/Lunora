@@ -2,7 +2,6 @@
 """Generate Android launcher resources from Lunora's checked-in SVG brand mark."""
 from pathlib import Path
 import re
-import sys
 
 import cairosvg
 
@@ -47,20 +46,20 @@ cairosvg.svg2png(bytestring=foreground_svg.encode(),
 adaptive_dir = ANDROID / "res" / "mipmap-anydpi-v26"
 adaptive_dir.mkdir(parents=True, exist_ok=True)
 (adaptive_dir / "ic_launcher.xml").write_text(
-    '<?xml version="1.0" encoding="utf-8"?>\\n'
-    '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\\n'
-    '    <background android:drawable="@color/lunora_launcher_background" />\\n'
-    '    <foreground android:drawable="@drawable/lunora_launcher_foreground" />\\n'
-    '</adaptive-icon>\\n',
+    '<?xml version="1.0" encoding="utf-8"?>\n'
+    '<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">\n'
+    '    <background android:drawable="@color/lunora_launcher_background" />\n'
+    '    <foreground android:drawable="@drawable/lunora_launcher_foreground" />\n'
+    '</adaptive-icon>\n',
     encoding="utf-8",
 )
 colors = ANDROID / "res" / "values" / "lunora_launcher_colors.xml"
 colors.parent.mkdir(parents=True, exist_ok=True)
 colors.write_text(
-    '<?xml version="1.0" encoding="utf-8"?>\\n'
-    '<resources>\\n'
-    '    <color name="lunora_launcher_background">#292044</color>\\n'
-    '</resources>\\n',
+    '<?xml version="1.0" encoding="utf-8"?>\n'
+    '<resources>\n'
+    '    <color name="lunora_launcher_background">#292044</color>\n'
+    '</resources>\n',
     encoding="utf-8",
 )
 
@@ -75,7 +74,7 @@ if label_count != 1:
 if 'android:icon="@mipmap/ic_launcher"' in source:
     pass
 else:
-    source, icon_count = re.subn(r'<application\\b',
+    source, icon_count = re.subn(r'<application\b',
                                 '<application android:icon="@mipmap/ic_launcher" '
                                 'android:roundIcon="@mipmap/ic_launcher"',
                                 source, count=1)
