@@ -29,26 +29,32 @@ class LunoraDatabase {
   Future<Database> _openDatabase() async {
     final databaseDirectory = await StorageService.instance.dataDirectory;
     final databasePath = p.join(databaseDirectory.path, databaseName);
-    final options = OpenDatabaseOptions(
-      version: databaseVersion,
-      onConfigure: _onConfigure,
-      onCreate: _onCreate,
-      onUpgrade: _onUpgrade,
+    return openDatabaseAtPath(
+      databasePath,
+      options: OpenDatabaseOptions(
+        version: databaseVersion,
+        onConfigure: _onConfigure,
+        onCreate: _onCreate,
+        onUpgrade: _onUpgrade,
+      ),
     );
+  }
+
+  /// Opens an existing database path using the platform's native SQLite
+  /// implementation. Used by restore validation as well as the main database.
+  static Future<Database> openDatabaseAtPath(
+    String path, {
+    OpenDatabaseOptions? options,
+  }) async {
+    final databaseOptions = options ?? OpenDatabaseOptions();
 
     if (Platform.isWindows) {
       sqfliteFfiInit();
-      return databaseFactoryFfi.openDatabase(
-        databasePath,
-        options: options,
-      );
+      return databaseFactoryFfi.openDatabase(path, options: databaseOptions);
     }
 
     if (Platform.isAndroid || Platform.isIOS) {
-      return mobile_sqlite.openDatabase(
-        databasePath,
-        options: options,
-      );
+      return mobile_sqlite.openDatabase(path, options: databaseOptions);
     }
 
     throw UnsupportedError(
