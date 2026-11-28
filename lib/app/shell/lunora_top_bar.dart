@@ -34,99 +34,102 @@ class _LunoraTopBarState extends State<LunoraTopBar> {
   @override
   Widget build(BuildContext context) {
     final p = Theme.of(context).extension<LunoraPalette>()!;
-    return Container(
-      height: 68,
-      padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width < 560 ? 12 : 24),
-      decoration: BoxDecoration(
-        color: p.surface,
-        border: Border(bottom: BorderSide(color: p.border)),
-      ),
-      child: Row(
-        children: [
-          if (MediaQuery.sizeOf(context).width >= 560)
-            Text(
-            LunoraLocalization.text('ТВОЁ ПРОСТРАНСТВО', 'YOUR SPACE'),
-            style: TextStyle(
-              color: p.secondary,
-              fontSize: 9,
-              fontWeight: FontWeight.w800,
-              letterSpacing: 1.7,
-            ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final compact = constraints.maxWidth < 560;
+        final veryCompact = constraints.maxWidth < 360;
+        return Container(
+          height: compact ? 62 : 68,
+          padding: EdgeInsets.symmetric(horizontal: compact ? 10 : 24),
+          decoration: BoxDecoration(
+            color: p.surface,
+            border: Border(bottom: BorderSide(color: p.border)),
           ),
-          const Spacer(),
-          ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: 340, minWidth: MediaQuery.sizeOf(context).width < 560 ? 80 : 180),
-            child: TextField(
-              controller: _controller,
-              onChanged: _handleSearch,
-              style: TextStyle(color: p.text, fontSize: 12.5),
-              decoration: InputDecoration(
-                hintText: LunoraLocalization.text(
-                  'Найти что-нибудь…',
-                  'Search anything…',
+          child: Row(
+            children: [
+              if (!compact) ...[
+                Text(
+                  LunoraLocalization.text('ТВОЁ ПРОСТРАНСТВО', 'YOUR SPACE'),
+                  style: TextStyle(
+                    color: p.secondary,
+                    fontSize: 9,
+                    fontWeight: FontWeight.w800,
+                    letterSpacing: 1.7,
+                  ),
                 ),
-                prefixIcon: Icon(
-                  Icons.search_rounded,
-                  color: p.secondary,
-                  size: 19,
-                ),
-                suffixIcon: _controller.text.isEmpty
-                    ? null
-                    : IconButton(
-                        onPressed: () {
-                          _controller.clear();
-                          widget.onSearchChanged('');
-                          setState(() {});
-                        },
-                        icon: const Icon(Icons.close_rounded, size: 17),
+                const Spacer(),
+              ],
+              Expanded(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 340),
+                  child: TextField(
+                    controller: _controller,
+                    onChanged: _handleSearch,
+                    style: TextStyle(color: p.text, fontSize: 12.5),
+                    decoration: InputDecoration(
+                      hintText: compact
+                          ? LunoraLocalization.text('Поиск…', 'Search…')
+                          : LunoraLocalization.text('Найти что-нибудь…', 'Search anything…'),
+                      prefixIcon: Icon(Icons.search_rounded, color: p.secondary, size: 19),
+                      suffixIcon: _controller.text.isEmpty
+                          ? null
+                          : IconButton(
+                              onPressed: () {
+                                _controller.clear();
+                                widget.onSearchChanged('');
+                                setState(() {});
+                              },
+                              icon: const Icon(Icons.close_rounded, size: 17),
+                            ),
+                      isDense: true,
+                      contentPadding: const EdgeInsets.symmetric(vertical: 10),
+                      fillColor: p.background,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide(color: p.border),
                       ),
-                isDense: true,
-                contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                fillColor: p.background,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(color: p.border),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(color: p.border),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide(color: p.accent, width: 1.4),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide(color: p.border),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(14),
+                        borderSide: BorderSide(color: p.accent, width: 1.4),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-          const SizedBox(width: 10),
-          AnimatedBuilder(
-            animation: NotificationService.instance,
-            builder: (context, _) {
-              return FutureBuilder<int>(
-                future: NotificationService.instance.getUnreadCount(),
-                builder: (context, s) {
-                  final count = s.data ?? 0;
-                  return _ActionButton(
-                    icon: Icons.notifications_none_rounded,
-                    badge: count,
-                    onTap: widget.onNotifications,
-                    tooltip: LunoraLocalization.text(
-                      'Уведомления',
-                      'Notifications',
-                    ),
+              SizedBox(width: compact ? 6 : 10),
+              AnimatedBuilder(
+                animation: NotificationService.instance,
+                builder: (context, _) {
+                  return FutureBuilder<int>(
+                    future: NotificationService.instance.getUnreadCount(),
+                    builder: (context, s) {
+                      final count = s.data ?? 0;
+                      return _ActionButton(
+                        compact: compact,
+                        icon: Icons.notifications_none_rounded,
+                        badge: count,
+                        onTap: widget.onNotifications,
+                        tooltip: LunoraLocalization.text('Уведомления', 'Notifications'),
+                      );
+                    },
                   );
                 },
-              );
-            },
+              ),
+              SizedBox(width: compact ? 6 : 8),
+              _ActionButton(
+                compact: compact,
+                icon: Icons.home_rounded,
+                onTap: widget.onHome,
+                tooltip: LunoraLocalization.text('Главная', 'Home'),
+              ),
+            ],
           ),
-          const SizedBox(width: 8),
-          _ActionButton(
-            icon: Icons.home_rounded,
-            onTap: widget.onHome,
-            tooltip: LunoraLocalization.text('Главная', 'Home'),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
@@ -137,11 +140,13 @@ class _ActionButton extends StatelessWidget {
     required this.onTap,
     required this.tooltip,
     this.badge = 0,
+    this.compact = false,
   });
   final IconData icon;
   final VoidCallback onTap;
   final String tooltip;
   final int badge;
+  final bool compact;
   @override
   Widget build(BuildContext context) {
     final p = Theme.of(context).extension<LunoraPalette>()!;
@@ -154,8 +159,8 @@ class _ActionButton extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(13),
           child: SizedBox(
-            width: 42,
-            height: 42,
+            width: compact ? 38 : 42,
+            height: compact ? 38 : 42,
             child: Stack(
               alignment: Alignment.center,
               clipBehavior: Clip.none,
