@@ -363,6 +363,7 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
     final settings = SettingsService.instance.settings;
     final order = _normalizedWidgetOrder(settings.dashboardWidgetOrder);
     final visibility = settings.dashboardWidgetVisibility;
+    final isAndroid = Theme.of(context).platform == TargetPlatform.android;
 
     return LayoutBuilder(
       builder: (context, constraints) {
@@ -516,6 +517,8 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
             ? constraints.maxWidth
             : (constraints.maxWidth - 18) / 2;
         final visibleIds = order.where((id) => visibility[id] ?? true).toList();
+        final mobilePrimaryIds = visibleIds.where((id) => const {'overview', 'agenda', 'quickActions'}.contains(id)).toList();
+        final mobileSecondaryIds = visibleIds.where((id) => !const {'overview', 'agenda', 'quickActions'}.contains(id)).toList();
         final columns = settings.dashboardWidgetColumns;
         int columnOf(String id) => compact
             ? 0
@@ -605,9 +608,9 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                       greeting: _greeting(),
                       date: _dateLabel(),
                       onCalendar: () => widget.onNavigate(1),
-                      onCustomize: _customizeDashboard,
-                      layoutEditing: _layoutEditing,
-                      onToggleLayout: () => setState(
+                      onCustomize: isAndroid ? () {} : _customizeDashboard,
+                      layoutEditing: !isAndroid && _layoutEditing,
+                      onToggleLayout: isAndroid ? () {} : () => setState(
                         () => _layoutEditing = !_layoutEditing,
                       ),
                     ),
@@ -620,7 +623,7 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                     else if (_error != null)
                       _ErrorPanel(message: _error!, onRetry: _loadDashboard)
                     else ...[
-                      if (_layoutEditing)
+                      if (_layoutEditing && !isAndroid)
                         Padding(
                           padding: const EdgeInsets.only(bottom: 14),
                           child: Text(
@@ -633,7 +636,36 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                         ),
                       SizedBox(
                         width: constraints.maxWidth,
-                        child: compact
+                        child: isAndroid
+                            ? Column(
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                children: [
+                                  for (var i = 0; i < mobilePrimaryIds.length; i++) ...[
+                                    sections[mobilePrimaryIds[i]]!,
+                                    if (i != mobilePrimaryIds.length - 1) const SizedBox(height: 14),
+                                  ],
+                                  if (mobileSecondaryIds.isNotEmpty) ...[
+                                    const SizedBox(height: 8),
+                                    Theme(
+                                      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+                                      child: ExpansionTile(
+                                        tilePadding: const EdgeInsets.symmetric(horizontal: 14),
+                                        childrenPadding: const EdgeInsets.only(bottom: 12),
+                                        leading: Icon(Icons.grid_view_rounded, color: palette.accent),
+                                        title: Text(LunoraLocalization.text('Все разделы', 'All sections')),
+                                        subtitle: Text(LunoraLocalization.text('Дополнительные карточки главной', 'Additional home cards')),
+                                        children: [
+                                          for (var i = 0; i < mobileSecondaryIds.length; i++) ...[
+                                            sections[mobileSecondaryIds[i]]!,
+                                            if (i != mobileSecondaryIds.length - 1) const SizedBox(height: 14),
+                                          ],
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              )
+                            : compact
                             ? DragTarget<String>(
                                 onWillAcceptWithDetails: (details) => _layoutEditing,
                                 onAcceptWithDetails: (details) => _moveWidgetToColumn(details.data, 0),
