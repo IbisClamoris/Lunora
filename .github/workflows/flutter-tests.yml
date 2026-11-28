@@ -110,7 +110,7 @@ jobs:
           retention-days: 1
 
   android-smoke-build:
-    name: Generate Android runner and build debug APK
+    name: Generate Android runner and build ARM64 test APK
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -194,10 +194,10 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build Android ARM64 release APK
+      - name: Build Android ARM64 debug APK
         run: |
           for attempt in 1 2 3; do
-            if flutter build apk --release --target-platform android-arm64; then
+            if flutter build apk --debug --target-platform android-arm64; then
               exit 0
             fi
             if [ "$attempt" -lt 3 ]; then
@@ -211,7 +211,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: Lunora-Android-arm64-test-${{ github.sha }}
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/app-debug.apk
           if-no-files-found: error
           retention-days: 7
 
