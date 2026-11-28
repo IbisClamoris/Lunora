@@ -11,6 +11,7 @@ import '../../core/settings/settings_service.dart';
 import '../../core/platform/windows_autostart_service.dart';
 import 'backup_management_page.dart';
 import '../../core/platform/update_service.dart';
+import '../../features/notifications/services/system_notification_service.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -74,6 +75,32 @@ class _SettingsPageState extends State<SettingsPage> {
         });
       }
     }
+  }
+
+  Future<void> _setNotificationsEnabled(bool enabled) async {
+    if (enabled && Platform.isAndroid) {
+      try {
+        final granted =
+            await SystemNotificationService.instance.requestPermission();
+        if (!granted) {
+          _showMessage(
+            _settings.language == AppLanguage.english
+                ? 'Allow notifications for Lunora in Android settings to receive reminders.'
+                : 'Разреши уведомления для Lunora в настройках Android, чтобы получать напоминания.',
+          );
+          return;
+        }
+      } catch (error) {
+        _showMessage(
+          _settings.language == AppLanguage.english
+              ? 'Could not request notification permission: $error'
+              : 'Не удалось запросить разрешение на уведомления: $error',
+        );
+        return;
+      }
+    }
+
+    await _update(_settings.copyWith(notificationsEnabled: enabled));
   }
 
   Future<void> _setWindowsAutostart(bool enabled) async {
@@ -827,8 +854,7 @@ class _SettingsPageState extends State<SettingsPage> {
               title: LunoraLocalization.text('Уведомления'),
               control: _switch(
                 value: _settings.notificationsEnabled,
-                onChanged: (value) =>
-                    _update(_settings.copyWith(notificationsEnabled: value)),
+                onChanged: _setNotificationsEnabled,
               ),
             ),
             _settingRow(
