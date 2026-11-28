@@ -37,6 +37,39 @@ jobs:
       - name: Generate Android platform project
         run: flutter create --platforms=android --org com.ibisclamoris --project-name lunora .
 
+      - name: Enable Android core library desugaring
+        run: |
+          if [ -f android/app/build.gradle.kts ]; then
+            cat >> android/app/build.gradle.kts <<'EOF'
+
+          android {
+              compileOptions {
+                  isCoreLibraryDesugaringEnabled = true
+              }
+          }
+
+          dependencies {
+              coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:2.1.4")
+          }
+          EOF
+          elif [ -f android/app/build.gradle ]; then
+            cat >> android/app/build.gradle <<'EOF'
+
+          android {
+              compileOptions {
+                  coreLibraryDesugaringEnabled true
+              }
+          }
+
+          dependencies {
+              coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+          }
+          EOF
+          else
+            echo "Android app Gradle file not found" >&2
+            exit 1
+          fi
+
       - name: Prepare repository assets and tests
         run: |
           mkdir -p assets/branding/theme_icons
