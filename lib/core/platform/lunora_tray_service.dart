@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
-import 'package:nativeapi/nativeapi.dart' show Application;
 import 'package:path/path.dart' as p;
 import 'package:tray_manager/tray_manager.dart';
 import 'package:window_manager/window_manager.dart';
@@ -90,15 +89,6 @@ class LunoraTrayService with WidgetsBindingObserver {
         'flutter_assets',
         '$assetBase.ico',
       );
-      if (await File(icoPath).exists()) {
-        final updated = Application.instance.setIcon(icoPath);
-        if (!updated) {
-          debugPrint('Lunora: Windows не приняла тематическую иконку: $icoPath');
-        }
-      } else {
-        debugPrint('Lunora: theme icon not found: $icoPath');
-      }
-
       final trayIcon = _trayIcon;
       if (trayIcon != null) {
         trayIcon.icon = ImageAsset.fromAsset('$assetBase.png');
