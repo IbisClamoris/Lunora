@@ -610,6 +610,7 @@ class _LunoraDashboardState extends State<LunoraDashboard> {
                       onCalendar: () => widget.onNavigate(1),
                       onCustomize: isAndroid ? () {} : _customizeDashboard,
                       layoutEditing: !isAndroid && _layoutEditing,
+                      showLayoutControls: !isAndroid,
                       onToggleLayout: isAndroid ? () {} : () => setState(
                         () => _layoutEditing = !_layoutEditing,
                       ),
@@ -767,6 +768,7 @@ class _DashboardHeader extends StatelessWidget {
     required this.onCalendar,
     required this.onCustomize,
     required this.layoutEditing,
+    required this.showLayoutControls,
     required this.onToggleLayout,
   });
 
@@ -775,6 +777,7 @@ class _DashboardHeader extends StatelessWidget {
   final VoidCallback onCalendar;
   final VoidCallback onCustomize;
   final bool layoutEditing;
+  final bool showLayoutControls;
   final VoidCallback onToggleLayout;
 
   @override
@@ -826,20 +829,22 @@ class _DashboardHeader extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          IconButton(
-            tooltip: layoutEditing
-                ? LunoraLocalization.text('Завершить настройку', 'Finish arranging')
-                : LunoraLocalization.text('Переместить блоки', 'Arrange blocks'),
-            onPressed: onToggleLayout,
-            icon: Icon(
-              layoutEditing ? Icons.check_rounded : Icons.open_with_rounded,
+          if (showLayoutControls) ...[
+            IconButton(
+              tooltip: layoutEditing
+                  ? LunoraLocalization.text('Завершить настройку', 'Finish arranging')
+                  : LunoraLocalization.text('Переместить блоки', 'Arrange blocks'),
+              onPressed: onToggleLayout,
+              icon: Icon(
+                layoutEditing ? Icons.check_rounded : Icons.open_with_rounded,
+              ),
             ),
-          ),
-          IconButton(
-            tooltip: LunoraLocalization.text('Настроить главную', 'Customize home page'),
-            onPressed: onCustomize,
-            icon: const Icon(Icons.dashboard_customize_outlined),
-          ),
+            IconButton(
+              tooltip: LunoraLocalization.text('Настроить главную', 'Customize home page'),
+              onPressed: onCustomize,
+              icon: const Icon(Icons.dashboard_customize_outlined),
+            ),
+          ],
           FilledButton.icon(
             onPressed: onCalendar,
             icon: const Icon(Icons.calendar_month_outlined, size: 18),
