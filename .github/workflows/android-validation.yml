@@ -5,6 +5,7 @@ on:
     branches:
       - feature/android-runner
       - fix/android-launcher-branding
+      - fix/android-responsive-layout
   pull_request:
     branches:
       - main
